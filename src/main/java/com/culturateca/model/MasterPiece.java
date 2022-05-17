@@ -33,7 +33,7 @@ public class MasterPiece {
     }
 
     public Long getId() {
-        return id
+        return id;
     }
 
     public String getTitle() {

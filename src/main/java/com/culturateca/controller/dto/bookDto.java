@@ -6,12 +6,12 @@ public class bookDto {
 
     private Long id;
     private String title;
-    private String author;
+    private String authorName;
 
     public  bookDto(MasterPiece source){
-        this.id = ;
-        this.title = ;
-        this.author = ;
+        this.id = source.getId();
+        this.title = source.getTitle();
+        this.authorName = source.getAuthor().getName();
     }
 
     public Long getId() {
@@ -30,11 +30,11 @@ public class bookDto {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorName(String author) {
+        this.authorName = author;
     }
 }
