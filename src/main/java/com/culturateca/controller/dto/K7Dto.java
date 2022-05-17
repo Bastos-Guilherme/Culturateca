@@ -1,4 +1,4 @@
 package com.culturateca.controller.dto;
 
-public class handoutDto {
+public class K7Dto {
 }

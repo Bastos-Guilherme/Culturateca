@@ -1,4 +1,4 @@
 package com.culturateca.controller.dto;
 
-public class bluerayDto {
+public class HandoutDto {
 }
