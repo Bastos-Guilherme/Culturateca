@@ -11,4 +11,23 @@ public class Category {
     @NotNull
     private String categoryName;
     private MasterPiece masterPiece;
+
+    public Category() {
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public MasterPiece getMasterPiece() {
+        return masterPiece;
+    }
+
+    public void setMasterPiece(MasterPiece masterPiece) {
+        this.masterPiece = masterPiece;
+    }
 }

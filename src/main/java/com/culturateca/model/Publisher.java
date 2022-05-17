@@ -14,4 +14,15 @@ public class Publisher {
     private LocalDateTime foundationDate;
     private Adress adress;
     private MasterPiece masterPiece;
+
+    public Publisher() {
+    }
+
+    public String getPublisherName() {
+        return publisherName;
+    }
+
+    public void setPublisherName(String publisherName) {
+        this.publisherName = publisherName;
+    }
 }

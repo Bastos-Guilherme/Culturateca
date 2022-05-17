@@ -1,5 +1,7 @@
 package com.culturateca.controller.dto;
 
+import com.culturateca.model.MasterPiece;
+
 public class bookDto {
 
     private Long id;
@@ -7,9 +9,9 @@ public class bookDto {
     private String author;
 
     public  bookDto(MasterPiece source){
-        this.id = source.getId();
-        this.title = source.getTitle();
-        this.author = source.getAuthor();
+        this.id = ;
+        this.title = ;
+        this.author = ;
     }
 
     public Long getId() {
