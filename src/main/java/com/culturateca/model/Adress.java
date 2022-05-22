@@ -18,6 +18,7 @@ public class Adress {
     private String city;
     private String country;
     private String additionalInfo;
+    @ManytoOne
     private Location location;
 
     public Adress() {
