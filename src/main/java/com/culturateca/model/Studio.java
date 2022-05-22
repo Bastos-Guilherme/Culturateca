@@ -11,7 +11,9 @@ public class Studio {
     @NotNull
     private String companyName;
     private LocalDateTime foundationDate;
+    @ManytoOne
     private MasterPiece masterPiece;
+    @OnetoOne
     private Adress hqAdress;
 
     public Studio() {
