@@ -27,5 +27,10 @@ public class BookDto {
     }
     
     public List<BookDto> toBookDto(List<MasterPiece> masterPieces) {
-        for()
+        private List<BookDto> booksDto;
+        for(MasterPiece masterPiece : masterPieces){
+            booksDto.add(new BookDto(masterPiece));
+        }
+        return booksDto;
+    }
 }
