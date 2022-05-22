@@ -11,8 +11,10 @@ public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String language;
     private String universalLnaguageCode;
+    @ManytoMany
     private MasterPiece masterPiece;
 
     public Language() {
