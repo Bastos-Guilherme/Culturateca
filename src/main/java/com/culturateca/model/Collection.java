@@ -10,6 +10,7 @@ public class Collection {
     @Id
     @NotNull
     private String collectionName;
+    @ManytoMany
     private MasterPiece masterPiece;
 
     public Collection() {
