@@ -10,6 +10,7 @@ public class Category {
     @Id
     @NotNull
     private String categoryName;
+    @ManytoMany
     private MasterPiece masterPiece;
 
     public Category() {
