@@ -25,4 +25,7 @@ public class BookDto {
     public String getAuthorName() {
         return authorName;
     }
+    
+    public List<BookDto> toBookDto(List<MasterPiece> masterPieces) {
+        for()
 }
