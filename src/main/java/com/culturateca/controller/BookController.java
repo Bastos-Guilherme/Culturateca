@@ -19,6 +19,6 @@ public class BookController {
     @RequestMapping("/all")
     public List<BookDto> findAll() {
         List<MasterPiece> masterPieces = masterPieceRepository.findAll();
-        return ;
+        return BookDto.toBookDto(masterPieces);
     }
 }
