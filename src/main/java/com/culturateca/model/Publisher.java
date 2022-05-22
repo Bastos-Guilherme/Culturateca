@@ -12,7 +12,9 @@ public class Publisher {
     @NotNull
     private String publisherName;
     private LocalDateTime foundationDate;
+    @OnetoOne
     private Adress adress;
+    @ManytoOne
     private MasterPiece masterPiece;
 
     public Publisher() {
