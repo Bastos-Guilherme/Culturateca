@@ -12,11 +12,13 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
     private String lastName;
     private LocalDateTime birthDate;
     private LocalDateTime deathDate;
     private String nationality;
+    @ManytoMany
     private MasterPiece masterPiece;
 
     public Author() {
