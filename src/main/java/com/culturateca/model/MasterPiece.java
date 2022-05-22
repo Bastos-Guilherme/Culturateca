@@ -15,16 +15,23 @@ public class MasterPiece {
     private Long id;
     @NotNull
     private String title;
+    @ManytoMany
     private Author author;
+    @OnetoMany
     private Language language;
     private LocalDateTime releaseDate;
+    @ManytoMany
     private Category category;
+    @ManytoMany
     private Collection collection;
+    @OnetoMany
     private Publisher publisher;
     private Long pagesOrTracks;
+    @OnetoMany
     private Studio studio;
     private Long lenght;
     private Type type;
+    @OnetoMany
     private Location location;
     private Long isbn;
     private Long Edition;
