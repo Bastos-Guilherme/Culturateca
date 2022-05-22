@@ -11,10 +11,12 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OnetoMany
     private Adress adress;
     private String room;
     private String unit;
     private String shelf;
+    @ManytoOne
     private MasterPiece masterPiece;
 
     public Location() {
