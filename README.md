@@ -1,6 +1,6 @@
 # Culturateca - Library for your house.
 > Know where your entertainment are, anytime anywhere.
-> Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
+> <!-- Live demo [_here_](https://www.example.com). If you have the project hosted somewhere, include the link here. -->
 
 ## Table of Contents
 * [General Info](#general-information)
