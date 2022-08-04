@@ -3,31 +3,21 @@ package com.culturateca.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Collection {
 
     @Id
     @NotNull
     private String collectionName;
+    @ManytoMany
     private MasterPiece masterPiece;
-
-    public Collection() {
-    }
-
-    public String getCollectionName() {
-        return collectionName;
-    }
-
-    public void setCollectionName(String collectionName) {
-        this.collectionName = collectionName;
-    }
-
-    public MasterPiece getMasterPiece() {
-        return masterPiece;
-    }
-
-    public void setMasterPiece(MasterPiece masterPiece) {
-        this.masterPiece = masterPiece;
-    }
 }
