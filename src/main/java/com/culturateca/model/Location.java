@@ -15,6 +15,8 @@ import javax.persistence.*;
 @Table(name = "Location")
 public class Location {
 
+    //to-do - relacional between entitys
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location-Id", nullable = false, unique = true)
