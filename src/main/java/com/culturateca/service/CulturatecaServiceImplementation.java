@@ -1,5 +1,5 @@
+package com.culturateca.service;
 
-
-public class CulturatecaServiceImplementation() implements CulturatecaService {
+public class CulturatecaServiceImplementation implements CulturatecaService {
   
 }

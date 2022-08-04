@@ -1,4 +1,4 @@
-package com.feigntest;
+package com.culturateca.config.swagger;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

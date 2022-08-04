@@ -1,5 +1,6 @@
-package com.culturateca;
+package com.culturateca.config.servlet;
 
+import com.culturateca.CulturatecaApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
