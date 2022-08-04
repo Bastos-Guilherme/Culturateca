@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @Table(name = "MasterPiece")
 public class MasterPiece {
 
+    //to-do - relacional between entitys
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "masterPiece-Id", nullable = false, unique = true)
