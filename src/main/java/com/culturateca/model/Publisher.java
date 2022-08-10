@@ -25,7 +25,7 @@ public class Publisher {
     private String publisherName;
 
     @JoinColumn(name = "address", nullable = false)
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "")
     private Address address;
 
     @Column(name = "foundation-date", nullable = false)
