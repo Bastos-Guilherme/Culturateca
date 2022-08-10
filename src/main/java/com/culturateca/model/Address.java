@@ -15,8 +15,6 @@ import javax.persistence.*;
 @Table(name = "address")
 public class Address {
 
-    //to-do - relacional between entitys
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address-Id", nullable = false, unique = true)
@@ -43,6 +41,7 @@ public class Address {
     @Column(name = "extra-info", nullable = false)
     private String extraInfo;
 
-    @Column(name = "location", nullable = false)
+    @JoinColumn(name = "location", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Location location;
 }

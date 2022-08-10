@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,15 +16,14 @@ import javax.persistence.*;
 @Table(name = "Location")
 public class Location {
 
-    //to-do - relacional between entitys
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location-Id", nullable = false, unique = true)
     private Long locationId;
 
-    @Column(name = "address", nullable = false)
-    private Address address;
+    @JoinColumn(name = "address", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Address> address;
 
     @Column(name = "room", nullable = false)
     private String room;
@@ -34,6 +34,7 @@ public class Location {
     @Column(name = "shelf", nullable = false)
     private String shelf;
 
-    @Column(name = "masterpiece", nullable = false)
+    @JoinColumn(name = "masterpiece", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private MasterPiece masterpiece;
 }

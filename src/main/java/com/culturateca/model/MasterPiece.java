@@ -7,16 +7,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "MasterPiece")
+@Table(name = "masterpiece")
 public class MasterPiece {
-
-    //to-do - relacional between entitys
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,29 +25,35 @@ public class MasterPiece {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "author", nullable = false)
-    private Author author;
+    @JoinColumn(name = "author", nullable = false)
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Author> author;
 
-    @Column(name = "language", nullable = false)
-    private Language language;
+    @JoinColumn(name = "language", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Language> language;
 
     @Column(name = "release-date", nullable = false)
     private LocalDateTime releaseDate;
 
-    @Column(name = "category", nullable = true)
-    private Category category;
+    @JoinColumn(name = "category", nullable = true)
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Category> category;
 
-    @Column(name = "collection", nullable = true)
-    private Collection collection;
+    @JoinColumn(name = "collection", nullable = true)
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Collection> collection;
 
-    @Column(name = "publisher", nullable = true)
-    private Publisher publisher;
+    @JoinColumn(name = "publisher", nullable = true)
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Publisher> publisher;
 
     @Column(name = "pages", nullable = true)
     private Integer pages;
 
-    @Column(name = "studio", nullable = true)
-    private Studio studio;
+    @JoinColumn(name = "studio", nullable = true)
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Studio> studio;
 
     @Column(name = "length", nullable = true)
     private Integer length;
@@ -57,8 +62,9 @@ public class MasterPiece {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @Column(name = "location", nullable = false)
-    private Location location;
+    @JoinColumn(name = "location", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Location> location;
 
     @Column(name = "isbn", nullable = true)
     private Integer isbn;
