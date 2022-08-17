@@ -24,14 +24,12 @@ public class Publisher {
     @Column(name = "publisher-name", nullable = false)
     private String publisherName;
 
-    @JoinColumn(name = "address", nullable = false)
-    @OneToOne(fetch = FetchType.LAZY,mappedBy = "")
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "",optional = false)
     private Address address;
 
     @Column(name = "foundation-date", nullable = false)
     private LocalDateTime foundationDate;
 
-    @JoinColumn(name = "masterpiece", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     private MasterPiece masterPiece;
 }

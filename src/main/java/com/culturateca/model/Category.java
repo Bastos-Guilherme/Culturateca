@@ -24,7 +24,6 @@ public class Category {
     @Column(name = "category-name", nullable = false)
     private String categoryName;
 
-    @JoinColumn(name = "masterpiece", nullable = false)
     @ManyToMany(fetch = FetchType.LAZY)
     private List<MasterPiece> masterPiece;
 }

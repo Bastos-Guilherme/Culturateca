@@ -27,7 +27,6 @@ public class Language {
     @Column(name = "code-name", nullable = false)
     private String codeName;
 
-    @JoinColumn(name = "masterpiece", nullable = false)
     @ManyToMany(fetch = FetchType.LAZY)
     private List<MasterPiece> masterPiece;
 }

@@ -31,7 +31,6 @@ public class Author {
     @Column(name = "nationality", nullable = false)
     private String nationality;
 
-    @JoinColumn(name = "masterpiece", nullable = false)
     @ManyToMany(fetch = FetchType.LAZY)
     private List<MasterPiece> masterPiece;
 }

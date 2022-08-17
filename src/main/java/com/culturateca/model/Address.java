@@ -41,7 +41,6 @@ public class Address {
     @Column(name = "extra-info", nullable = false)
     private String extraInfo;
 
-    @JoinColumn(name = "location", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     private Location location;
 }

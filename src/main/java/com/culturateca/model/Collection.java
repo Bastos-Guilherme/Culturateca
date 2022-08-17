@@ -24,7 +24,6 @@ public class Collection {
     @Column(name = "collection-name", nullable = false)
     private String collectionName;
 
-    @JoinColumn(name = "masterpiece", nullable = false)
     @ManyToMany(fetch = FetchType.LAZY)
     private List<MasterPiece> masterPiece;
 }
