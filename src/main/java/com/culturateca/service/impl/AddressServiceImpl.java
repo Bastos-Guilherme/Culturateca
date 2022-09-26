@@ -12,10 +12,12 @@ public class AddressServiceImpl implements AddressService {
     @Autowired
     AddressRepository addressRepository;
 
+    @Override
     public Long saveNewAddress(Address address){
         return addressRepository.save(address).getAddressId();
     };
 
+    @Override
     public Address findAddressById(Long id){
         return addressRepository.findById(id).get();
     }
