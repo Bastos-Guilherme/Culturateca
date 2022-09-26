@@ -19,13 +19,13 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "author-Id", nullable = false, unique = true)
+    @Column(name = "author_id", nullable = false, unique = true)
     private Long authorId;
 
-    @Column(name = "birth-date", nullable = true)
+    @Column(name = "birth_date", nullable = true)
     private LocalDateTime birthDate;
 
-    @Column(name = "death-date", nullable = true)
+    @Column(name = "death_date", nullable = true)
     private LocalDateTime deathDate;
 
     @Column(name = "nationality", nullable = false)

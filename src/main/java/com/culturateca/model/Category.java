@@ -18,10 +18,10 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category-Id", nullable = false, unique = true)
+    @Column(name = "category_id", nullable = false, unique = true)
     private Long categoryId;
 
-    @Column(name = "category-name", nullable = false)
+    @Column(name = "category_name", nullable = false)
     private String categoryName;
 
     @ManyToMany(fetch = FetchType.LAZY)

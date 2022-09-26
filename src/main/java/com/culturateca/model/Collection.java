@@ -18,10 +18,10 @@ public class Collection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "collection-Id", nullable = false, unique = true)
+    @Column(name = "collection_id", nullable = false, unique = true)
     private Long collectionId;
 
-    @Column(name = "collection-name", nullable = false)
+    @Column(name = "collection_name", nullable = false)
     private String collectionName;
 
     @ManyToMany(fetch = FetchType.LAZY)

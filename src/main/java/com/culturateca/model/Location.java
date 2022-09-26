@@ -13,16 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Location")
+@Table(name = "location")
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location-Id", nullable = false, unique = true)
+    @Column(name = "location_id", nullable = false, unique = true)
     private Long locationId;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Address> address;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Address address;
 
     @Column(name = "room", nullable = false)
     private String room;

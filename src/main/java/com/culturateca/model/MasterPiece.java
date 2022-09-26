@@ -19,7 +19,7 @@ public class MasterPiece {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "masterPiece-Id", nullable = false, unique = true)
+    @Column(name = "masterpiece_id", nullable = false, unique = true)
     private Long masterPieceId;
 
     @Column(name = "title", nullable = false)
@@ -33,7 +33,7 @@ public class MasterPiece {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Language> language;
 
-    @Column(name = "release-date", nullable = false)
+    @Column(name = "release_date", nullable = false)
     private LocalDateTime releaseDate;
 
     @JoinColumn(name = "category", nullable = true)

@@ -18,15 +18,15 @@ public class Language {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "language-Id", nullable = false, unique = true)
+    @Column(name = "language_id", nullable = false, unique = true)
     private Long languageId;
 
-    @Column(name = "language-name", nullable = false)
+    @Column(name = "language_name", nullable = false)
     private String languageName;
 
-    @Column(name = "code-name", nullable = false)
+    @Column(name = "code_name", nullable = false)
     private String codeName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterPiece;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private MasterPiece masterPiece;
 }

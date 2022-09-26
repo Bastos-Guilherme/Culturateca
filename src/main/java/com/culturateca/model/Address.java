@@ -17,10 +17,10 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address-Id", nullable = false, unique = true)
+    @Column(name = "address_id", nullable = false, unique = true)
     private Long addressId;
 
-    @Column(name = "zip-code", nullable = false)
+    @Column(name = "zip_code", nullable = false)
     private String zipCode;
 
     @Column(name = "number", nullable = false)
@@ -38,9 +38,15 @@ public class Address {
     @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "extra-info", nullable = false)
+    @Column(name = "extra_info", nullable = false)
     private String extraInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @OneToOne(fetch = FetchType.LAZY,optional = true)
     private Location location;
+
+    @OneToOne(fetch = FetchType.LAZY,optional = true)
+    private Publisher publisher;
+
+    @OneToOne(fetch = FetchType.LAZY,optional = true)
+    private Studio studio;
 }

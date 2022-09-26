@@ -4,7 +4,7 @@ public enum Type {
 
     BOOK("book"),
     HANDOUT("handout"),
-    BLUE_RAY("blue-ray"),
+    BLUE_RAY("blue_ray"),
     CD("cd"),
     DVD("dvd"),
     K7("k7"),
