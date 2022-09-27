@@ -24,12 +24,12 @@ public class Publisher {
     @Column(name = "publisher_name", nullable = false)
     private String publisherName;
 
-    @OneToOne(fetch = FetchType.LAZY,optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     private Address address;
 
     @Column(name = "foundation_date", nullable = false)
     private LocalDateTime foundationDate;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private MasterPiece masterPiece;
 }

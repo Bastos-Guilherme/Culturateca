@@ -25,50 +25,50 @@ public class MasterPiece {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @JoinColumn(name = "author", nullable = false)
+    @JoinColumn(name = "author")
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Author> author;
 
-    @JoinColumn(name = "language", nullable = false)
-    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "language")
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Language> language;
 
     @Column(name = "release_date", nullable = false)
     private LocalDateTime releaseDate;
 
-    @JoinColumn(name = "category", nullable = true)
+    @JoinColumn(name = "category")
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Category> category;
 
-    @JoinColumn(name = "collection", nullable = true)
+    @JoinColumn(name = "collection")
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Collection> collection;
 
-    @JoinColumn(name = "publisher", nullable = true)
+    @JoinColumn(name = "publisher")
     @OneToMany(fetch = FetchType.LAZY)
     private List<Publisher> publisher;
 
-    @Column(name = "pages", nullable = true)
+    @Column(name = "pages")
     private Integer pages;
 
-    @JoinColumn(name = "studio", nullable = true)
+    @JoinColumn(name = "studio")
     @OneToMany(fetch = FetchType.LAZY)
     private List<Studio> studio;
 
-    @Column(name = "length", nullable = true)
+    @Column(name = "length")
     private Integer length;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @JoinColumn(name = "location", nullable = false)
+    @JoinColumn(name = "location")
     @OneToMany(fetch = FetchType.LAZY)
     private List<Location> location;
 
-    @Column(name = "isbn", nullable = true)
+    @Column(name = "isbn")
     private Integer isbn;
 
-    @Column(name = "edition", nullable = true)
+    @Column(name = "edition")
     private Integer edition;
 }

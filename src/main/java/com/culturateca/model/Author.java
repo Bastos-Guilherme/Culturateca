@@ -22,10 +22,13 @@ public class Author {
     @Column(name = "author_id", nullable = false, unique = true)
     private Long authorId;
 
-    @Column(name = "birth_date", nullable = true)
+    @Column(name = "name", nullable = false)
+    private String Name;
+
+    @Column(name = "birth_date")
     private LocalDateTime birthDate;
 
-    @Column(name = "death_date", nullable = true)
+    @Column(name = "death_date")
     private LocalDateTime deathDate;
 
     @Column(name = "nationality", nullable = false)

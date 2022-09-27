@@ -20,26 +20,12 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class AddressDto {
 
-    @Autowired
-    PublisherService publisherService;
-
-    @Autowired
-    StudioService studioService;
-
-    @Autowired
-    LocationService locationService;
-
-    @NotBlank
-    @NotNull
-    @NotEmpty
     private Long addressId;
     @NotBlank
     @NotNull
     @NotEmpty
     private String zipCode;
-    @NotBlank
     @NotNull
-    @NotEmpty
     private Integer number;
     @NotBlank
     @NotNull
@@ -53,25 +39,26 @@ public class AddressDto {
     @NotBlank
     @NotNull
     @NotEmpty
+    private String state;
+    @NotBlank
+    @NotNull
+    @NotEmpty
     private String country;
     private String extraInfo;
-    @NotBlank
-    @NotEmpty
     private Long location;
-    @NotBlank
-    @NotEmpty
     private Long publisher;
-    @NotBlank
-    @NotEmpty
     private Long studio;
 
-    public AddressDto(Long addressId,String zipCode,Integer number,String street,String neighborhood,String city,String country,String extraInfo,Long location,Long publisher,Long studio){
+    public AddressDto(){}
+
+    public AddressDto(Long addressId,String state,String zipCode,Integer number,String street,String neighborhood,String city,String country,String extraInfo,Long location,Long publisher,Long studio){
         setAddressId(addressId);
         setZipCode(zipCode);
         setNumber(number);
         setStreet(street);
         setNeighborhood(neighborhood);
         setCity(city);
+        setState(state);
         setCountry(country);
         setExtraInfo(extraInfo);
         setLocation(location);
@@ -80,38 +67,35 @@ public class AddressDto {
     }
 
     public AddressDto toAddressDto(Address address){
-        AddressDto addressDto = new AddressDto(
-                address.getAddressId(),
-                address.getZipCode(),
-                address.getNumber(),
-                address.getStreet(),
-                address.getNeighborhood(),
-                address.getCity(),
-                address.getCountry(),
-                address.getExtraInfo(),
-                address.getLocation().getLocationId(),
-                address.getPublisher().getPublisherId(),
-                address.getStudio().getStudioId()
-        );
+        this.setAddressId(address.getAddressId());
+        this.setZipCode(address.getZipCode());
+        this.setNumber(address.getNumber());
+        this.setExtraInfo(address.getExtraInfo());
+        this.setStreet(address.getStreet());
+        this.setNeighborhood(address.getNeighborhood());
+        this.setCity(address.getCity());
+        this.setState(address.getState());
+        this.setCountry(address.getCountry());
+        this.setLocation(address.getLocation().getLocationId());
+        this.setPublisher(address.getPublisher().getPublisherId());
+        this.setStudio(address.getStudio().getStudioId());
         return this;
     }
 
-    public Address toAddress(AddressDto addressDto){
+    public Address toAddress(LocationService locationService,PublisherService publisherService,StudioService studioService){
         Address address = new Address();
-        Location location = locationService.findLocationById(addressDto.getLocation());
-        Publisher publisher = publisherService.findPublisherById(addressDto.getPublisher());
-        Studio studio = studioService.findStudioById(addressDto.getStudio());
-        address.setAddressId(addressDto.getAddressId());
-        address.setZipCode(addressDto.getZipCode());
-        address.setNumber(addressDto.getNumber());
-        address.setStreet(addressDto.getStreet());
-        address.setNeighborhood(addressDto.getNeighborhood());
-        address.setCity(addressDto.getCity());
-        address.setCountry(addressDto.getCountry());
-        address.setExtraInfo(addressDto.getExtraInfo());
-        address.setLocation(location);
-        address.setPublisher(publisher);
-        address.setStudio(studio);
+        address.setAddressId(this.getAddressId());
+        address.setZipCode(this.getZipCode());
+        address.setNumber(this.getNumber());
+        address.setStreet(this.getStreet());
+        address.setNeighborhood(this.getNeighborhood());
+        address.setCity(this.getCity());
+        address.setState(this.getState());
+        address.setCountry(this.getCountry());
+        address.setExtraInfo(this.getExtraInfo());
+        address.setLocation(locationService.findLocationById(this.getLocation()));
+        address.setPublisher(publisherService.findPublisherById(this.getPublisher()));
+        address.setStudio(studioService.findStudioById(this.getStudio()));
         return address;
     }
 }

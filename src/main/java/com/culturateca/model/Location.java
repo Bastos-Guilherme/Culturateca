@@ -33,6 +33,6 @@ public class Location {
     @Column(name = "shelf", nullable = false)
     private String shelf;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private MasterPiece masterpiece;
 }

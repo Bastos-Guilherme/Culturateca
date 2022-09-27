@@ -13,8 +13,8 @@ public class AddressServiceImpl implements AddressService {
     AddressRepository addressRepository;
 
     @Override
-    public Long saveNewAddress(Address address){
-        return addressRepository.save(address).getAddressId();
+    public Address saveNewAddress(Address address){
+        return addressRepository.save(address);
     };
 
     @Override

@@ -35,18 +35,21 @@ public class Address {
     @Column(name = "city", nullable = false)
     private String city;
 
+    @Column(name = "state", nullable = false)
+    private String state;
+
     @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "extra_info", nullable = false)
+    @Column(name = "extra_info")
     private String extraInfo;
 
-    @OneToOne(fetch = FetchType.LAZY,optional = true)
+    @OneToOne(fetch = FetchType.LAZY)
     private Location location;
 
-    @OneToOne(fetch = FetchType.LAZY,optional = true)
+    @OneToOne(fetch = FetchType.LAZY)
     private Publisher publisher;
 
-    @OneToOne(fetch = FetchType.LAZY,optional = true)
+    @OneToOne(fetch = FetchType.LAZY)
     private Studio studio;
 }

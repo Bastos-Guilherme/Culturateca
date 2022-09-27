@@ -14,6 +14,7 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public Studio findStudioById(Long id){
-        return studioRepository.findById(id).get();
+        Studio studio = new Studio(1L,null,"",null,null);
+        return studioRepository.findById(id).orElse(studio);
     }
 }
