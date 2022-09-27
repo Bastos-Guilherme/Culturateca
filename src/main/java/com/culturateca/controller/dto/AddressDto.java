@@ -7,6 +7,7 @@ import com.culturateca.model.Studio;
 import com.culturateca.service.LocationService;
 import com.culturateca.service.PublisherService;
 import com.culturateca.service.StudioService;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ import javax.validation.constraints.NotNull;
 public class AddressDto {
 
     @Autowired
-    StudioService studioService;
+    PublisherService publisherService;
 
     @Autowired
-    PublisherService publisherService;
+    StudioService studioService;
 
     @Autowired
     LocationService locationService;
@@ -64,32 +65,34 @@ public class AddressDto {
     @NotEmpty
     private Long studio;
 
-    public AddressDto(String zipCode, Integer number, String street, String neighborhood, String city, String country, String extraInfo, Long location){
-        this.addressId = null;
-        this.zipCode = zipCode;
-        this.number = number;
-        this.street = street;
-        this.neighborhood = neighborhood;
-        this.city = city;
-        this.country = country;
-        this.extraInfo = extraInfo;
-        this.location = location;
-        this.publisher = null;
-        this.studio = null;
+    public AddressDto(Long addressId,String zipCode,Integer number,String street,String neighborhood,String city,String country,String extraInfo,Long location,Long publisher,Long studio){
+        setAddressId(addressId);
+        setZipCode(zipCode);
+        setNumber(number);
+        setStreet(street);
+        setNeighborhood(neighborhood);
+        setCity(city);
+        setCountry(country);
+        setExtraInfo(extraInfo);
+        setLocation(location);
+        setPublisher(publisher);
+        setStudio(studio);
     }
 
     public AddressDto toAddressDto(Address address){
-        this.setAddressId(address.getAddressId());
-        this.setZipCode(address.getZipCode());
-        this.setNumber(address.getNumber());
-        this.setStreet(address.getStreet());
-        this.setNeighborhood(address.getNeighborhood());
-        this.setCity(address.getCity());
-        this.setCountry(address.getCountry());
-        this.setExtraInfo(address.getExtraInfo());
-        this.setLocation(address.getLocation().getLocationId());
-        this.setPublisher(address.getPublisher().getPublisherId());
-        this.setStudio(address.getStudio().getStudioId());
+        AddressDto addressDto = new AddressDto(
+                address.getAddressId(),
+                address.getZipCode(),
+                address.getNumber(),
+                address.getStreet(),
+                address.getNeighborhood(),
+                address.getCity(),
+                address.getCountry(),
+                address.getExtraInfo(),
+                address.getLocation().getLocationId(),
+                address.getPublisher().getPublisherId(),
+                address.getStudio().getStudioId()
+        );
         return this;
     }
 
@@ -99,7 +102,6 @@ public class AddressDto {
         Publisher publisher = publisherService.findPublisherById(addressDto.getPublisher());
         Studio studio = studioService.findStudioById(addressDto.getStudio());
         address.setAddressId(addressDto.getAddressId());
-        address.setZipCode(addressDto.getZipCode());
         address.setZipCode(addressDto.getZipCode());
         address.setNumber(addressDto.getNumber());
         address.setStreet(addressDto.getStreet());
