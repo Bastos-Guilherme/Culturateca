@@ -1,19 +1,24 @@
 package com.culturateca.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.culturateca.model.Location;
+import com.culturateca.model.MasterPiece;
+import com.culturateca.model.Publisher;
+import com.culturateca.service.CulturatecaService;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Setter
+@Getter
 public class PublisherDto {
 
     private Long publisherId;
     private String publisherName;
-    private Long address;
+    private AddressDto address;
     private String foundationDate;
-    private Long masterPiece;
+    private MasterPieceDto masterPiece;
+
+    public PublisherDto(){};
+
+    public PublisherDto toPublisherDto(Publisher publisher){return new PublisherDto();}
+
+    public Publisher toPublisher(CulturatecaService culturatecaService) {return new Publisher();}
 }

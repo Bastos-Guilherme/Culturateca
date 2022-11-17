@@ -1,22 +1,26 @@
 package com.culturateca.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.culturateca.model.Collection;
+import com.culturateca.model.Location;
+import com.culturateca.service.CulturatecaService;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Setter
+@Getter
 public class LocationDto {
 
     private Long locationId;
-    private Long address;
+    private AddressDto address;
     private String room;
     private String unit;
     private String shelf;
-    private Long masterpiece;
+    private MasterPieceDto masterpiece;
+
+    public LocationDto(){};
+
+    public LocationDto toLocationDto(Location location){return new LocationDto();}
+
+    public Location toLocation(CulturatecaService culturatecaService) {return new Location();}
 }

@@ -1,19 +1,22 @@
 package com.culturateca.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.culturateca.model.Category;
+import com.culturateca.service.CulturatecaService;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Setter
+@Getter
 public class CategoryDto {
 
     private Long categoryId;
     private String categoryName;
-    private List<Long> masterPiece;
+    private List<MasterPieceDto> masterPiece;
+
+    public CategoryDto(){}
+
+    public CategoryDto toCategoryDto(Category category){return new CategoryDto();}
+
+    public Category toCategory(CulturatecaService culturatecaService){return new Category();}
 }

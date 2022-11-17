@@ -1,19 +1,23 @@
 package com.culturateca.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.culturateca.model.Publisher;
+import com.culturateca.model.Studio;
+import com.culturateca.service.CulturatecaService;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter
+@Setter
 public class StudioDto {
 
     private Long studioId;
     private String foundationDate;
     private String companyName;
     private Long hq;
-    private Long masterPiece;
+    private MasterPieceDto masterPiece;
+
+    public StudioDto(){};
+
+    public StudioDto toStudioDto(Studio studio){return new StudioDto();}
+
+    public Studio toStudio(CulturatecaService culturatecaService) {return new Studio();}
 }

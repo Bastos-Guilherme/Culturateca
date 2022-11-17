@@ -1,18 +1,21 @@
 package com.culturateca.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.culturateca.model.Language;
+import com.culturateca.service.CulturatecaService;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter
+@Setter
 public class LanguageDto {
 
     private Long languageId;
     private String languageName;
     private String codeName;
-    private Long masterPiece;
+    private MasterPieceDto masterPiece;
+
+    public LanguageDto(){};
+
+    public LanguageDto toLanguageDto(Language language){return new LanguageDto();}
+
+    public Language toLanguage(CulturatecaService culturatecaService) {return new Language();}
 }
