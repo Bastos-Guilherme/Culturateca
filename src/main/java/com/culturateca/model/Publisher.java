@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -28,8 +29,8 @@ public class Publisher {
     private Address address;
 
     @Column(name = "foundation_date", nullable = false)
-    private LocalDateTime foundationDate;
+    private LocalDate foundationDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private MasterPiece masterPiece;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<MasterPiece> masterPiece;
 }

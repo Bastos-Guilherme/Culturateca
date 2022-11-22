@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -65,35 +66,37 @@ public class AddressDto {
             @JsonProperty("extraInfo") String extraInfo,
             @JsonProperty("location") LocationDto location,
             @JsonProperty("publisher") PublisherDto publisher,
-            @JsonProperty("studio") StudioDto studio){
-        setAddressId(addressId);
-        setZipCode(zipCode);
-        setNumber(number);
-        setStreet(street);
-        setNeighborhood(neighborhood);
-        setCity(city);
-        setState(state);
-        setCountry(country);
-        setExtraInfo(extraInfo);
-        setLocation(location);
-        setPublisher(publisher);
-        setStudio(studio);
+            @JsonProperty("studio") StudioDto studio
+    ){
+        this.setAddressId(addressId);
+        this.setZipCode(zipCode);
+        this.setNumber(number);
+        this.setStreet(street);
+        this.setNeighborhood(neighborhood);
+        this.setCity(city);
+        this.setState(state);
+        this.setCountry(country);
+        this.setExtraInfo(extraInfo);
+        this.setLocation(location);
+        this.setPublisher(publisher);
+        this.setStudio(studio);
     }
 
-    public AddressDto toAddressDto(Address address){
-        this.setAddressId(address.getAddressId());
-        this.setZipCode(address.getZipCode());
-        this.setNumber(address.getNumber());
-        this.setExtraInfo(address.getExtraInfo());
-        this.setStreet(address.getStreet());
-        this.setNeighborhood(address.getNeighborhood());
-        this.setCity(address.getCity());
-        this.setState(address.getState());
-        this.setCountry(address.getCountry());
-        this.setLocation(new LocationDto().toLocationDto(address.getLocation()));
-        this.setPublisher(new PublisherDto().toPublisherDto(address.getPublisher()));
-        this.setStudio(new StudioDto().toStudioDto(address.getStudio()));
-        return this;
+    public static AddressDto toAddressDto(Address address, CulturatecaService culturatecaService) {
+            return new AddressDto(
+                    address.getAddressId(),
+                    address.getState(),
+                    address.getZipCode(),
+                    address.getNumber(),
+                    address.getStreet(),
+                    address.getNeighborhood(),
+                    address.getCity(),
+                    address.getCountry(),
+                    address.getExtraInfo(),
+                    null,
+                    null,
+                    null
+            );
     }
 
     public Address toAddress(CulturatecaService culturatecaService){

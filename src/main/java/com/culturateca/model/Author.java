@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,10 +26,10 @@ public class Author {
     private String Name;
 
     @Column(name = "birth_date")
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "death_date")
-    private LocalDateTime deathDate;
+    private LocalDate deathDate;
 
     @Column(name = "nationality", nullable = false)
     private String nationality;

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -34,7 +34,7 @@ public class MasterPiece {
     private List<Language> language;
 
     @Column(name = "release_date", nullable = false)
-    private LocalDateTime releaseDate;
+    private LocalDate releaseDate;
 
     @JoinColumn(name = "category")
     @ManyToMany(fetch = FetchType.LAZY)
@@ -45,15 +45,15 @@ public class MasterPiece {
     private List<Collection> collection;
 
     @JoinColumn(name = "publisher")
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Publisher> publisher;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Publisher publisher;
 
     @Column(name = "pages")
     private Integer pages;
 
     @JoinColumn(name = "studio")
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Studio> studio;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Studio studio;
 
     @Column(name = "length")
     private Integer length;
@@ -64,7 +64,7 @@ public class MasterPiece {
 
     @JoinColumn(name = "location")
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Location> location;
+    private Location location;
 
     @Column(name = "isbn")
     private Integer isbn;

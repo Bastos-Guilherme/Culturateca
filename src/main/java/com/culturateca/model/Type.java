@@ -2,16 +2,16 @@ package com.culturateca.model;
 
 public enum Type {
 
-    BOOK("book"),
-    HANDOUT("handout"),
-    BLUE_RAY("blue_ray"),
-    CD("cd"),
-    DVD("dvd"),
-    K7("k7"),
-    MAP("map"),
-    MAGAZINE("magazine"),
-    MANGA("manga"),
-    LP("lp");
+    BOOK("Book"),
+    HANDOUT("Handout"),
+    BLUE_RAY("BlueRay"),
+    CD("CD"),
+    DVD("DVD"),
+    K7("K7"),
+    MAP("Map"),
+    MAGAZINE("Magazine"),
+    MANGA("Manga"),
+    LP("LP");
 
     public final String value;
 
