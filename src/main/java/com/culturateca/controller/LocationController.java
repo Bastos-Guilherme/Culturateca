@@ -48,4 +48,12 @@ public class LocationController {
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateLocation(location);
     }
+
+    @PutMapping("/add/into{locationId}/masterpieces{masterPieceIds}/address{addressId}")
+    public Location updateLocationRelations(@RequestParam(value = "locationId", required = true) Long locationId,
+                                            @RequestParam(value = "addressId", required = false) Long addressId,
+                                            @RequestParam(value = "masterPieceIds", required = false) List<Long> masterPieceIds
+    ){
+        return culturatecaService.updateLocationRelations(locationId,addressId,masterPieceIds);
+    }
 }

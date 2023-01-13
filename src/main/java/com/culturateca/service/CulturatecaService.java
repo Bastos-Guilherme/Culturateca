@@ -95,4 +95,22 @@ public interface CulturatecaService {
     void deleteStudioById(Long studioId);
 
     Studio updateStudio(Studio studio);
+
+    Address updateAddressRelations(Long addressId, List<Long> locationIds, Long publisherId, Long studioId);
+
+    Language updateLanguageRelations(Long languageId, List<Long> masterPieceIds);
+
+    Location updateLocationRelations(Long locationId, Long addressId, List<Long> masterPieceIds);
+
+    MasterPiece updateMasterPieceRelations(Long masterPieceId, List<Long> authorIds, List<Long> languageIds, List<Long> categoryIds, List<Long> collectionIds, Long publisherId, Long studioId, Long locationId);
+
+    Publisher updatePublisherRelations(Long publisherId, Long addressId, List<Long> masterPieceIds);
+
+    Studio updateStudioRelations(Long studioId, Long addressId, List<Long> masterPieceIds);
+
+    Author updateAuthorRelations(Long authorId, List<Long> masterPieceIds);
+
+    Category updateCategoryRelations(Long categoryId, List<Long> masterPieceIds);
+
+    Collection updateCollectionRelations(Long collectionId, List<Long> masterPieceIds);
 }

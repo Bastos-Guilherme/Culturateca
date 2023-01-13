@@ -48,4 +48,11 @@ public class CategoryController {
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateCategory(category);
     }
+
+    @PutMapping("/add/into{categoryId}/masterpieces{masterPieceIds}")
+    public Category updateCategoryRelations(@RequestParam(value = "categoryId", required = true) Long categoryId,
+                                              @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
+    ){
+        return culturatecaService.updateCategoryRelations(categoryId,masterPieceIds);
+    }
 }

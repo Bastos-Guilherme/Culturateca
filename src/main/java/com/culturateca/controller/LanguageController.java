@@ -48,4 +48,11 @@ public class LanguageController {
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateLanguage(language);
     }
+
+    @PutMapping("/add/into{languageId}/masterpieces{masterPieceIds}")
+    public Language updateLanguageRelations(@RequestParam(value = "languageId", required = true) Long languageId,
+                                            @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
+    ){
+        return culturatecaService.updateLanguageRelations(languageId,masterPieceIds);
+    }
 }

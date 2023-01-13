@@ -34,5 +34,5 @@ public class Location {
     private String shelf;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "location")
-    private List<MasterPiece> masterpieces;
+    private List<MasterPiece> masterPieces;
 }

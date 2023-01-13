@@ -48,4 +48,11 @@ public class CollectionController {
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateCollection(collection);
     }
+
+    @PutMapping("/add/into{collectionId}/masterpieces{masterPieceIds}")
+    public Collection updateCollectionRelations(@RequestParam(value = "collectionId", required = true) Long collectionId,
+                                              @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
+    ){
+        return culturatecaService.updateCollectionRelations(collectionId,masterPieceIds);
+    }
 }

@@ -48,4 +48,17 @@ public class MasterPieceController {
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateMasterPiece(masterPiece);
     }
+
+    @PutMapping("/add/into{masterPieceId}/authors{authorIds}/languages{languageIds}/categories{categoryIds}/collections{collectionIds}/publisher{publisherId}/studio{studioId}/location{locationId}")
+    public MasterPiece updateMasterPieceRelations(@RequestParam(value = "masterPieceId", required = true) Long masterPieceId,
+                                          @RequestParam(value = "authorIds", required = false) List<Long> authorIds,
+                                          @RequestParam(value = "languageIds", required = false) List<Long> languageIds,
+                                          @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds,
+                                          @RequestParam(value = "collectionIds", required = false) List<Long> collectionIds,
+                                          @RequestParam(value = "publisherId", required = false) Long publisherId,
+                                          @RequestParam(value = "studioId", required = false) Long studioId,
+                                          @RequestParam(value = "locationId", required = false) Long locationId
+    ){
+        return culturatecaService.updateMasterPieceRelations(masterPieceId,authorIds,languageIds,categoryIds,collectionIds,publisherId,studioId,locationId);
+    }
 }

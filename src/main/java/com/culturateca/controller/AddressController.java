@@ -27,7 +27,7 @@ public class AddressController {
     }
 
     @GetMapping("/getById/{addressId}")
-    public Address findAddressById(@RequestParam Long addressId){
+    public Address findAddressById(@RequestParam("addressId") Long addressId){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.findAddressById(addressId);
     }
@@ -39,7 +39,7 @@ public class AddressController {
     }
 
     @DeleteMapping("/delete/{addressId}")
-    public void deleteAddressById(@RequestParam Long addressId){
+    public void deleteAddressById(@RequestParam("addressId") Long addressId){
         culturatecaService.deleteAddressById(addressId);
     }
 
@@ -47,5 +47,14 @@ public class AddressController {
     public Address updateAddress(@Valid @RequestBody Address address){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateAddress(address);
+    }
+
+    @PutMapping("/add/into{addressId}/locations{locationsId}/publisher{publisherId}/studio{studioId}")
+    public Address updateAddressRelations(@RequestParam(value = "addressId", required = true) Long addressId,
+                                          @RequestParam(value = "locationsId", required = false) List<Long> locationIds,
+                                          @RequestParam(value = "publisherId", required = false) Long publisherId,
+                                          @RequestParam(value = "studioId", required = false) Long studioId
+    ){
+        return culturatecaService.updateAddressRelations(addressId,locationIds,publisherId,studioId);
     }
 }

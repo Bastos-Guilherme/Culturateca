@@ -48,4 +48,12 @@ public class StudioController {
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateStudio(studio);
     }
+
+    @PutMapping("/add/into{studioId}/masterpieces{masterPieceIds}/address{addressId}")
+    public Studio updateStudioRelations(@RequestParam(value = "studioId", required = true) Long studioId,
+                                        @RequestParam(value = "addressId", required = false) Long addressId,
+                                        @RequestParam(value = "masterPieceIds", required = false) List<Long> masterPieceIds
+    ){
+        return culturatecaService.updateStudioRelations(studioId,addressId,masterPieceIds);
+    }
 }

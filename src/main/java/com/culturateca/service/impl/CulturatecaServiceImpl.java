@@ -306,4 +306,142 @@ public class CulturatecaServiceImpl implements CulturatecaService {
         //todo check and validations for business usage
         return studioService.save(studio);
     }
+
+    @Override
+    public Address updateAddressRelations(Long addressId, List<Long> locationIds, Long publisherId, Long studioId) {
+
+        //todo check ids existence
+        Address address = addressService.findById(addressId);
+        List<Location> locations = address.getLocations();
+        for (Long id:locationIds) {
+            locations.add(locationService.findById(id));
+        }
+        address.setPublisher(publisherService.findById(publisherId));
+        address.setStudio(studioService.findById(studioId));
+        return addressService.save(address);
+    }
+
+    @Override
+    public Language updateLanguageRelations(Long languageId, List<Long> masterPieceIds) {
+
+        //todo check ids existence
+        Language language = languageService.findById(languageId);
+        List<MasterPiece> masterPieces = language.getMasterPieces();
+        for (Long id:masterPieceIds) {
+            masterPieces.add(masterPieceService.findById(id));
+        }
+        language.setMasterPieces(masterPieces);
+        return languageService.save(language);
+    }
+
+    @Override
+    public Location updateLocationRelations(Long locationId, Long addressId, List<Long> masterPieceIds) {
+
+        //todo check ids existence
+        Location location = locationService.findById(locationId);
+        List<MasterPiece> masterPieces = location.getMasterPieces();
+        for (Long id:masterPieceIds) {
+            masterPieces.add(masterPieceService.findById(id));
+        }
+        location.setMasterPieces(masterPieces);
+        return locationService.save(location);
+    }
+
+    @Override
+    public MasterPiece updateMasterPieceRelations(Long masterPieceId, List<Long> authorIds, List<Long> languageIds, List<Long> categoryIds, List<Long> collectionIds, Long publisherId, Long studioId, Long locationId) {
+
+        //todo check ids existence
+        MasterPiece masterPiece = masterPieceService.findById(masterPieceId);
+        List<Author> authors = masterPiece.getAuthors();
+        for (Long id:authorIds) {
+            authors.add(authorService.findById(id));
+        }
+        List<Language> languages = masterPiece.getLanguages();
+        for (Long id:languageIds) {
+            languages.add(languageService.findById(id));
+        }
+        List<Category> categories = masterPiece.getCategories();
+        for (Long id:categoryIds) {
+            categories.add(categoryService.findById(id));
+        }
+        List<Collection> collections = masterPiece.getCollections();
+        for (Long id:collectionIds) {
+            collections.add(collectionService.findById(id));
+        }
+        masterPiece.setAuthors(authors);
+        masterPiece.setLanguages(languages);
+        masterPiece.setCategories(categories);
+        masterPiece.setCollections(collections);
+        masterPiece.setPublisher(publisherService.findById(publisherId));
+        masterPiece.setStudio(studioService.findById(studioId));
+        masterPiece.setLocation(locationService.findById(locationId));
+        return masterPieceService.save(masterPiece);
+    }
+
+    @Override
+    public Publisher updatePublisherRelations(Long publisherId, Long addressId, List<Long> masterPieceIds) {
+
+        //todo check ids existence
+        Publisher publisher = publisherService.findById(publisherId);
+        List<MasterPiece> masterPieces = publisher.getMasterPieces();
+        for (Long id:masterPieceIds) {
+            masterPieces.add(masterPieceService.findById(id));
+        }
+        publisher.setMasterPieces(masterPieces);
+        publisher.setAddress(addressService.findById(addressId));
+        return publisherService.save(publisher);
+    }
+
+    @Override
+    public Studio updateStudioRelations(Long studioId, Long addressId, List<Long> masterPieceIds) {
+
+        //todo check ids existence
+        Studio studio = studioService.findById(studioId);
+        List<MasterPiece> masterPieces = studio.getMasterPieces();
+        for (Long id:masterPieceIds) {
+            masterPieces.add(masterPieceService.findById(id));
+        }
+        studio.setMasterPieces(masterPieces);
+        studio.setHq(addressService.findById(addressId));
+        return studioService.save(studio);
+    }
+
+    @Override
+    public Author updateAuthorRelations(Long authorId, List<Long> masterPieceIds) {
+
+        //todo check ids existence
+        Author author = authorService.findById(authorId);
+        List<MasterPiece> masterPieces = author.getMasterPieces();
+        for (Long id:masterPieceIds) {
+            masterPieces.add(masterPieceService.findById(id));
+        }
+        author.setMasterPieces(masterPieces);
+        return authorService.save(author);
+    }
+
+    @Override
+    public Category updateCategoryRelations(Long categoryId, List<Long> masterPieceIds) {
+
+        //todo check ids existence
+        Category category = categoryService.findById(categoryId);
+        List<MasterPiece> masterPieces = category.getMasterPieces();
+        for (Long id:masterPieceIds) {
+            masterPieces.add(masterPieceService.findById(id));
+        }
+        category.setMasterPieces(masterPieces);
+        return categoryService.save(category);
+    }
+
+    @Override
+    public Collection updateCollectionRelations(Long collectionId, List<Long> masterPieceIds) {
+
+        //todo check ids existence
+        Collection collection = collectionService.findById(collectionId);
+        List<MasterPiece> masterPieces = collection.getMasterPieces();
+        for (Long id:masterPieceIds) {
+            masterPieces.add(masterPieceService.findById(id));
+        }
+        collection.setMasterPieces(masterPieces);
+        return collectionService.save(collection);
+    }
 }

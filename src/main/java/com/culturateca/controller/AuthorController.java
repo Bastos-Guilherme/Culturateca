@@ -48,4 +48,11 @@ public class AuthorController {
         //todo implement checks and validations for formatting and data type
         return culturatecaService.updateAuthor(author);
     }
+
+    @PutMapping("/add/into{authorId}/masterpieces{masterPieceIds}")
+    public Author updateAuthorRelations(@RequestParam(value = "authorId", required = true) Long authorId,
+                                              @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
+    ){
+        return culturatecaService.updateAuthorRelations(authorId,masterPieceIds);
+    }
 }
