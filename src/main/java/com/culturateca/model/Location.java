@@ -21,7 +21,7 @@ public class Location {
     @Column(name = "location_id", nullable = false, unique = true)
     private Long locationId;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Address address;
 
     @Column(name = "room", nullable = false)
@@ -33,6 +33,6 @@ public class Location {
     @Column(name = "shelf", nullable = false)
     private String shelf;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterpiece;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "location")
+    private List<MasterPiece> masterpieces;
 }

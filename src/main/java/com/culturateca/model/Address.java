@@ -46,8 +46,8 @@ public class Address {
     private String extraInfo;
 
     @JoinColumn(name="addressLocation")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private List<Location> location;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Location> locations;
 
     @JoinColumn(name="addressPublisher")
     @OneToOne(fetch = FetchType.LAZY)

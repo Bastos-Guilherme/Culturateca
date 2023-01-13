@@ -24,6 +24,6 @@ public class Category {
     @Column(name = "category_name", nullable = false)
     private String categoryName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterPiece;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
+    private List<MasterPiece> masterPieces;
 }

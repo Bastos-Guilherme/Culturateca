@@ -27,6 +27,6 @@ public class Language {
     @Column(name = "code_name", nullable = false)
     private String languageCode;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterPiece;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "languages")
+    private List<MasterPiece> masterPieces;
 }

@@ -46,29 +46,29 @@ public class MasterPiece {
 
     @JoinColumn(name = "masterPieceAuthor")
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Author> author;
+    private List<Author> authors;
 
     @JoinColumn(name = "masterPieceLanguage")
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Language> language;
+    private List<Language> languages;
 
     @JoinColumn(name = "masterPieceCategory")
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Category> category;
+    private List<Category> categories;
 
     @JoinColumn(name = "masterPieceCollection")
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Collection> collection;
+    private List<Collection> collections;
 
     @JoinColumn(name = "masterPiecePublisher")
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Publisher publisher;
 
     @JoinColumn(name = "masterPieceStudio")
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Studio studio;
 
     @JoinColumn(name = "masterPieceLocation")
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Location location;
 }

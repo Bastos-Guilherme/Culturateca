@@ -24,6 +24,6 @@ public class Collection {
     @Column(name = "collection_name", nullable = false)
     private String collectionName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterPiece;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "collections")
+    private List<MasterPiece> masterPieces;
 }

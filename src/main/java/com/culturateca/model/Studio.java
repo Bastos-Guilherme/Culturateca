@@ -28,9 +28,9 @@ public class Studio {
     @Column(name = "company_name", nullable = false, unique = true)
     private String companyName;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "studio")
     private Address hq;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterPiece;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "studio")
+    private List<MasterPiece> masterPieces;
 }

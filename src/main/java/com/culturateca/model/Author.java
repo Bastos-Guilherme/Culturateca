@@ -34,6 +34,6 @@ public class Author {
     @Column(name = "nationality", nullable = false)
     private String nationality;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterPiece;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authors")
+    private List<MasterPiece> masterPieces;
 }

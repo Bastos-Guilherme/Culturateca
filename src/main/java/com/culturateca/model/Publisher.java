@@ -25,12 +25,12 @@ public class Publisher {
     @Column(name = "publisher_name", nullable = false)
     private String publisherName;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "publisher")
     private Address address;
 
     @Column(name = "foundation_date", nullable = false)
     private LocalDate foundationDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private List<MasterPiece> masterPiece;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "publisher")
+    private List<MasterPiece> masterPieces;
 }
