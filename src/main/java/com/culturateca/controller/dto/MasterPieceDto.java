@@ -21,13 +21,9 @@ public class MasterPieceDto {
     @NotNull
     @NotEmpty
     private String title;
-    @NotBlank
     @NotNull
-    @NotEmpty
     private LocalDate releaseDate;
-    @NotNull
     private Integer pages;
-    @NotNull
     private Integer length;
     @NotBlank
     @NotNull

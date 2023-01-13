@@ -20,13 +20,9 @@ public class AuthorDto {
     @NotNull
     @NotEmpty
     private String name;
-    @NotBlank
     @NotNull
-    @NotEmpty
     private LocalDate birthDate;
-    @NotBlank
     @NotNull
-    @NotEmpty
     private LocalDate deathDate;
     @NotBlank
     @NotNull

@@ -16,9 +16,7 @@ import java.time.LocalDate;
 public class StudioDto {
 
     private Long studioId;
-    @NotBlank
     @NotNull
-    @NotEmpty
     private LocalDate foundationDate;
     @NotBlank
     @NotNull

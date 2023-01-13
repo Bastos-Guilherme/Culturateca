@@ -20,9 +20,7 @@ public class PublisherDto {
     @NotNull
     @NotEmpty
     private String publisherName;
-    @NotBlank
     @NotNull
-    @NotEmpty
     private LocalDate foundationDate;
 
     @JsonCreator
