@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MasterPieceService {
 
-    MasterPiece saveNew(MasterPiece masterPiece);
+    MasterPiece save(MasterPiece masterPiece);
 
     MasterPiece findById(Long id);
 

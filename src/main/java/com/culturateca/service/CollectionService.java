@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CollectionService {
 
-    Collection saveNew(Collection collection);
+    Collection save(Collection collection);
 
     Collection findById(Long id);
 

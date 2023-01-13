@@ -15,7 +15,7 @@ public class LanguageServiceImpl implements LanguageService {
     LanguageRepository languageRepository;
 
     @Override
-    public Language saveNew(Language language){
+    public Language save(Language language){
         return languageRepository.save(language);
     };
 

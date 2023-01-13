@@ -38,51 +38,51 @@ public class CulturatecaServiceImpl implements CulturatecaService {
     @Override
     public Address saveNewAddress(Address address){
         //todo check and validations for business usage
-        return addressService.saveNewAddress(address);
+        return addressService.save(address);
     }
 
     @Override
     public Address findAddressById(Long addressId){
-        return addressService.findAddressById(addressId);
+        return addressService.findById(addressId);
     }
 
     @Override
     public Author findAuthorById(Long authorId) {
-        return authorService.findAuthorById(authorId);
+        return authorService.findById(authorId);
     }
 
     @Override
     public Category findCategoryById(Long categoryId) {
-        return categoryService.findCategoryById(categoryId);
+        return categoryService.findById(categoryId);
     }
 
     @Override
     public Collection findCollectionById(Long collectionId) {
-        return collectionService.findCollectionById(collectionId);
+        return collectionService.findById(collectionId);
     }
 
     @Override
     public Language findLanguageById(Long languageId) {
-        return languageService.findLanguageById(languageId);
+        return languageService.findById(languageId);
     }
 
     @Override
     public Location findLocationById(Long locationId) {
-        return locationService.findLocationById(locationId);
+        return locationService.findById(locationId);
     }
 
     @Override
     public MasterPiece findMasterPieceById(Long masterPieceId) {
-        return masterPieceService.findMasterPieceById(masterPieceId);
+        return masterPieceService.findById(masterPieceId);
     }
 
     @Override
     public Publisher findPublisherById(Long publisherId) {
-        return publisherService.findPublisherById(publisherId);
+        return publisherService.findById(publisherId);
     }
 
     @Override
     public Studio findStudioById(Long studioId) {
-        return studioService.findStudioById(studioId);
+        return studioService.findById(studioId);
     }
 }

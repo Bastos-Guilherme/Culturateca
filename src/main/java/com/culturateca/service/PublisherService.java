@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PublisherService {
 
-    Publisher saveNew(Publisher publisher);
+    Publisher save(Publisher publisher);
 
     Publisher findById(Long id);
 

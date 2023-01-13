@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AddressService {
 
-    Address saveNew(Address address);
+    Address save(Address address);
 
     Address findById(Long id);
 

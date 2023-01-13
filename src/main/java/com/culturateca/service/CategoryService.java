@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Category saveNew(Category category);
+    Category save(Category category);
 
     Category findById(Long id);
 

@@ -20,9 +20,9 @@ public class CulturatecaController {
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/saveNewAddress")
+    @PostMapping("/saveAddress")
     @Headers("Content-Type: application/json")
-    public Long saveNewAddress(@Valid @RequestBody AddressDto address){
+    public Long saveAddress(@Valid @RequestBody AddressDto address){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewAddress(address.toAddress()).getAddressId();
     }

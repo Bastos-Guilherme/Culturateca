@@ -15,7 +15,7 @@ public class MasterPieceServiceImpl implements MasterPieceService {
     MasterPieceRepository masterPieceRepository;
 
     @Override
-    public MasterPiece saveNew(MasterPiece masterPiece){
+    public MasterPiece save(MasterPiece masterPiece){
         return masterPieceRepository.save(masterPiece);
     };
 

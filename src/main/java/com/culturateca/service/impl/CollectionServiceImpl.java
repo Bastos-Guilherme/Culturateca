@@ -15,7 +15,7 @@ public class CollectionServiceImpl implements CollectionService {
     CollectionRepository collectionRepository;
 
     @Override
-    public Collection saveNew(Collection collection){
+    public Collection save(Collection collection){
         return collectionRepository.save(collection);
     };
 

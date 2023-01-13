@@ -15,7 +15,7 @@ public class StudioServiceImpl implements StudioService {
     StudioRepository studioRepository;
 
     @Override
-    public Studio saveNew(Studio studio){
+    public Studio save(Studio studio){
         return studioRepository.save(studio);
     };
 

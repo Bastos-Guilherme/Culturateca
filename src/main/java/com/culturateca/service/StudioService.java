@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface StudioService {
 
-    Studio saveNew(Studio studio);
+    Studio save(Studio studio);
 
     Studio findById(Long id);
 

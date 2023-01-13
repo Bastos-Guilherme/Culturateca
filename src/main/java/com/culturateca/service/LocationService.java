@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface LocationService {
 
-    Location saveNew(Location location);
+    Location save(Location location);
 
     Location findById(Long id);
 

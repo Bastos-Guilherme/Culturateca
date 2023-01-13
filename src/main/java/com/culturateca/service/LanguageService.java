@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface LanguageService {
 
-    Language saveNew(Language language);
+    Language save(Language language);
 
     Language findById(Long id);
 
