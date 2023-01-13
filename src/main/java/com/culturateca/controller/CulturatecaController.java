@@ -23,6 +23,7 @@ public class CulturatecaController {
     @PostMapping("/saveNewAddress")
     @Headers("Content-Type: application/json")
     public Long saveNewAddress(@Valid @RequestBody AddressDto address){
-        return culturatecaService.saveNewAddress(address.toAddress(culturatecaService)).getAddressId();
+        //todo implement checks and validations for formatting and data type
+        return culturatecaService.saveNewAddress(address.toAddress()).getAddressId();
     }
 }

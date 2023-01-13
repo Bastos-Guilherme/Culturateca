@@ -37,7 +37,7 @@ public class CulturatecaServiceImpl implements CulturatecaService {
 
     @Override
     public Address saveNewAddress(Address address){
-        //todo check for uniqueness into address
+        //todo check and validations for business usage
         return addressService.saveNewAddress(address);
     }
 

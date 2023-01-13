@@ -6,6 +6,8 @@ import com.culturateca.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
@@ -13,5 +15,18 @@ public class AuthorServiceImpl implements AuthorService {
     AuthorRepository authorRepository;
 
     @Override
-    public Author findAuthorById(Long id){return authorRepository.findById(id).get();}
+    public Author saveNew(Author author){
+        return authorRepository.save(author);
+    };
+
+    @Override
+    public Author findById(Long id){
+        return authorRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Author> findAll(){ return authorRepository.findAll(); }
+
+    @Override
+    public void deleteById(long id){ authorRepository.deleteById(id); }
 }

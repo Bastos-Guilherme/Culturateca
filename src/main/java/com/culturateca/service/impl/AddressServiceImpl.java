@@ -6,6 +6,8 @@ import com.culturateca.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AddressServiceImpl implements AddressService {
 
@@ -13,12 +15,18 @@ public class AddressServiceImpl implements AddressService {
     AddressRepository addressRepository;
 
     @Override
-    public Address saveNewAddress(Address address){
+    public Address saveNew(Address address){
         return addressRepository.save(address);
     };
 
     @Override
-    public Address findAddressById(Long id){
+    public Address findById(Long id){
         return addressRepository.findById(id).get();
     }
+
+    @Override
+    public List<Address> findAll(){ return addressRepository.findAll(); }
+
+    @Override
+    public void deleteById(long id){ addressRepository.deleteById(id); }
 }

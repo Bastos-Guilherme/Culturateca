@@ -6,6 +6,8 @@ import com.culturateca.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LanguageServiceImpl implements LanguageService {
 
@@ -13,5 +15,18 @@ public class LanguageServiceImpl implements LanguageService {
     LanguageRepository languageRepository;
 
     @Override
-    public Language findLanguageById(Long id){return languageRepository.findById(id).get();}
+    public Language saveNew(Language language){
+        return languageRepository.save(language);
+    };
+
+    @Override
+    public Language findById(Long id){
+        return languageRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Language> findAll(){ return languageRepository.findAll(); }
+
+    @Override
+    public void deleteById(long id){ languageRepository.deleteById(id); }
 }

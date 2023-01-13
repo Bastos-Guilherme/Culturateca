@@ -2,9 +2,15 @@ package com.culturateca.service;
 
 import com.culturateca.model.Address;
 
+import java.util.List;
+
 public interface AddressService {
 
-    Address saveNewAddress(Address address);
+    Address saveNew(Address address);
 
-    Address findAddressById(Long id);
+    Address findById(Long id);
+
+    List<Address> findAll();
+
+    void deleteById(long id);
 }

@@ -2,7 +2,15 @@ package com.culturateca.service;
 
 import com.culturateca.model.Language;
 
+import java.util.List;
+
 public interface LanguageService {
 
-    Language findLanguageById(Long id);
+    Language saveNew(Language language);
+
+    Language findById(Long id);
+
+    List<Language> findAll();
+
+    void deleteById(long id);
 }
