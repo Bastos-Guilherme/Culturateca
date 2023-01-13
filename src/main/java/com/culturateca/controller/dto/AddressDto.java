@@ -1,20 +1,11 @@
 package com.culturateca.controller.dto;
 
 import com.culturateca.model.Address;
-import com.culturateca.model.Location;
-import com.culturateca.model.Publisher;
-import com.culturateca.model.Studio;
 import com.culturateca.service.CulturatecaService;
-import com.culturateca.service.LocationService;
-import com.culturateca.service.PublisherService;
-import com.culturateca.service.StudioService;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -49,9 +40,6 @@ public class AddressDto {
     @NotEmpty
     private String country;
     private String extraInfo;
-    private LocationDto location;
-    private PublisherDto publisher;
-    private StudioDto studio;
 
     @JsonCreator
     public AddressDto(
@@ -63,10 +51,7 @@ public class AddressDto {
             @JsonProperty("neighborhood") String neighborhood,
             @JsonProperty("city") String city,
             @JsonProperty("country") String country,
-            @JsonProperty("extraInfo") String extraInfo,
-            @JsonProperty("location") LocationDto location,
-            @JsonProperty("publisher") PublisherDto publisher,
-            @JsonProperty("studio") StudioDto studio
+            @JsonProperty("extraInfo") String extraInfo
     ){
         this.setAddressId(addressId);
         this.setZipCode(zipCode);
@@ -77,9 +62,6 @@ public class AddressDto {
         this.setState(state);
         this.setCountry(country);
         this.setExtraInfo(extraInfo);
-        this.setLocation(location);
-        this.setPublisher(publisher);
-        this.setStudio(studio);
     }
 
     public static AddressDto toAddressDto(Address address, CulturatecaService culturatecaService) {
@@ -92,45 +74,24 @@ public class AddressDto {
                     address.getNeighborhood(),
                     address.getCity(),
                     address.getCountry(),
-                    address.getExtraInfo(),
-                    null,
-                    null,
-                    null
+                    address.getExtraInfo()
             );
     }
 
-    public Address toAddress(CulturatecaService culturatecaService){
-        Address address = new Address();
-        address.setAddressId(this.getAddressId());
-        address.setZipCode(this.getZipCode());
-        address.setNumber(this.getNumber());
-        address.setStreet(this.getStreet());
-        address.setNeighborhood(this.getNeighborhood());
-        address.setCity(this.getCity());
-        address.setState(this.getState());
-        address.setCountry(this.getCountry());
-        address.setExtraInfo(this.getExtraInfo());
-        if (this.getLocation() == null){
-            address.setLocation(null);
-        } else if (this.getLocation().getLocationId() == null) {
-            address.setLocation(this.getLocation().toLocation(culturatecaService));
-        } else {
-            address.setLocation(culturatecaService.findLocationById(this.getLocation().getLocationId()));
-        }
-        if (this.getPublisher() == null){
-            address.setPublisher(null);
-        } else if (this.getPublisher().getPublisherId() == null) {
-            address.setPublisher(this.getPublisher().toPublisher(culturatecaService));
-        } else {
-            address.setPublisher(culturatecaService.findPublisherById(this.getPublisher().getPublisherId()));
-        }
-        if (this.getStudio() == null){
-            address.setStudio(null);
-        } else if (this.getStudio().getStudioId() == null) {
-            address.setStudio(this.getStudio().toStudio(culturatecaService));
-        } else {
-            address.setStudio(culturatecaService.findStudioById(this.getStudio().getStudioId()));
-        }
-        return address;
+    public Address toAddress() {
+        return new Address(
+                this.getAddressId(),
+                this.getZipCode(),
+                this.getNumber(),
+                this.getStreet(),
+                this.getNeighborhood(),
+                this.getCity(),
+                this.getState(),
+                this.getCountry(),
+                this.getExtraInfo(),
+                null,
+                null,
+                null
+        );
     }
 }

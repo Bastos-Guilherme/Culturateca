@@ -1,19 +1,15 @@
 package com.culturateca.controller.dto;
 
 import com.culturateca.model.Author;
-import com.culturateca.model.MasterPiece;
-import com.culturateca.service.CulturatecaService;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Getter
 @Setter
@@ -36,7 +32,6 @@ public class AuthorDto {
     @NotNull
     @NotEmpty
     private String nationality;
-    private List<MasterPieceDto> masterPieces;
 
     @JsonCreator
     public AuthorDto(
@@ -44,15 +39,13 @@ public class AuthorDto {
             @JsonProperty("name") String name,
             @JsonProperty("birthDate") LocalDate birthDate,
             @JsonProperty("deathDate") LocalDate deathDate,
-            @JsonProperty("nationality") String nationality,
-            @JsonProperty("masterPieces") List<MasterPieceDto> masterPieces
+            @JsonProperty("nationality") String nationality
     ){
         this.setAuthorId(authorId);
         this.setName(name);
         this.setBirthDate(birthDate);
         this.setDeathDate(deathDate);
         this.setNationality(nationality);
-        this.setMasterPieces(masterPieces);
     }
 
     public static AuthorDto toAuthorDto(Author author){
@@ -61,30 +54,18 @@ public class AuthorDto {
                 author.getName(),
                 author.getBirthDate(),
                 author.getDeathDate(),
-                author.getNationality(),
-                null
+                author.getNationality()
         );
     }
 
-    public Author toAuthor(CulturatecaService culturatecaService){
-        List<MasterPiece> listMasterPieces = null;
-        if (this.getMasterPieces() != null) {
-            List<MasterPieceDto> listMasterPiecesDto = this.getMasterPieces();
-            for (MasterPieceDto m : listMasterPiecesDto) {
-                if (m.getMasterPieceId() == null) {
-                    listMasterPieces.add(m.toMasterPiece(culturatecaService));
-                } else {
-                    listMasterPieces.add(culturatecaService.findMasterPieceById(m.getMasterPieceId()));
-                }
-            }
-        }
+    public Author toAuthor(){
         return new Author(
                 this.getAuthorId(),
                 this.getName(),
                 this.getBirthDate(),
                 this.getDeathDate(),
                 this.getNationality(),
-                listMasterPieces
+                null
         );
     }
 }
