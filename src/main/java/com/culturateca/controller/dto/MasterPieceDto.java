@@ -1,6 +1,7 @@
 package com.culturateca.controller.dto;
 
 import com.culturateca.model.MasterPiece;
+import com.culturateca.model.Type;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -75,19 +76,19 @@ public class MasterPieceDto {
         return new MasterPiece(
                 this.getMasterPieceId(),
                 this.getTitle(),
-                null,
-                null,
                 this.getReleaseDate(),
-                null,
-                null,
-                null,
                 this.getPages(),
-                null,
                 this.getLength(),
-                null,
-                null,
+                Type.valueOf(this.getType()),
                 this.getIsbn(),
-                this.getEdition()
+                this.getEdition(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
         );
     }
 }
