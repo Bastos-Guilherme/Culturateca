@@ -25,35 +25,11 @@ public class MasterPiece {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @JoinColumn(name = "author")
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Author> author;
-
-    @JoinColumn(name = "language")
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Language> language;
-
     @Column(name = "release_date", nullable = false)
     private LocalDate releaseDate;
 
-    @JoinColumn(name = "category")
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Category> category;
-
-    @JoinColumn(name = "collection")
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Collection> collection;
-
-    @JoinColumn(name = "publisher")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Publisher publisher;
-
     @Column(name = "pages")
     private Integer pages;
-
-    @JoinColumn(name = "studio")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Studio studio;
 
     @Column(name = "length")
     private Integer length;
@@ -62,13 +38,37 @@ public class MasterPiece {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @JoinColumn(name = "location")
-    @OneToMany(fetch = FetchType.LAZY)
-    private Location location;
-
     @Column(name = "isbn")
     private Integer isbn;
 
     @Column(name = "edition")
     private Integer edition;
+
+    @JoinColumn(name = "masterPieceAuthor")
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Author> author;
+
+    @JoinColumn(name = "masterPieceLanguage")
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Language> language;
+
+    @JoinColumn(name = "masterPieceCategory")
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Category> category;
+
+    @JoinColumn(name = "masterPieceCollection")
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Collection> collection;
+
+    @JoinColumn(name = "masterPiecePublisher")
+    @OneToMany(fetch = FetchType.LAZY)
+    private Publisher publisher;
+
+    @JoinColumn(name = "masterPieceStudio")
+    @OneToMany(fetch = FetchType.LAZY)
+    private Studio studio;
+
+    @JoinColumn(name = "masterPieceLocation")
+    @OneToMany(fetch = FetchType.LAZY)
+    private Location location;
 }

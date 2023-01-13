@@ -31,6 +31,6 @@ public class Studio {
     @OneToOne(fetch = FetchType.LAZY)
     private Address hq;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private List<MasterPiece> masterPiece;
 }

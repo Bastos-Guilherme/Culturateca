@@ -31,6 +31,6 @@ public class Publisher {
     @Column(name = "foundation_date", nullable = false)
     private LocalDate foundationDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private List<MasterPiece> masterPiece;
 }

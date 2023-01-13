@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -44,12 +45,15 @@ public class Address {
     @Column(name = "extra_info")
     private String extraInfo;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Location location;
+    @JoinColumn(name="addressLocation")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private List<Location> location;
 
+    @JoinColumn(name="addressPublisher")
     @OneToOne(fetch = FetchType.LAZY)
     private Publisher publisher;
 
+    @JoinColumn(name="addressStudio")
     @OneToOne(fetch = FetchType.LAZY)
     private Studio studio;
 }
