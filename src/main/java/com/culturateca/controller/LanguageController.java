@@ -23,19 +23,16 @@ public class LanguageController {
     @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveLanguage(@Valid @RequestBody LanguageDto language){
-        //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewLanguage(language.toLanguage()).getLanguageId();
     }
 
     @GetMapping("/{languageId}")
     public LanguageDto findLanguageById(@RequestParam Long languageId){
-        //todo implement checks and validations for formatting and data type
         return LanguageDto.toLanguageDto(culturatecaService.findLanguageById(languageId));
     }
 
     @GetMapping()
     public List<LanguageDto> findAllLanguages(){
-        //todo implement checks and validations for formatting and data type
         List<Language> languages = culturatecaService.findAllLanguages();
         List<LanguageDto> languageDtos = new ArrayList<LanguageDto>();
         for (Language language:languages) {
@@ -51,7 +48,6 @@ public class LanguageController {
 
     @PatchMapping()
     public LanguageDto updateLanguage(@Valid @RequestBody Language language){
-        //todo implement checks and validations for formatting and data type
         return LanguageDto.toLanguageDto(culturatecaService.updateLanguage(language));
     }
 

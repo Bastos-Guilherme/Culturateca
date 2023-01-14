@@ -23,19 +23,16 @@ public class CategoryController {
     @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveCategory(@Valid @RequestBody CategoryDto category){
-        //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewCategory(category.toCategory()).getCategoryId();
     }
 
     @GetMapping("/{categoryId}")
     public CategoryDto findCategoryById(@RequestParam Long categoryId){
-        //todo implement checks and validations for formatting and data type
         return CategoryDto.toCategoryDto(culturatecaService.findCategoryById(categoryId));
     }
 
     @GetMapping()
     public List<CategoryDto> findAllCategories(){
-        //todo implement checks and validations for formatting and data type
         List<Category> categories = culturatecaService.findAllCategories();
         List<CategoryDto> categoryDtos = new ArrayList<CategoryDto>();
         for (Category category:categories) {
@@ -51,7 +48,6 @@ public class CategoryController {
 
     @PatchMapping()
     public CategoryDto updateCategory(@Valid @RequestBody Category category){
-        //todo implement checks and validations for formatting and data type
         return CategoryDto.toCategoryDto(culturatecaService.updateCategory(category));
     }
 

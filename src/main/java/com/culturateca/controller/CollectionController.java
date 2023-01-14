@@ -23,19 +23,16 @@ public class CollectionController {
     @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveCollection(@Valid @RequestBody CollectionDto collection){
-        //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewCollection(collection.toCollection()).getCollectionId();
     }
 
     @GetMapping("/{collectionId}")
     public CollectionDto findCollectionById(@RequestParam Long collectionId){
-        //todo implement checks and validations for formatting and data type
         return CollectionDto.toCollectionDto(culturatecaService.findCollectionById(collectionId));
     }
 
     @GetMapping()
     public List<CollectionDto> findAllCollections(){
-        //todo implement checks and validations for formatting and data type
         List<Collection> collections = culturatecaService.findAllCollections();
         List<CollectionDto> collectionDtos = new ArrayList<CollectionDto>();
         for (Collection collection:collections) {
@@ -51,7 +48,6 @@ public class CollectionController {
 
     @PatchMapping()
     public CollectionDto updateCollection(@Valid @RequestBody Collection collection){
-        //todo implement checks and validations for formatting and data type
         return CollectionDto.toCollectionDto(culturatecaService.updateCollection(collection));
     }
 

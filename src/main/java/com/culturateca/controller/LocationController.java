@@ -23,19 +23,16 @@ public class LocationController {
     @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveLocation(@Valid @RequestBody LocationDto location){
-        //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewLocation(location.toLocation()).getLocationId();
     }
 
     @GetMapping("/{locationId}")
     public LocationDto findLocationById(@RequestParam Long locationId){
-        //todo implement checks and validations for formatting and data type
         return LocationDto.toLocationDto(culturatecaService.findLocationById(locationId));
     }
 
     @GetMapping()
     public List<LocationDto> findAllLocations(){
-        //todo implement checks and validations for formatting and data type
         List<Location> locations = culturatecaService.findAllLocations();
         List<LocationDto> locationDtos = new ArrayList<LocationDto>();
         for (Location location:locations) {
@@ -51,7 +48,6 @@ public class LocationController {
 
     @PatchMapping()
     public LocationDto updateLocation(@Valid @RequestBody Location location){
-        //todo implement checks and validations for formatting and data type
         return LocationDto.toLocationDto(culturatecaService.updateLocation(location));
     }
 

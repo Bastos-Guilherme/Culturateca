@@ -23,19 +23,16 @@ public class StudioController {
     @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveStudio(@Valid @RequestBody StudioDto studio){
-        //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewStudio(studio.toStudio()).getStudioId();
     }
 
     @GetMapping("/{studioId}")
     public StudioDto findStudioById(@RequestParam Long studioId){
-        //todo implement checks and validations for formatting and data type
         return StudioDto.toStudioDto(culturatecaService.findStudioById(studioId));
     }
 
     @GetMapping()
     public List<StudioDto> findAllStudios(){
-        //todo implement checks and validations for formatting and data type
         List<Studio> studios = culturatecaService.findAllStudios();
         List<StudioDto> studioDtos = new ArrayList<StudioDto>();
         for (Studio studio:studios) {
@@ -51,7 +48,6 @@ public class StudioController {
 
     @PatchMapping()
     public StudioDto updateStudio(@Valid @RequestBody Studio studio){
-        //todo implement checks and validations for formatting and data type
         return StudioDto.toStudioDto(culturatecaService.updateStudio(studio));
     }
 

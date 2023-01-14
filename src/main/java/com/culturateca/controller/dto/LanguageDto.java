@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class LanguageDto {
     @NotBlank
     @NotNull
     @NotEmpty
+    @Pattern(regexp = "(\\w{2}-\\w{2})|(\\w{1}-\\w{2})|(\\w{3}-\\w{2})|(\\w{1})|(\\w{2})|(\\w{3})", message = "Please use ISO code formatting")
     private String codeName;
 
     @JsonCreator

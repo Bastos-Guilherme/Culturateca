@@ -23,19 +23,16 @@ public class AddressController {
     @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveAddress(@Valid @RequestBody AddressDto address){
-        //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewAddress(address.toAddress()).getAddressId();
     }
 
     @GetMapping("/{addressId}")
     public AddressDto findAddressById(@RequestParam("addressId") Long addressId){
-        //todo implement checks and validations for formatting and data type
         return AddressDto.toAddressDto(culturatecaService.findAddressById(addressId));
     }
 
     @GetMapping()
     public List<AddressDto> findAllAddresses(){
-        //todo implement checks and validations for formatting and data type
         List<Address> addresses = culturatecaService.findAllAddresses();
         List<AddressDto> addressDtos = new ArrayList<AddressDto>();
         for (Address address:addresses) {
@@ -51,7 +48,6 @@ public class AddressController {
 
     @PatchMapping()
     public AddressDto updateAddress(@Valid @RequestBody Address address){
-        //todo implement checks and validations for formatting and data type
         return AddressDto.toAddressDto(culturatecaService.updateAddress(address));
     }
 

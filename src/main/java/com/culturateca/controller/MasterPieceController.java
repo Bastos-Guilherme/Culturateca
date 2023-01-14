@@ -23,19 +23,16 @@ public class MasterPieceController {
     @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveMasterPiece(@Valid @RequestBody MasterPieceDto masterPiece){
-        //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewMasterPiece(masterPiece.toMasterPiece()).getMasterPieceId();
     }
 
     @GetMapping("/{masterPieceId}")
     public MasterPieceDto findMasterPieceById(@RequestParam Long masterPieceId){
-        //todo implement checks and validations for formatting and data type
         return MasterPieceDto.toMasterPieceDto(culturatecaService.findMasterPieceById(masterPieceId));
     }
 
     @GetMapping()
     public List<MasterPieceDto> findAllMasterPieces(){
-        //todo implement checks and validations for formatting and data type
         List<MasterPiece> masterPieces = culturatecaService.findAllMasterPieces();
         List<MasterPieceDto> masterPieceDtos = new ArrayList<MasterPieceDto>();
         for (MasterPiece masterPiece:masterPieces) {
@@ -51,7 +48,6 @@ public class MasterPieceController {
 
     @PutMapping()
     public MasterPieceDto updateMasterPiece(@Valid @RequestBody MasterPiece masterPiece){
-        //todo implement checks and validations for formatting and data type
         return MasterPieceDto.toMasterPieceDto(culturatecaService.updateMasterPiece(masterPiece));
     }
 

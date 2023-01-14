@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ public class AddressDto {
     @NotBlank
     @NotNull
     @NotEmpty
+    @Pattern(regexp = "([0-9]{5}[\\s-]{1}[0-9]{3})|([0-9]{8})", message = "Must be \'00000-000\' or \'00000 000\' or \'00000000\'.")
     private String zipCode;
     @NotNull
     private Integer number;
