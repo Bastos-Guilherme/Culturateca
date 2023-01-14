@@ -1,7 +1,6 @@
 package com.culturateca.controller.dto;
 
 import com.culturateca.model.Address;
-import com.culturateca.service.CulturatecaService;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -64,7 +63,7 @@ public class AddressDto {
         this.setExtraInfo(extraInfo);
     }
 
-    public static AddressDto toAddressDto(Address address, CulturatecaService culturatecaService) {
+    public static AddressDto toAddressDto(Address address) {
             return new AddressDto(
                     address.getAddressId(),
                     address.getState(),

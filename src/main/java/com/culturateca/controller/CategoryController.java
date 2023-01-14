@@ -9,50 +9,56 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/category/")
+@RequestMapping("/category")
 public class CategoryController {
 
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/new")
+    @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveCategory(@Valid @RequestBody CategoryDto category){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewCategory(category.toCategory()).getCategoryId();
     }
 
-    @GetMapping("/getById/{categoryId}")
-    public Category findCategoryById(@RequestParam Long categoryId){
+    @GetMapping("/{categoryId}")
+    public CategoryDto findCategoryById(@RequestParam Long categoryId){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findCategoryById(categoryId);
+        return CategoryDto.toCategoryDto(culturatecaService.findCategoryById(categoryId));
     }
 
-    @GetMapping("/getAll")
-    public List<Category> findAllCategoryes(){
+    @GetMapping()
+    public List<CategoryDto> findAllCategories(){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAllCategories();
+        List<Category> categories = culturatecaService.findAllCategories();
+        List<CategoryDto> categoryDtos = new ArrayList<CategoryDto>();
+        for (Category category:categories) {
+            categoryDtos.add(CategoryDto.toCategoryDto(category));
+        }
+        return categoryDtos;
     }
 
-    @DeleteMapping("/delete/{categoryId}")
+    @DeleteMapping("/{categoryId}")
     public void deleteCategoryById(@RequestParam Long categoryId){
         culturatecaService.deleteCategoryById(categoryId);
     }
 
-    @PutMapping("/update")
-    public Category updateCategory(@Valid @RequestBody Category category){
+    @PatchMapping()
+    public CategoryDto updateCategory(@Valid @RequestBody Category category){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.updateCategory(category);
+        return CategoryDto.toCategoryDto(culturatecaService.updateCategory(category));
     }
 
-    @PutMapping("/add/into{categoryId}/masterpieces{masterPieceIds}")
-    public Category updateCategoryRelations(@RequestParam(value = "categoryId", required = true) Long categoryId,
+    @PutMapping("/{categoryId}/masterpieces{masterPieceIds}")
+    public CategoryDto updateCategoryRelations(@RequestParam(value = "categoryId", required = true) Long categoryId,
                                               @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
     ){
-        return culturatecaService.updateCategoryRelations(categoryId,masterPieceIds);
+        return CategoryDto.toCategoryDto(culturatecaService.updateCategoryRelations(categoryId,masterPieceIds));
     }
 }

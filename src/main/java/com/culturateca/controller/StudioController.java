@@ -9,51 +9,57 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/studio/")
+@RequestMapping("/studio")
 public class StudioController {
 
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/new")
+    @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveStudio(@Valid @RequestBody StudioDto studio){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewStudio(studio.toStudio()).getStudioId();
     }
 
-    @GetMapping("/getById/{studioId}")
-    public Studio findStudioById(@RequestParam Long studioId){
+    @GetMapping("/{studioId}")
+    public StudioDto findStudioById(@RequestParam Long studioId){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findStudioById(studioId);
+        return StudioDto.toStudioDto(culturatecaService.findStudioById(studioId));
     }
 
-    @GetMapping("/getAll")
-    public List<Studio> findAllStudioes(){
+    @GetMapping()
+    public List<StudioDto> findAllStudios(){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAllStudios();
+        List<Studio> studios = culturatecaService.findAllStudios();
+        List<StudioDto> studioDtos = new ArrayList<StudioDto>();
+        for (Studio studio:studios) {
+            studioDtos.add(StudioDto.toStudioDto(studio));
+        }
+        return studioDtos;
     }
 
-    @DeleteMapping("/delete/{studioId}")
+    @DeleteMapping("/{studioId}")
     public void deleteStudioById(@RequestParam Long studioId){
         culturatecaService.deleteStudioById(studioId);
     }
 
-    @PutMapping("/update")
-    public Studio updateStudio(@Valid @RequestBody Studio studio){
+    @PatchMapping()
+    public StudioDto updateStudio(@Valid @RequestBody Studio studio){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.updateStudio(studio);
+        return StudioDto.toStudioDto(culturatecaService.updateStudio(studio));
     }
 
-    @PutMapping("/add/into{studioId}/masterpieces{masterPieceIds}/address{addressId}")
-    public Studio updateStudioRelations(@RequestParam(value = "studioId", required = true) Long studioId,
-                                        @RequestParam(value = "addressId", required = false) Long addressId,
-                                        @RequestParam(value = "masterPieceIds", required = false) List<Long> masterPieceIds
+    @PutMapping("/{studioId}/masterpieces{masterPieceIds}/address{addressId}")
+    public StudioDto updateStudioRelations(@RequestParam(value = "studioId", required = true) Long studioId,
+                                           @RequestParam(value = "addressId", required = false) Long addressId,
+                                           @RequestParam(value = "masterPieceIds", required = false) List<Long> masterPieceIds
     ){
-        return culturatecaService.updateStudioRelations(studioId,addressId,masterPieceIds);
+        return StudioDto.toStudioDto(culturatecaService.updateStudioRelations(studioId,addressId,masterPieceIds));
     }
 }

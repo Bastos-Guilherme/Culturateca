@@ -9,50 +9,56 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/collection/")
+@RequestMapping("/collection")
 public class CollectionController {
 
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/new")
+    @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveCollection(@Valid @RequestBody CollectionDto collection){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewCollection(collection.toCollection()).getCollectionId();
     }
 
-    @GetMapping("/getById/{collectionId}")
-    public Collection findCollectionById(@RequestParam Long collectionId){
+    @GetMapping("/{collectionId}")
+    public CollectionDto findCollectionById(@RequestParam Long collectionId){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findCollectionById(collectionId);
+        return CollectionDto.toCollectionDto(culturatecaService.findCollectionById(collectionId));
     }
 
-    @GetMapping("/getAll")
-    public List<Collection> findAllCollectiones(){
+    @GetMapping()
+    public List<CollectionDto> findAllCollections(){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAllCollections();
+        List<Collection> collections = culturatecaService.findAllCollections();
+        List<CollectionDto> collectionDtos = new ArrayList<CollectionDto>();
+        for (Collection collection:collections) {
+            collectionDtos.add(CollectionDto.toCollectionDto(collection));
+        }
+        return collectionDtos;
     }
 
-    @DeleteMapping("/delete/{collectionId}")
+    @DeleteMapping("/{collectionId}")
     public void deleteCollectionById(@RequestParam Long collectionId){
         culturatecaService.deleteCollectionById(collectionId);
     }
 
-    @PutMapping("/update")
-    public Collection updateCollection(@Valid @RequestBody Collection collection){
+    @PatchMapping()
+    public CollectionDto updateCollection(@Valid @RequestBody Collection collection){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.updateCollection(collection);
+        return CollectionDto.toCollectionDto(culturatecaService.updateCollection(collection));
     }
 
-    @PutMapping("/add/into{collectionId}/masterpieces{masterPieceIds}")
-    public Collection updateCollectionRelations(@RequestParam(value = "collectionId", required = true) Long collectionId,
-                                              @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
+    @PutMapping("/{collectionId}/masterpieces{masterPieceIds}")
+    public CollectionDto updateCollectionRelations(@RequestParam(value = "collectionId", required = true) Long collectionId,
+                                                   @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
     ){
-        return culturatecaService.updateCollectionRelations(collectionId,masterPieceIds);
+        return CollectionDto.toCollectionDto(culturatecaService.updateCollectionRelations(collectionId,masterPieceIds));
     }
 }

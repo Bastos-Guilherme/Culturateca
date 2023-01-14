@@ -9,52 +9,58 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/address/")
+@RequestMapping("/address")
 public class AddressController {
 
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/new")
+    @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveAddress(@Valid @RequestBody AddressDto address){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewAddress(address.toAddress()).getAddressId();
     }
 
-    @GetMapping("/getById/{addressId}")
-    public Address findAddressById(@RequestParam("addressId") Long addressId){
+    @GetMapping("/{addressId}")
+    public AddressDto findAddressById(@RequestParam("addressId") Long addressId){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAddressById(addressId);
+        return AddressDto.toAddressDto(culturatecaService.findAddressById(addressId));
     }
 
-    @GetMapping("/getAll")
-    public List<Address> findAllAddresses(){
+    @GetMapping()
+    public List<AddressDto> findAllAddresses(){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAllAddresses();
+        List<Address> addresses = culturatecaService.findAllAddresses();
+        List<AddressDto> addressDtos = new ArrayList<AddressDto>();
+        for (Address address:addresses) {
+            addressDtos.add(AddressDto.toAddressDto(address));
+        }
+        return addressDtos;
     }
 
-    @DeleteMapping("/delete/{addressId}")
+    @DeleteMapping("/{addressId}")
     public void deleteAddressById(@RequestParam("addressId") Long addressId){
         culturatecaService.deleteAddressById(addressId);
     }
 
-    @PutMapping("/update")
-    public Address updateAddress(@Valid @RequestBody Address address){
+    @PatchMapping()
+    public AddressDto updateAddress(@Valid @RequestBody Address address){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.updateAddress(address);
+        return AddressDto.toAddressDto(culturatecaService.updateAddress(address));
     }
 
-    @PutMapping("/add/into{addressId}/locations{locationsId}/publisher{publisherId}/studio{studioId}")
-    public Address updateAddressRelations(@RequestParam(value = "addressId", required = true) Long addressId,
+    @PutMapping("/{addressId}/locations{locationsId}/publisher{publisherId}/studio{studioId}")
+    public AddressDto updateAddressRelations(@RequestParam(value = "addressId", required = true) Long addressId,
                                           @RequestParam(value = "locationsId", required = false) List<Long> locationIds,
                                           @RequestParam(value = "publisherId", required = false) Long publisherId,
                                           @RequestParam(value = "studioId", required = false) Long studioId
     ){
-        return culturatecaService.updateAddressRelations(addressId,locationIds,publisherId,studioId);
+        return AddressDto.toAddressDto(culturatecaService.updateAddressRelations(addressId,locationIds,publisherId,studioId));
     }
 }

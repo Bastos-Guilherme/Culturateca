@@ -9,48 +9,54 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/masterPiece/")
+@RequestMapping("/masterPiece")
 public class MasterPieceController {
 
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/new")
+    @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveMasterPiece(@Valid @RequestBody MasterPieceDto masterPiece){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewMasterPiece(masterPiece.toMasterPiece()).getMasterPieceId();
     }
 
-    @GetMapping("/getById/{masterPieceId}")
-    public MasterPiece findMasterPieceById(@RequestParam Long masterPieceId){
+    @GetMapping("/{masterPieceId}")
+    public MasterPieceDto findMasterPieceById(@RequestParam Long masterPieceId){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findMasterPieceById(masterPieceId);
+        return MasterPieceDto.toMasterPieceDto(culturatecaService.findMasterPieceById(masterPieceId));
     }
 
-    @GetMapping("/getAll")
-    public List<MasterPiece> findAllMasterPiecees(){
+    @GetMapping()
+    public List<MasterPieceDto> findAllMasterPieces(){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAllMasterPieces();
+        List<MasterPiece> masterPieces = culturatecaService.findAllMasterPieces();
+        List<MasterPieceDto> masterPieceDtos = new ArrayList<MasterPieceDto>();
+        for (MasterPiece masterPiece:masterPieces) {
+            masterPieceDtos.add(MasterPieceDto.toMasterPieceDto(masterPiece));
+        }
+        return masterPieceDtos;
     }
 
-    @DeleteMapping("/delete/{masterPieceId}")
+    @DeleteMapping("/{masterPieceId}")
     public void deleteMasterPieceById(@RequestParam Long masterPieceId){
         culturatecaService.deleteMasterPieceById(masterPieceId);
     }
 
-    @PutMapping("/update")
-    public MasterPiece updateMasterPiece(@Valid @RequestBody MasterPiece masterPiece){
+    @PutMapping()
+    public MasterPieceDto updateMasterPiece(@Valid @RequestBody MasterPiece masterPiece){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.updateMasterPiece(masterPiece);
+        return MasterPieceDto.toMasterPieceDto(culturatecaService.updateMasterPiece(masterPiece));
     }
 
-    @PutMapping("/add/into{masterPieceId}/authors{authorIds}/languages{languageIds}/categories{categoryIds}/collections{collectionIds}/publisher{publisherId}/studio{studioId}/location{locationId}")
-    public MasterPiece updateMasterPieceRelations(@RequestParam(value = "masterPieceId", required = true) Long masterPieceId,
+    @PutMapping("/{masterPieceId}/authors{authorIds}/languages{languageIds}/categories{categoryIds}/collections{collectionIds}/publisher{publisherId}/studio{studioId}/location{locationId}")
+    public MasterPieceDto updateMasterPieceRelations(@RequestParam(value = "masterPieceId", required = true) Long masterPieceId,
                                           @RequestParam(value = "authorIds", required = false) List<Long> authorIds,
                                           @RequestParam(value = "languageIds", required = false) List<Long> languageIds,
                                           @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds,
@@ -59,6 +65,6 @@ public class MasterPieceController {
                                           @RequestParam(value = "studioId", required = false) Long studioId,
                                           @RequestParam(value = "locationId", required = false) Long locationId
     ){
-        return culturatecaService.updateMasterPieceRelations(masterPieceId,authorIds,languageIds,categoryIds,collectionIds,publisherId,studioId,locationId);
+        return MasterPieceDto.toMasterPieceDto(culturatecaService.updateMasterPieceRelations(masterPieceId,authorIds,languageIds,categoryIds,collectionIds,publisherId,studioId,locationId));
     }
 }

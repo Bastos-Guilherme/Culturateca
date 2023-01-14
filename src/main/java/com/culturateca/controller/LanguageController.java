@@ -9,50 +9,56 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/language/")
+@RequestMapping("/language")
 public class LanguageController {
 
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/new")
+    @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveLanguage(@Valid @RequestBody LanguageDto language){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewLanguage(language.toLanguage()).getLanguageId();
     }
 
-    @GetMapping("/getById/{languageId}")
-    public Language findLanguageById(@RequestParam Long languageId){
+    @GetMapping("/{languageId}")
+    public LanguageDto findLanguageById(@RequestParam Long languageId){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findLanguageById(languageId);
+        return LanguageDto.toLanguageDto(culturatecaService.findLanguageById(languageId));
     }
 
-    @GetMapping("/getAll")
-    public List<Language> findAllLanguagees(){
+    @GetMapping()
+    public List<LanguageDto> findAllLanguages(){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAllLanguages();
+        List<Language> languages = culturatecaService.findAllLanguages();
+        List<LanguageDto> languageDtos = new ArrayList<LanguageDto>();
+        for (Language language:languages) {
+            languageDtos.add(LanguageDto.toLanguageDto(language));
+        }
+        return languageDtos;
     }
 
-    @DeleteMapping("/delete/{languageId}")
+    @DeleteMapping("/{languageId}")
     public void deleteLanguageById(@RequestParam Long languageId){
         culturatecaService.deleteLanguageById(languageId);
     }
 
-    @PutMapping("/update")
-    public Language updateLanguage(@Valid @RequestBody Language language){
+    @PatchMapping()
+    public LanguageDto updateLanguage(@Valid @RequestBody Language language){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.updateLanguage(language);
+        return LanguageDto.toLanguageDto(culturatecaService.updateLanguage(language));
     }
 
-    @PutMapping("/add/into{languageId}/masterpieces{masterPieceIds}")
-    public Language updateLanguageRelations(@RequestParam(value = "languageId", required = true) Long languageId,
+    @PutMapping("/{languageId}/masterpieces{masterPieceIds}")
+    public LanguageDto updateLanguageRelations(@RequestParam(value = "languageId", required = true) Long languageId,
                                             @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
     ){
-        return culturatecaService.updateLanguageRelations(languageId,masterPieceIds);
+        return LanguageDto.toLanguageDto(culturatecaService.updateLanguageRelations(languageId,masterPieceIds));
     }
 }

@@ -9,50 +9,56 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/author/")
+@RequestMapping("/author")
 public class AuthorController {
 
     @Autowired
     CulturatecaService culturatecaService;
 
-    @PostMapping("/new")
+    @PostMapping()
     @Headers("Content-Type: application/json")
     public Long saveAuthor(@Valid @RequestBody AuthorDto author){
         //todo implement checks and validations for formatting and data type
         return culturatecaService.saveNewAuthor(author.toAuthor()).getAuthorId();
     }
 
-    @GetMapping("/getById/{authorId}")
-    public Author findAuthorById(@RequestParam Long authorId){
+    @GetMapping("/{authorId}")
+    public AuthorDto findAuthorById(@RequestParam Long authorId){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAuthorById(authorId);
+        return AuthorDto.toAuthorDto(culturatecaService.findAuthorById(authorId));
     }
 
-    @GetMapping("/getAll")
-    public List<Author> findAllAuthores(){
+    @GetMapping()
+    public List<AuthorDto> findAllAuthors(){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.findAllAuthors();
+        List<Author> authors = culturatecaService.findAllAuthors();
+        List<AuthorDto> authorsDtos = new ArrayList<AuthorDto>();
+        for (Author author:authors) {
+            authorsDtos.add(AuthorDto.toAuthorDto(author));
+        }
+        return authorsDtos;
     }
 
-    @DeleteMapping("/delete/{authorId}")
+    @DeleteMapping("/{authorId}")
     public void deleteAuthorById(@RequestParam Long authorId){
         culturatecaService.deleteAuthorById(authorId);
     }
 
-    @PutMapping("/update")
-    public Author updateAuthor(@Valid @RequestBody Author author){
+    @PatchMapping()
+    public AuthorDto updateAuthor(@Valid @RequestBody Author author){
         //todo implement checks and validations for formatting and data type
-        return culturatecaService.updateAuthor(author);
+        return AuthorDto.toAuthorDto(culturatecaService.updateAuthor(author));
     }
 
-    @PutMapping("/add/into{authorId}/masterpieces{masterPieceIds}")
-    public Author updateAuthorRelations(@RequestParam(value = "authorId", required = true) Long authorId,
+    @PutMapping("/{authorId}/masterpieces{masterPieceIds}")
+    public AuthorDto updateAuthorRelations(@RequestParam(value = "authorId", required = true) Long authorId,
                                               @RequestParam(value = "masterPieceIds", required = true) List<Long> masterPieceIds
     ){
-        return culturatecaService.updateAuthorRelations(authorId,masterPieceIds);
+        return AuthorDto.toAuthorDto(culturatecaService.updateAuthorRelations(authorId,masterPieceIds));
     }
 }
