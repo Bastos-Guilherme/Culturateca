@@ -1,9 +1,49 @@
-1 - Criar novo usuário
-2 - Fazer Login / Logout
-3 - Cadastrar itens
-4 - Alterar itens
-5 - Pesquisar itens
-6 - Deletar itens
-7 - Alterar visão de Acervo
-8 - Buscar outros usuários
-9 - Seguir acervo deoutro usuário
+RF001 - Criar novo usuário
+
+  - Prioridade: Essencial
+  - Descrição: Este requisito permite que o usuário crie um perfil dentro do aplicativo cadastrando um email, login e senha.
+
+RF002 - Fazer Login / Logout
+
+  - Prioridade: Essencial
+  - Descrição: Este requisito permite que o usuário possa acessar sua conta/perfil inserindo seu email ou login e respectiva senha.
+
+RF003 - Cadastrar itens
+
+  - Prioridade: Essencial
+  - Descrição: Este requisito permite que o usuário possa cadastrar itens em uma coleção já criada anteriormente, utilizando o título, autor e outros atributos da obra.
+
+RF004 - Alterar itens
+
+  - Prioridade: Essencial
+  - Descrição: Este requisito permite que o usuário possa alterar características e atributos de itens cadastrados em uma coleção.
+
+RF005 - Pesquisar itens
+
+  - Prioridade: Essencial
+  - Descrição: Este requisito permite que o usuário possa pesquisar itens do acervo por meio de seus atributos
+
+RF006 - Deletar itens
+
+  - Prioridade: Essencial
+  - Descrição: Este requisito permite que o usuário possa remover itens do acervo
+
+RF007 - Alterar visão de Acervo
+
+  - Prioridade: Importante
+  - Descrição: Esse recurso permite que o usuário possa decidir se o seu acervo será visivel para outros usuários
+
+RF008 - Buscar outros usuários
+
+  - Prioridade: Importante
+  - Descrição: Esse recurso perimitirá ao usuário pesquisar outros usuários e seus acervos
+
+RF009 - Seguir acervo de outro usuário
+
+  - Prioridade: Importante
+  - Descrição: Esse recurso permite que o usuário possa seguir outros usuários para acomopanhar mais facilmetne suas atualizações e coleções.
+
+RF010 - Criar um acervo dentro do perfil
+
+  - Prioridade: Essencial
+  - Descrição: Este requisito permite que o usuário possa criar uma coleção no seu perfil, cadastrando um nome e segmento de itens da coleção
