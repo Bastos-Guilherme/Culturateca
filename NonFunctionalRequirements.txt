@@ -1,20 +1,47 @@
 # Desempenho e Eficiência
 1 - Garantir tempo de resposta maximo de 2.5s
+    Prioridade: Essencial
+
 2 - Garantir tempo de resposta medio de 0.4s
+    Prioridade: Importante
+
 3 - Garantir capacidade de carga minimo de 1000 usuarios
+    Prioridade: Essencial
+
 
 # Disponibilidade e Confiabilidade
 1 - Deve estar disponivel em todas as plataformas (Dispositivos Moveis, Web...)
+    Prioridade: Importante
+
 2 - Disponivel 24hrs / 7 dias por semana permissivel a falhas, ate 97% de tempo disponivel
+    Prioridade: Essencial
+
 3 - No maximo 5% de requisicoes sao passiveis de serem entregues desatualizadas
+    Prioridade: Importante
+
 
 # Segurança e Privacidade
 1 - Atender a LGPD
+    Prioridade: Essencial
+
 
 # Usabilidade e Manutenção
 1 - 90% de taxa de conformidade com as heuristicas de Nielsen, com pesquisa com usuarios
+    Prioridade: Importante
+
 2 - Seguir conventional commits
+    Prioridade: Importante
+
 3 - Fazer testes unitarios com 90% de cobertura
+    Prioridade: Importante
+
 4 - Fazer testes end to end com 100% de cobertura
+    Prioridade: Essencial
+
 5 - Seguir versionamento semantico
+    Prioridade: Essencial
+    Descrição: Manter padrão de gerenciamento de versões de software (formato X.Y.Z) indicando mudanças no código
+
 6 - Codigo comentado
+    Prioridade: Importante
+
