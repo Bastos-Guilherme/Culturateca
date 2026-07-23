@@ -1,4 +1,4 @@
-package com.social.culturateca.v001;
+package com.social.culturateca;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
