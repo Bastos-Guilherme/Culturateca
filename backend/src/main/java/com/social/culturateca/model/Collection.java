@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,15 +22,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Collection {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @ManyToOne
+  @JoinColumn(name = "curator")
   private Curator curator;
 
   private String name;
 
-  @Column(name = "isprivate")
-  private Boolean isPrivate;
+  @Column(name = "ispublic")
+  private Boolean isPublic;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
