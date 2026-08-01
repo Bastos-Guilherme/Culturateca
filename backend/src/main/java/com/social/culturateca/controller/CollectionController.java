@@ -35,7 +35,6 @@ public class CollectionController {
   
   @PostMapping
   public Collection create(@RequestBody Collection collection) {
-    
     return collectionService.createCollection(collection);
   }
 
