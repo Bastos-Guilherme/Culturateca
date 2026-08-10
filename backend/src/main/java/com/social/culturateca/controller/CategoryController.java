@@ -39,7 +39,6 @@ public class CategoryController {
 
     @PostMapping
     public Category create(@RequestBody Category category){
-        System.out.println("ta passano");
         return categoryService.createCategory(category);
     }
 
