@@ -28,7 +28,7 @@ public class CollectionController {
     return collectionService.findCollectionsByOwner(curator);
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/id={id}")
   public Collection getById(@PathVariable Long id) {
     return collectionService.findById(id);
   }

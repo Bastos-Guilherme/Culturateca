@@ -74,8 +74,14 @@ public class CanonicServiceImpl implements CanonicService {
     public Canonic createCanonic(Canonic canonic){
         try {
             if (canonic.getId() != null) {
-                throw new RuntimeException();
+                throw new RuntimeException("Não deve possuir ID específico");
             }
+
+            if (canonic.getProperty() == null || canonic.getProperty().isEmpty()) {
+                throw new RuntimeException(
+                    "Property é obrigatória"
+                );
+            }   
 
             Set<Long> propertyIds = canonic.getProperty().keySet();
 
@@ -94,7 +100,20 @@ public class CanonicServiceImpl implements CanonicService {
                 }
             }
 
+            if (canonic.getCategory() == null || canonic.getCategory().getId() == null) {
+                throw new RuntimeException(
+                    "Category é obrigatória"
+                );
+            }
+
+            if (!categoryRepository.existsById(canonic.getCategory().getId())) {
+                throw new RuntimeException(
+                    "ID de Category inexistente"
+                );
+            }
+
             return canonicRepository.save(canonic);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
