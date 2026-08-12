@@ -123,6 +123,49 @@ public class CanonicServiceImpl implements CanonicService {
     @Override
     public Canonic editCanonic(Canonic canonic){
         try {
+            if (canonic.getId() == null) {
+                throw new RuntimeException("ID não pode ser nulo");
+            }
+
+            if(canonicRepository.findById(canonic.getId()).isEmpty()){
+                throw new RuntimeException("Canonic não encontrada");
+            }
+
+            if (canonic.getProperty() == null || canonic.getProperty().isEmpty()) {
+                throw new RuntimeException(
+                    "Property é obrigatória"
+                );
+            }   
+
+            Set<Long> propertyIds = canonic.getProperty().keySet();
+
+            List<Property> properties = propertyRepository.findAllById(propertyIds);
+
+            Set<Long> existingIds = properties.stream()
+                    .map(Property::getId)
+                    .collect(Collectors.toSet());
+
+            for (Long propertyId : propertyIds) {
+
+                if (!existingIds.contains(propertyId)) {
+                    throw new RuntimeException(
+                        "Property com ID " + propertyId + " não existe"
+                    );
+                }
+            }
+
+            if (canonic.getCategory() == null || canonic.getCategory().getId() == null) {
+                throw new RuntimeException(
+                    "Category é obrigatória"
+                );
+            }
+
+            if (!categoryRepository.existsById(canonic.getCategory().getId())) {
+                throw new RuntimeException(
+                    "ID de Category inexistente"
+                );
+            }
+
             return canonicRepository.save(canonic);
         } catch (Exception e) {
             // TODO: handle exception

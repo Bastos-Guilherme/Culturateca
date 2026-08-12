@@ -1,5 +1,7 @@
 package com.social.culturateca.model.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +10,5 @@ import com.social.culturateca.model.Location;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
   
-  <List>Location findByName(String name);
+  List<Location> findByName(String name);
 }

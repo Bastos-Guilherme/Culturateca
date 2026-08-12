@@ -27,16 +27,18 @@ public class CollectionServiceImpl implements CollectionService {
   @Override
   public Collection createCollection(Collection collection) {
     try {
-      //collection.setCurator(curatorRepository.findById(collection.getCurator().getEmail()).get());
       if (collection.getId() != null) {
-        throw new RuntimeException();
+        throw new RuntimeException("ID não deve ser específicado");
       }
+
       if (!curatorRepository.existsById(collection.getCurator().getEmail())) {
         throw new RuntimeException();
       }
+
       if (BLACKLIST.contains(collection.getName().toLowerCase())) {
         throw new RuntimeException();
       }
+
       return collectionRepository.save(collection);
     } catch (Exception e) {
       // TODO: handle exception
@@ -56,9 +58,22 @@ public class CollectionServiceImpl implements CollectionService {
   @Override
   public Collection editCollection(Collection collection) {
     try {
+      if (collection.getId() == null) {
+        throw new RuntimeException("ID não pode ser nulo");
+      }
+
+      if(collectionRepository.findById(collection.getId()).isEmpty()){
+        throw new RuntimeException("Collection não encontrada");
+      }
+
+      if (!curatorRepository.existsById(collection.getCurator().getEmail())) {
+        throw new RuntimeException();
+      }
+
       if (BLACKLIST.contains(collection.getName().toLowerCase())) {
         throw new RuntimeException();
       }
+
       return collectionRepository.save(collection);
     } catch (Exception e) {
       // TODO: handle exception
@@ -72,6 +87,7 @@ public class CollectionServiceImpl implements CollectionService {
       if (curator == null) {
         throw new RuntimeException();
       }
+
       return collectionRepository.findAllByCurator(curator);
     } catch (Exception e) {
       // TODO: handle exception

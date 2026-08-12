@@ -48,11 +48,13 @@ public class PropertyServiceImpl implements PropertyService {
     public Property createProperty(Property property){
         try {
             if (property.getId() != null) {
-                throw new RuntimeException();
+                throw new RuntimeException("ID não deve ser específicado");
             }
+
             if (!propertyRepository.findByName(property.getName()).isEmpty()) {
                 throw new RuntimeException();
             }
+
             return propertyRepository.save(property);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -63,6 +65,18 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public Property editProperty(Property property){
         try {
+            if (property.getId() == null) {
+                throw new RuntimeException("ID não pode ser nulo");
+            }
+
+            if(propertyRepository.findById(property.getId()).isEmpty()){
+                throw new RuntimeException("Property não encontrada");
+            }
+
+            if (!propertyRepository.findByName(property.getName()).isEmpty()) {
+                throw new RuntimeException();
+            }
+
             return propertyRepository.save(property);
         } catch (Exception e) {
             // TODO: handle exception

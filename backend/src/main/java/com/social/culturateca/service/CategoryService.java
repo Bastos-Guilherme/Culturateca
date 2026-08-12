@@ -8,13 +8,14 @@ public interface CategoryService {
 
     public List<Category> categoryAll();
 
+    public Category findById(Long id);
+
+    public List<Category> findByName(String name);
+
     public Category createCategory(Category category);
 
     public Category editCategory(Category category);
     
     public void deleteCategory(Long id);
-
-    public Category findById(Long id);
-
-    public List<Category> findByName(String name);
+    
 }

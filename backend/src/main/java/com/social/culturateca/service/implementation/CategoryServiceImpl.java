@@ -49,11 +49,13 @@ public class CategoryServiceImpl implements CategoryService {
     public Category createCategory(Category category){
         try {
             if (category.getId() != null) {
-                throw new RuntimeException();
+                throw new RuntimeException("ID não deve ser específicado");
             }
+
             if (!categoryRepository.findByName(category.getName()).isEmpty()) {
                 throw new RuntimeException();
             }
+
             return categoryRepository.save(category);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -64,6 +66,18 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category editCategory(Category category){
         try {
+            if (category.getId() == null) {
+                throw new RuntimeException("ID não pode ser nulo");
+            }
+
+            if(categoryRepository.findById(category.getId()).isEmpty()){
+                throw new RuntimeException("Category não encontrada");
+            }
+
+            if (!categoryRepository.findByName(category.getName()).isEmpty()) {
+                throw new RuntimeException();
+            }
+
             return categoryRepository.save(category);
         } catch (Exception e) {
             // TODO: handle exception
