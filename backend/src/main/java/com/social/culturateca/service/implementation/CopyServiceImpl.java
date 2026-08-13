@@ -8,29 +8,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.social.culturateca.model.Canonic;
-import com.social.culturateca.model.Category;
+import com.social.culturateca.model.Copy;
+import com.social.culturateca.model.Location;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.CanonicRepository;
-import com.social.culturateca.model.repository.CategoryRepository;
+import com.social.culturateca.model.repository.CopyRepository;
+import com.social.culturateca.model.repository.LocationRepository;
 import com.social.culturateca.model.repository.PropertyRepository;
-import com.social.culturateca.service.CanonicService;
+import com.social.culturateca.service.CopyService;
 
 @Service
-public class CanonicServiceImpl implements CanonicService {
-    
+public class CopyServiceImpl implements CopyService {
+
     @Autowired
     CanonicRepository canonicRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    CopyRepository copyRepository;
 
     @Autowired
     PropertyRepository propertyRepository;
 
+    @Autowired
+    LocationRepository locationRepository;
+
     @Override
-    public List<Canonic> canonicAll(){
+    public List<Copy> copyAll(){
         try {
-            return canonicRepository.findAll();
+            return copyRepository.findAll();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -38,9 +43,9 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public Canonic findById(Long id){
+    public Copy findById(Long id){
         try {
-            return canonicRepository.findById(id).get();
+            return copyRepository.findById(id).get();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -48,11 +53,11 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public List<Canonic> findByCategory(Long categoryId){
+    public List<Copy> findByCanonic(Long canonicId){
         try {
-            Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
-            return canonicRepository.findByCategory(category);
+            Canonic canonic = canonicRepository.findById(canonicId)
+                .orElseThrow(() -> new RuntimeException("Canonic não encontrado"));
+            return copyRepository.findByCanonic(canonic);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -60,9 +65,9 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public List<Canonic> findAllByProperty(Long propertyId){
+    public List<Copy> findAllByProperty(Long propertyId){
         try {
-            return canonicRepository.findAllByProperty(propertyId);
+            return copyRepository.findAllByProperty(propertyId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -70,19 +75,19 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public Canonic createCanonic(Canonic canonic){
+    public Copy createCopy(Copy copy){
         try {
-            if (canonic.getId() != null) {
+            if (copy.getId() != null) {
                 throw new RuntimeException("Não deve possuir ID específico");
             }
 
-            if (canonic.getProperty() == null || canonic.getProperty().isEmpty()) {
+            if (copy.getProperty() == null || copy.getProperty().isEmpty()) {
                 throw new RuntimeException(
                     "Property é obrigatória"
                 );
             }   
 
-            Set<Long> propertyIds = canonic.getProperty().keySet();
+            Set<Long> propertyIds = copy.getProperty().keySet();
 
             List<Property> properties = propertyRepository.findAllById(propertyIds);
 
@@ -99,19 +104,33 @@ public class CanonicServiceImpl implements CanonicService {
                 }
             }
 
-            if (canonic.getCategory() == null || canonic.getCategory().getId() == null) {
+            if (copy.getCanonic() == null || copy.getCanonic().getId() == null) {
                 throw new RuntimeException(
-                    "Category é obrigatória"
+                    "Canonic é obrigatória"
                 );
             }
 
-            if (!categoryRepository.existsById(canonic.getCategory().getId())) {
+            if (!canonicRepository.existsById(copy.getCanonic().getId())) {
                 throw new RuntimeException(
-                    "ID de Category inexistente"
+                    "ID de Canonic inexistente"
                 );
             }
 
-            return canonicRepository.save(canonic);
+            if (copy.getLocation() != null) {
+
+                if (copy.getLocation().getId() == null) {
+                    throw new RuntimeException("Location deve possuir ID");
+                }
+
+                Long locationId = copy.getLocation().getId();
+
+                Location parent = locationRepository.findById(locationId)
+                    .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+
+                copy.setLocation(parent);
+            }
+
+            return copyRepository.save(copy);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -120,23 +139,23 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public Canonic editCanonic(Canonic canonic){
+    public Copy editCopy(Copy copy){
         try {
-            if (canonic.getId() == null) {
+            if (copy.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");
             }
 
-            if(canonicRepository.findById(canonic.getId()).isEmpty()){
-                throw new RuntimeException("Canonic não encontrada");
+            if(copyRepository.findById(copy.getId()).isEmpty()){
+                throw new RuntimeException("Copy não encontrada");
             }
 
-            if (canonic.getProperty() == null || canonic.getProperty().isEmpty()) {
+            if (copy.getProperty() == null || copy.getProperty().isEmpty()) {
                 throw new RuntimeException(
                     "Property é obrigatória"
                 );
             }   
 
-            Set<Long> propertyIds = canonic.getProperty().keySet();
+            Set<Long> propertyIds = copy.getProperty().keySet();
 
             List<Property> properties = propertyRepository.findAllById(propertyIds);
 
@@ -153,19 +172,39 @@ public class CanonicServiceImpl implements CanonicService {
                 }
             }
 
-            if (canonic.getCategory() == null || canonic.getCategory().getId() == null) {
+            if (copy.getCanonic() == null || copy.getCanonic().getId() == null) {
                 throw new RuntimeException(
-                    "Category é obrigatória"
+                    "Canonic é obrigatória"
                 );
             }
 
-            if (!categoryRepository.existsById(canonic.getCategory().getId())) {
+            if (!canonicRepository.existsById(copy.getCanonic().getId())) {
                 throw new RuntimeException(
-                    "ID de Category inexistente"
+                    "ID de Canonic inexistente"
                 );
             }
 
-            return canonicRepository.save(canonic);
+            if (copy.getLocation() != null) {
+
+                if (copy.getLocation().getId() == null) {
+                    throw new RuntimeException("Location deve possuir ID");
+                }
+
+                Long locationId = copy.getLocation().getId();
+
+                Location parent = locationRepository.findById(locationId)
+                    .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+
+                copy.setLocation(parent);
+            }
+
+            if (copy.getCollections() != null && !copy.getCollections().isEmpty()) {
+                throw new RuntimeException(
+                    "Collections não devem ser informadas na criação de uma Copy"
+                );
+            }
+
+            return copyRepository.save(copy);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -173,11 +212,12 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public void deleteCanonic(Long id){
+    public void deleteCopy(Long id){
         try {
-            canonicRepository.deleteById(id);
+            copyRepository.deleteById(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
+
 }

@@ -19,7 +19,7 @@ public class PropertyServiceImpl implements PropertyService {
         try {
             return propertyRepository.findAll();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -29,7 +29,7 @@ public class PropertyServiceImpl implements PropertyService {
         try {
             return propertyRepository.findByName(name);
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -39,7 +39,7 @@ public class PropertyServiceImpl implements PropertyService {
         try {
             return propertyRepository.findById(id).get();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -79,7 +79,7 @@ public class PropertyServiceImpl implements PropertyService {
 
             return propertyRepository.save(property);
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -89,7 +89,7 @@ public class PropertyServiceImpl implements PropertyService {
         try {
             propertyRepository.deleteById(id);
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
         }
     }
 }

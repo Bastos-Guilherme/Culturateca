@@ -20,7 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             return categoryRepository.findAll();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             return categoryRepository.findByName(name);
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -40,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             return categoryRepository.findById(id).get();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -80,7 +80,7 @@ public class CategoryServiceImpl implements CategoryService {
 
             return categoryRepository.save(category);
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -90,7 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             categoryRepository.deleteById(id);
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
         }
     }
 }

@@ -66,6 +66,10 @@ public class LocationServiceImpl implements LocationService{
 
             if (location.getLocation() != null) {
 
+                if (location.getLocation().getId() == null) {
+                    throw new RuntimeException("Location deve possuir ID");
+                }
+
                 Long locationId = location.getLocation().getId();
 
                 Location parent = locationRepository.findById(locationId)
@@ -105,6 +109,10 @@ public class LocationServiceImpl implements LocationService{
             }
 
             if (location.getLocation() != null) {
+
+                if (location.getLocation().getId() == null) {
+                    throw new RuntimeException("Location deve possuir ID");
+                }
 
                 Long locationId = location.getLocation().getId();
 

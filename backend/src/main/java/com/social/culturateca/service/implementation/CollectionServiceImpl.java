@@ -41,7 +41,7 @@ public class CollectionServiceImpl implements CollectionService {
 
       return collectionRepository.save(collection);
     } catch (Exception e) {
-      // TODO: handle exception
+      System.out.println(e.getMessage());
       return null;
     }
   }
@@ -51,7 +51,7 @@ public class CollectionServiceImpl implements CollectionService {
     try {
       collectionRepository.deleteById(id);
     } catch (Exception e) {
-      // TODO: handle exception
+      System.out.println(e.getMessage());
     }
   }
 
@@ -76,7 +76,7 @@ public class CollectionServiceImpl implements CollectionService {
 
       return collectionRepository.save(collection);
     } catch (Exception e) {
-      // TODO: handle exception
+      System.out.println(e.getMessage());
       return null;
     }
   }
@@ -90,7 +90,7 @@ public class CollectionServiceImpl implements CollectionService {
 
       return collectionRepository.findAllByCurator(curator);
     } catch (Exception e) {
-      // TODO: handle exception
+      System.out.println(e.getMessage());
       return null;
     }
   }
@@ -100,7 +100,7 @@ public class CollectionServiceImpl implements CollectionService {
     try {
       return collectionRepository.findById(id).get();
     } catch (Exception e) {
-      // TODO: handle exception
+      System.out.println(e.getMessage());
       return null;
     }
   }
