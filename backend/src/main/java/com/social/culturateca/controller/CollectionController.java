@@ -24,7 +24,12 @@ public class CollectionController {
   CollectionService collectionService;
 
   @GetMapping
-  public List<Collection> getAllByCurator(@RequestBody Curator curator) {
+  public List<Collection> getAllCollection(){
+    return collectionService.collectionAll();
+  }
+
+  @GetMapping("/curator={curator}")
+  public List<Collection> getAllByCurator(@PathVariable Curator curator) {
     return collectionService.findCollectionsByOwner(curator);
   }
 

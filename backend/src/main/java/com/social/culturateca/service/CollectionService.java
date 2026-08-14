@@ -7,6 +7,8 @@ import com.social.culturateca.model.Curator;
 
 public interface CollectionService {
 
+  public List<Collection> collectionAll();
+
   public Collection createCollection(Collection collection);
 
   public void deleteCollection(Long id);

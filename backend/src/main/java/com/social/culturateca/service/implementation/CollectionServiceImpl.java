@@ -25,6 +25,17 @@ public class CollectionServiceImpl implements CollectionService {
   CuratorRepository curatorRepository;
 
   @Override
+  public List<Collection> collectionAll(){
+      try {
+          return collectionRepository.findAll();
+      } catch (Exception e) {
+          System.out.println(e.getMessage());
+          return null;
+      }
+  }
+
+
+  @Override
   public Collection createCollection(Collection collection) {
     try {
       if (collection.getId() != null) {
@@ -67,11 +78,15 @@ public class CollectionServiceImpl implements CollectionService {
       }
 
       if (!curatorRepository.existsById(collection.getCurator().getEmail())) {
-        throw new RuntimeException();
+        throw new RuntimeException("Curator não encontrada");
       }
 
       if (BLACKLIST.contains(collection.getName().toLowerCase())) {
         throw new RuntimeException();
+      }
+
+      if (collection.getIsPublic() == null) {
+        collection.setIsPublic(true);
       }
 
       return collectionRepository.save(collection);
