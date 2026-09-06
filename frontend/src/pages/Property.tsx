@@ -130,6 +130,7 @@ function Property() {
         <button className="btn btn-secondary" onClick={loadProperties}>
           Atualizar
         </button>
+        
       </div>
 
       <table className="table table-striped table-hover">
@@ -270,7 +271,7 @@ function Property() {
       </form>
 
       <hr className="my-5" />
-        
+    
       <h2>Deletar Property</h2>
 
       <form onSubmit={deleteProp}>

@@ -1,14 +1,15 @@
 import '../styles/Home.css'
-import { Link } from 'react-router-dom'
 
 function Home() {
   return (
     <>
-      <h1>Home</h1>
+      <div className='container mt-5'>
+        <h2>Bem-vindo à Culturateca!</h2>
 
-      <h2>Páginas</h2>
-
-      <Link to="/property">Property</Link>
+        <p>
+          Selecione uma opção no menu lateral.
+        </p>
+      </div>
     </>
   )
 }
