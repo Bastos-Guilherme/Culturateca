@@ -7,6 +7,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Property from './pages/Property'
 import CreateCurator from './pages/CreateCurator'
+import Curator from './pages/Curator'
 import Login from './pages/Login'
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/property" element={<Property />} />
           <Route path="/createCurator" element={<CreateCurator />} />
+          <Route path="/curator" element={<Curator />} />
           <Route path="/login" element={<Login />} />
         </Route>
       </Routes>

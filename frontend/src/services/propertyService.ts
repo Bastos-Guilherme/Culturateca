@@ -1,5 +1,7 @@
+import { apiFetch } from "./api";
+
 export async function getAllProperty() {
-  const response = await fetch("http://localhost:8080/property");
+  const response = await apiFetch("http://localhost:8080/property");
 
   if (!response.ok) {
     throw new Error("Erro ao buscar properties");
@@ -9,7 +11,7 @@ export async function getAllProperty() {
 }
 
 export async function getPropertyById(id: number) {
-  const response = await fetch(`http://localhost:8080/property/id=${id}`);
+  const response = await apiFetch(`http://localhost:8080/property/id=${id}`);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar property");
@@ -19,7 +21,7 @@ export async function getPropertyById(id: number) {
 }
 
 export async function getPropertyByName(name: string) {
-  const response = await fetch(`http://localhost:8080/property/name=${name}`);
+  const response = await apiFetch(`http://localhost:8080/property/name=${name}`);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar property");
@@ -30,7 +32,7 @@ export async function getPropertyByName(name: string) {
 
 export async function createProperty(name: string) {
 
-  const response = await fetch('http://localhost:8080/property', {
+  const response = await apiFetch('http://localhost:8080/property', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -48,7 +50,7 @@ export async function createProperty(name: string) {
 }
 
 export async function updateProperty(id: number, name: string) {
-  const response = await fetch(`http://localhost:8080/property`, {
+  const response = await apiFetch(`http://localhost:8080/property`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -67,7 +69,7 @@ export async function updateProperty(id: number, name: string) {
 }
 
 export async function deleteProperty(id: number) {
-  const response = await fetch(`http://localhost:8080/property/${id}`, {
+  const response = await apiFetch(`http://localhost:8080/property/${id}`, {
     method: "DELETE",
   });
 

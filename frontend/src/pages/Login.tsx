@@ -1,12 +1,33 @@
 import { useState, type SyntheticEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+import { authenticate } from '../services/loginService'
+import { useAuth } from '../context/AuthContext'
 
 function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const { login } = useAuth()
+    const navigate = useNavigate()
+
     async function submitLogin(event: SyntheticEvent<HTMLFormElement>) {
         event.preventDefault()
+
+        try {
+            const token = await authenticate(email, password)
+            login(token)
+        
+            alert('Login realizado com sucesso!')
+            setEmail('')
+            setPassword('')
+        
+            navigate('/')
+
+        } catch (error) {
+            console.error(error)
+            alert('Erro ao realizar o Login')
+        }
     }
 
     return (
@@ -14,7 +35,7 @@ function Login() {
             <h1>Login</h1>
             <form onSubmit={submitLogin}>
                 <div className="mb-3 pt-4">
-                    <label htmlFor="name" className="form-label">
+                    <label htmlFor="email" className="form-label">
                         Digite seu e-mail:
                     </label><br/>
                     <input
@@ -26,11 +47,11 @@ function Login() {
                     />
                 </div>
                 <div className="mb-3 pt-4">
-                    <label htmlFor="name" className="form-label">
+                    <label htmlFor="password" className="form-label">
                         Digite sua senha:
                     </label><br/>
                     <input
-                        type="text"
+                        type="password"
                         className="form-control"
                         id="password"
                         value={password}

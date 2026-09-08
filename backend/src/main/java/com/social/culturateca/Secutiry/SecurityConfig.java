@@ -3,7 +3,9 @@ package com.social.culturateca.Secutiry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,15 +17,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired 
+    @Autowired
     JwtAuthenticationFilter jwtFilter;
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
-        throws Exception {
-        
+            throws Exception {
+
         http
             .csrf(csrf -> csrf.disable())
+
+            .cors(Customizer.withDefaults())
 
             .sessionManagement(session -> session.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS
@@ -32,7 +36,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/login",
-                    "/register"
+                    "/curator/register"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
@@ -41,14 +45,17 @@ public class SecurityConfig {
 
             .httpBasic(basic -> basic.disable())
 
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        
+            .addFilterBefore(
+                jwtFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
+
         return http.build();
     }
 
-    @Bean 
+    @Bean
     public AuthenticationManager authenticationManager(
-        AuthenticationConfiguration configuration
+            AuthenticationConfiguration configuration
     ) throws Exception {
 
         return configuration.getAuthenticationManager();

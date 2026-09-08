@@ -3,6 +3,7 @@ package com.social.culturateca.service.implementation;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.social.culturateca.model.Curator;
@@ -19,6 +20,9 @@ public class CuratorServiceImpl implements CuratorService{
 
     @Autowired
     LocationRepository locationRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public List<Curator> curatorAll(){
@@ -78,6 +82,11 @@ public class CuratorServiceImpl implements CuratorService{
             if (curator.getPassword() == null) {
                 throw new RuntimeException("Password é necessária");
             }
+
+            curator.setPassword(
+                passwordEncoder.encode(curator.getPassword())
+            );
+
 
             if (curator.getName() == null) {
                 throw new RuntimeException("Name é necessário");
