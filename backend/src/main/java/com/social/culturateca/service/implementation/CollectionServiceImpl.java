@@ -119,4 +119,15 @@ public class CollectionServiceImpl implements CollectionService {
       return null;
     }
   }
+
+  @Override
+  public List<Collection> findByName(String name) {
+    try {
+      return collectionRepository.findByNameContainingIgnoreCase(name);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return null;
+    }
+  }
+  
 }

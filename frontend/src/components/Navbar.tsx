@@ -29,7 +29,7 @@ function Navbar() {
               </button>
               <button onClick={() => navigate('/curator')}>
                 <i className="bi bi-box-arrow-in-right"></i>
-                perfil
+                Configurações
               </button>
             </div>
           )}
@@ -50,8 +50,13 @@ function Navbar() {
             <span>Home</span>
           </Link>
 
+          <Link to="/curator">
+            <i className="bi bi-person"></i>
+            <span>Perfil</span>
+          </Link>
+
           <Link to="/property">
-            <i className="bi bi-building"></i>
+            <i className="bi bi-box-fill"></i>
             <span>Property</span>
           </Link>
         </nav>

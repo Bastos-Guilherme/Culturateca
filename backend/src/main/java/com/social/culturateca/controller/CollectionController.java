@@ -37,6 +37,11 @@ public class CollectionController {
   public Collection getById(@PathVariable Long id) {
     return collectionService.findById(id);
   }
+
+  @GetMapping("/name={name}")
+  public List<Collection> getByName(@PathVariable String name) {
+    return collectionService.findByName(name);
+  }
   
   @PostMapping
   public Collection create(@RequestBody Collection collection) {

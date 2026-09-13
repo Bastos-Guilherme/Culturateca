@@ -18,4 +18,6 @@ public interface CollectionService {
   public Collection editCollection(Collection collection);
 
   public Collection findById(Long id);
+
+  public List<Collection> findByName(String name);
 }

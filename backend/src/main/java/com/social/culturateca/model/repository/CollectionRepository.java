@@ -11,7 +11,7 @@ import com.social.culturateca.model.Curator;
 @Repository
 public interface CollectionRepository extends JpaRepository<Collection, Long> {
   
-  List<Collection> findByName(String name);
+  List<Collection> findByNameContainingIgnoreCase(String name);
 
   List<Collection> findAllByCurator(Curator curator);
 }

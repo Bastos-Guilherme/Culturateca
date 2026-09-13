@@ -27,7 +27,7 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public List<Property> findByName(String name){
         try {
-            return propertyRepository.findByName(name);
+            return propertyRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -51,7 +51,7 @@ public class PropertyServiceImpl implements PropertyService {
                 throw new RuntimeException("ID não deve ser específicado");
             }
 
-            if (!propertyRepository.findByName(property.getName()).isEmpty()) {
+            if (!propertyRepository.findByNameContainingIgnoreCase(property.getName()).isEmpty()) {
                 throw new RuntimeException();
             }
 
@@ -73,7 +73,7 @@ public class PropertyServiceImpl implements PropertyService {
                 throw new RuntimeException("Property não encontrada");
             }
 
-            if (!propertyRepository.findByName(property.getName()).isEmpty()) {
+            if (!propertyRepository.findByNameContainingIgnoreCase(property.getName()).isEmpty()) {
                 throw new RuntimeException();
             }
 

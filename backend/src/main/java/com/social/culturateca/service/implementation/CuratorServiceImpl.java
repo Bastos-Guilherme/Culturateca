@@ -47,7 +47,7 @@ public class CuratorServiceImpl implements CuratorService{
     @Override
     public List<Curator> findByName(String name){
         try {
-            return curatorRepository.findByName(name);
+            return curatorRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

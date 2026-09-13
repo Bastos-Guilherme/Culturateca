@@ -28,7 +28,7 @@ public class LocationServiceImpl implements LocationService{
     @Override
     public List<Location> findByName(String name){
         try {
-            return locationRepository.findByName(name);
+            return locationRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -52,7 +52,7 @@ public class LocationServiceImpl implements LocationService{
                 throw new RuntimeException("ID não deve ser específicado");
             }
 
-            if (!locationRepository.findByName(location.getName()).isEmpty()) {
+            if (!locationRepository.findByNameContainingIgnoreCase(location.getName()).isEmpty()) {
                 throw new RuntimeException("nome da Location ja existe");
             }
 
@@ -96,7 +96,7 @@ public class LocationServiceImpl implements LocationService{
                 throw new RuntimeException("Location não encontrada");
             }
                 
-            if (!locationRepository.findByName(location.getName()).isEmpty()) {
+            if (!locationRepository.findByNameContainingIgnoreCase(location.getName()).isEmpty()) {
                 throw new RuntimeException("nome da Location ja existe");
             }
 

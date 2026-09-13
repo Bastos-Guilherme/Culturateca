@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> findByName(String name){
         try {
-            return categoryRepository.findByName(name);
+            return categoryRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new RuntimeException("ID não deve ser específicado");
             }
 
-            if (!categoryRepository.findByName(category.getName()).isEmpty()) {
+            if (!categoryRepository.findByNameContainingIgnoreCase(category.getName()).isEmpty()) {
                 throw new RuntimeException();
             }
 
@@ -74,7 +74,7 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new RuntimeException("Category não encontrada");
             }
 
-            if (!categoryRepository.findByName(category.getName()).isEmpty()) {
+            if (!categoryRepository.findByNameContainingIgnoreCase(category.getName()).isEmpty()) {
                 throw new RuntimeException();
             }
 

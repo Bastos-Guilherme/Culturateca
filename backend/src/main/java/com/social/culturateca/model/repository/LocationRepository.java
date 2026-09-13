@@ -10,5 +10,5 @@ import com.social.culturateca.model.Location;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
   
-  List<Location> findByName(String name);
+  List<Location> findByNameContainingIgnoreCase(String name);
 }
