@@ -276,13 +276,13 @@ function Property() {
 
       <form onSubmit={deleteProp}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">
+          <label htmlFor="deleteId" className="form-label">
             ID:
           </label>
           <input
             type="number"
             className="form-control"
-            id="updateId"
+            id="deleteId"
             value={id}
             onChange={(event) => setId(Number(event.target.value))}
           />
