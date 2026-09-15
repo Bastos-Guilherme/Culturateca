@@ -34,9 +34,12 @@ create table curator (
 	location bigint references location(id),
 	password varchar(255) not null,
 	name varchar(255) not null,
-	gender varchar(255) not null,
-	phone varchar(255) not null,
-	isPublic bool 
+	gender varchar(255),
+	phone varchar(255),
+	isPublic bool,
+	bio text,
+	following jsonb,
+	profilePicture varchar(255)
 );
 
 create table collection (

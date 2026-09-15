@@ -102,6 +102,9 @@ function CreateCurator() {
                         <option value="FEMALE">
                             Feminino
                         </option>
+                        <option value="">
+                            Prefiro não informar
+                        </option>
                     </select>
                 </div>
                 <div className="mb-3">

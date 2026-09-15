@@ -1,5 +1,11 @@
 package com.social.culturateca.model;
 
+import java.util.List;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,4 +40,13 @@ public class Curator {
 
   @Column(name = "ispublic")
   private Boolean isPublic;
+
+  private String bio;
+
+  @JdbcTypeCode(SqlTypes.JSON)
+  private List<String> following;
+
+  @Column(name = "profilepicture")
+  private String profilePicture;
+
 }

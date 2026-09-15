@@ -87,17 +87,8 @@ public class CuratorServiceImpl implements CuratorService{
                 passwordEncoder.encode(curator.getPassword())
             );
 
-
             if (curator.getName() == null) {
                 throw new RuntimeException("Name é necessário");
-            }
-
-            if (curator.getGender() == null) {
-                throw new RuntimeException("Gender é necessário");
-            }
-
-            if (curator.getPhone() == null) {
-                throw new RuntimeException("Gender é necessário");
             }
 
             if (curator.getIsPublic() == null) {
@@ -142,14 +133,6 @@ public class CuratorServiceImpl implements CuratorService{
 
             if (curator.getName() == null) {
                 throw new RuntimeException("Name é necessário");
-            }
-
-            if (curator.getGender() == null) {
-                throw new RuntimeException("Gender é necessário");
-            }
-
-            if (curator.getPhone() == null) {
-                throw new RuntimeException("Gender é necessário");
             }
 
             if (curator.getIsPublic() == null) {

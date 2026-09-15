@@ -35,21 +35,21 @@ function Navbar() {
           {menuOpen && (
             <div className="dropdown-menu">
               {!isAuthenticated && (
-                <button onClick={() => navigate('/login')}>
+                <button onClick={() => {navigate('/login'), setMenuOpen(!menuOpen)}}>
                   <i className="bi bi-box-arrow-in-right"></i>
                   Login
                 </button>
               )}
 
               {isAuthenticated && (
-                <button onClick={() => navigate('/curator')}>
+                <button onClick={() => {navigate('/curator'), setMenuOpen(!menuOpen)}}>
                   <i className="bi bi-box-arrow-in-right"></i>
                   Configurações
                 </button>
               )}
 
               {isAuthenticated && (
-                <button onClick={() => setLogoutModalOpen(true)}>
+                <button onClick={() => {setLogoutModalOpen(true), setMenuOpen(!menuOpen)}}>
                   <i className="bi bi-box-arrow-in-right"></i>
                   Logout
                 </button>
