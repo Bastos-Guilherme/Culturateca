@@ -55,7 +55,7 @@ public class CuratorController {
         return curatorService.editCurator(curator);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{email}")
     public void delete(@PathVariable String email){
         curatorService.deleteCurator(email);
     }

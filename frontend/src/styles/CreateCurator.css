@@ -1,0 +1,57 @@
+.location-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1000;
+}
+
+.location-modal {
+    width: 500px;
+    max-width: 90%;
+
+    background: white;
+    border-radius: 10px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+
+    overflow: hidden;
+}
+
+.location-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.location-modal-header h3 {
+    margin: 0;
+}
+
+.location-close {
+    border: none;
+    background: transparent;
+
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.location-modal-body {
+    padding: 20px;
+}
+
+.location-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+}
