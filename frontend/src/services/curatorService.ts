@@ -4,12 +4,12 @@ export interface Curator {
     email: string
     name: string
     password: string
-    gender: string
-    phone: string
+    gender: string | null
+    phone: string | null
     isPublic: boolean
-    bio: string
-    following: string[]
-    profilePicture: string
+    bio: string | null
+    following: string[] | null
+    profilePicture: string | null
     location: {
         id: number
     } | null
@@ -64,11 +64,11 @@ export async function createCurator(
     password: string,
     name: string,
     gender: string | null,
-    phone: string,
+    phone: string | null,
     isPublic: boolean,
-    bio: string,
-    following: string[],
-    profilePicture: string,
+    bio: string | null,
+    following: string[] | null,
+    profilePicture: string | null,
     locationId: number | null
 ) {
     const response = await fetch(
@@ -107,11 +107,11 @@ export async function updateCurator(
     password: string,
     name: string,
     gender: string | null,
-    phone: string,
+    phone: string | null,
     isPublic: boolean,
-    bio: string,
-    following: string[],
-    profilePicture: string,
+    bio: string | null,
+    following: string[] | null,
+    profilePicture: string | null,
     locationId: number | null
 ) {
     const response = await apiFetch(

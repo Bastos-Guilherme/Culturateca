@@ -36,13 +36,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     HttpMethod.POST,
-                    "/location",
                     "/login",
                     "/curator/register"
-                ).permitAll()
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/location"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

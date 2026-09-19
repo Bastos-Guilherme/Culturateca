@@ -54,35 +54,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return storedToken
     })
 
-    useEffect(() => {
-        if (!token) {
-            return
-        }
-
-        const expiration = getTokenExpiration(token)
-
-        if (!expiration) {
-            logout()
-            return
-        }
-
-        const timeUntilExpiration = expiration - Date.now()
-
-        if (timeUntilExpiration <= 0) {
-            logout()
-            return
-        }
-
-        const timeout = setTimeout(() => {
-            logout()
-        }, timeUntilExpiration)
-
-        return () => {
-            clearTimeout(timeout)
-        }
-
-    }, [token])
-
     function login(newToken: string) {
         if (!isTokenValid(newToken)) {
             return
@@ -91,6 +62,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
         localStorage.setItem('token', newToken)
         setToken(newToken)
     }
+
+    useEffect(() => {
+        function handleLogout() {
+            setToken(null)
+        }
+
+        window.addEventListener('auth:logout', handleLogout)
+
+        return () => {
+            window.removeEventListener('auth:logout', handleLogout)
+        }
+    }, [])
 
     function logout() {
         localStorage.removeItem('token')

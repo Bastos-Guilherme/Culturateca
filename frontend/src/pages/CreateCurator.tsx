@@ -1,46 +1,22 @@
 import '../styles/CreateCurator.css'
-import { useEffect, useState, type SyntheticEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { createCurator } from '../services/curatorService'
-
-import { getAllLocation, createLocation, type Location } from '../services/locationService'
+import { useState, type SyntheticEvent } from 'react'
 
 function CreateCurator() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
     const [gender, setGender] = useState<string | null>(null)
-    const [phone, setPhone] = useState('')
-    const [locationId, setLocationId] = useState('')
-    const [bio, setBio] = useState('')
-    const [profilePicture, setProfilePicture] = useState('')
+    const [phone, setPhone] = useState<string | null>(null)
+    const locationId = null
+    const [bio, setBio] = useState<string | null>(null)
+    const [profilePicture, setProfilePicture] = useState<string | null>(null)
     const [isPublic, setIsPublic] = useState(true)
     const following: string[] = []
 
-    const [locations, setLocations] = useState<Location[]>([])
-
-    const [locationModalOpen, setLocationModalOpen] = useState(false)
-    const [newLocationName, setNewLocationName] = useState('')
-    const [newLocationLatitude, setNewLocationLatitude] = useState('')
-    const [newLocationLongitude, setNewLocationLongitude] = useState('')
-    const [newLocationChildId, setNewLocationChildId] = useState('')
-
     const navigate = useNavigate()
-
-    useEffect(() => {
-        async function loadLocations() {
-            try {
-                const data = await getAllLocation()
-                setLocations(data)
-            } catch (error) {
-                console.error(error)
-                alert('Erro ao carregar localizações')
-            }
-        }
-
-        loadLocations()
-    }, [])
 
     async function submit(event: SyntheticEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -66,38 +42,6 @@ function CreateCurator() {
         } catch (error) {
             console.error(error)
             alert('Erro ao realizar cadastro')
-        }
-    }
-
-    async function submitLocation(event: SyntheticEvent<HTMLFormElement>) {
-        event.preventDefault()
-
-        try {
-            const location = await createLocation(
-                newLocationName,
-                Number(newLocationLatitude),
-                Number(newLocationLongitude),
-                Number(newLocationChildId)
-            )
-
-            setLocations((currentLocations) => [
-                ...currentLocations,
-                location
-            ])
-
-            setLocationId(String(location.id))
-
-            setNewLocationName('')
-            setNewLocationLatitude('')
-            setNewLocationLongitude('')
-            setNewLocationChildId('')
-            setLocationModalOpen(false)
-
-            alert('Localização cadastrada com sucesso!')
-
-        } catch (error) {
-            console.error(error)
-            alert('Erro ao cadastrar localização')
         }
     }
 
@@ -186,47 +130,11 @@ function CreateCurator() {
                         type="tel"
                         className="form-control"
                         id="phone"
-                        value={phone}
+                        value={phone ?? ""}
                         onChange={(event) =>
-                            setPhone(event.target.value)
+                            setPhone(event.target.value || null)
                         }
                     />
-                </div>
-
-                <div className="mb-3">
-                    <label htmlFor="location" className="form-label">
-                        Localização
-                    </label>
-
-                    <div className="d-flex justify-content-center align-items-center">
-                        <select
-                            className="form-select"
-                            id="location"
-                            value={locationId}
-                            onChange={(event) =>
-                                setLocationId(event.target.value)
-                            }
-                        >
-                            <option value="">
-                                Nenhuma localização
-                            </option>
-
-                            {locations.map((location) => (
-                                <option
-                                    key={location.id}
-                                    value={location.id}
-                                >
-                                    {location.name}
-                                </option>
-                            ))}
-                        </select>
-
-                        <button type="button" className="btn btn-secondary ms-2" 
-                            onClick={() => setLocationModalOpen(true)}
-                        > 
-                            <i className="bi bi-plus-lg"></i> Nova localização 
-                        </button>
-                    </div>
                 </div>
 
                 <div className="mb-3">
@@ -237,9 +145,9 @@ function CreateCurator() {
                         className="form-control"
                         id="bio"
                         rows={3}
-                        value={bio}
+                        value={bio ?? ""}
                         onChange={(event) =>
-                            setBio(event.target.value)
+                            setBio(event.target.value || null)
                         }
                     />
                 </div>
@@ -252,9 +160,9 @@ function CreateCurator() {
                         type="url"
                         className="form-control"
                         id="profilePicture"
-                        value={profilePicture}
+                        value={profilePicture ?? ""}
                         onChange={(event) =>
-                            setProfilePicture(event.target.value)
+                            setProfilePicture(event.target.value || null)
                         }
                         placeholder="https://exemplo.com/imagem.jpg"
                     />
@@ -282,110 +190,6 @@ function CreateCurator() {
                     Criar conta
                 </button>
             </form>
-
-            {locationModalOpen && (
-                <div className="location-overlay">
-                    <div className="location-modal">
-
-                        <div className="location-modal-header">
-                            <h3>Nova localização</h3>
-
-                            <button type="button" className="location-close"
-                                onClick={() => setLocationModalOpen(false)}
-                            >
-                                <i className="bi bi-x-lg"></i>
-                            </button>
-                        </div>
-
-                        <form onSubmit={submitLocation}>
-                            <div className="location-modal-body">
-                                <div className="mb-3">
-                                    <label className="form-label">
-                                        Nome *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={newLocationName}
-                                        onChange={(e) =>
-                                            setNewLocationName(e.target.value)
-                                        }
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">
-                                        Localização Filha
-                                    </label>
-                                    <select
-                                        className="form-select"
-                                        value={newLocationChildId}
-                                        onChange={(e) =>
-                                            setNewLocationChildId(e.target.value)
-                                        }
-                                    >
-                                        <option value="">
-                                            Nenhuma localização
-                                        </option>
-                                        {locations.map((location) => (
-                                            <option
-                                                key={location.id}
-                                                value={location.id}
-                                            >
-                                                {location.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label">
-                                            Latitude *
-                                        </label>
-                                        <input
-                                            type="number"
-                                            step="any"
-                                            className="form-control"
-                                            value={newLocationLatitude}
-                                            onChange={(e) =>
-                                                setNewLocationLatitude(e.target.value)
-                                            }
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label">
-                                            Longitude *
-                                        </label>
-                                        <input
-                                            type="number"
-                                            step="any"
-                                            className="form-control"
-                                            value={newLocationLongitude}
-                                            onChange={(e) =>
-                                                setNewLocationLongitude(e.target.value)
-                                            }
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="location-modal-footer">
-                                <button type="button" className="btn btn-secondary"
-                                    onClick={() => setLocationModalOpen(false)}
-                                >
-                                    Cancelar
-                                </button>
-                                <button type="submit" className="btn btn-primary">
-                                    Criar localização
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
     )
 }
