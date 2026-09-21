@@ -1,0 +1,415 @@
+.curator-page {
+    min-height: 100%;
+    background-color: #f8f7f5;
+    color: #222;
+    padding-bottom: 50px;
+}
+
+.curator-header {
+    display: flex;
+    gap: 35px;
+    padding: 30px 45px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.curator-avatar-container {
+    flex-shrink: 0;
+}
+
+.curator-avatar {
+    width: 145px;
+    height: 145px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid #222;
+}
+
+.curator-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e8e6e3;
+    font-size: 50px;
+    color: #555;
+}
+
+.curator-info {
+    flex: 1;
+}
+
+.curator-name-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.curator-name-row h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.curator-username {
+    margin: 3px 0 0;
+    text-align: left;
+    color: #666;
+    font-size: 14px;
+}
+
+.curator-edit-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 9px 15px;
+
+    background-color: #d7d0ff;
+    border: 2px solid #222;
+    border-radius: 5px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.curator-edit-button:hover {
+    background-color: #c8bfff;
+}
+
+.curator-location {
+    margin-top: 14px;
+    margin-bottom: 10px;
+
+    font-size: 14px;
+    color: #555;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.curator-bio {
+    max-width: 750px;
+    margin: 12px 0;
+
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.curator-tags {
+    display: flex;
+    gap: 7px;
+    margin-top: 15px;
+}
+
+.curator-tags span {
+    padding: 5px 9px;
+
+    background-color: #e7e3ff;
+
+    border-radius: 4px;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.curator-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 12px;
+
+    padding: 20px 45px;
+
+    background-color: #fff;
+}
+
+.curator-stat {
+    border: 1.5px solid #333;
+    border-radius: 4px;
+
+    padding: 10px 15px;
+
+    background-color: #f8f7f5;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.curator-stat strong {
+    font-size: 23px;
+    line-height: 1.1;
+}
+
+.curator-stat span {
+    margin-top: 4px;
+
+    font-size: 12px;
+    color: #555;
+}
+
+
+.curator-collections {
+    padding: 28px 45px;
+}
+
+.collections-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+
+    margin-bottom: 15px;
+}
+
+.section-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #666;
+}
+
+.collections-header h2 {
+    margin: 3px 0 0;
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.collection-filters {
+    display: flex;
+    gap: 6px;
+}
+
+.collection-filters button {
+    padding: 7px 13px;
+
+    background-color: #fff;
+
+    border: 1.5px solid #222;
+    border-radius: 4px;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.collection-filters button.active {
+    background-color: #222;
+    color: #fff;
+}
+
+.collection-card {
+    background-color: #fff;
+
+    border: 2px solid #222;
+    border-radius: 12px;
+
+    padding: 25px 28px;
+
+    box-shadow: 5px 5px 0 #222;
+}
+
+.collection-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.collection-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.collection-title h3 {
+    margin: 0;
+
+    font-size: 19px;
+}
+
+.collection-title span {
+    padding: 3px 7px;
+
+    border: 1px solid #555;
+    border-radius: 4px;
+
+    font-size: 10px;
+}
+
+.collection-card-header p {
+    margin: 5px 0 0;
+    text-align: left;
+    color: #666;
+    font-size: 13px;
+}
+
+.collection-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 8px 13px;
+
+    background-color: #f5f3f0;
+
+    border: 1.5px solid #222;
+    border-radius: 4px;
+
+    cursor: pointer;
+}
+
+.collection-items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 13px;
+
+    margin-top: 22px;
+}
+
+.collection-item {
+    min-width: 0;
+
+    padding: 12px;
+
+    border: 1.5px solid #222;
+    border-radius: 6px;
+
+    background-color: #f8f7f5;
+}
+
+.item-image {
+    height: 105px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #e5e3e1;
+
+    border: 1.5px solid #333;
+    border-radius: 3px;
+
+    font-size: 30px;
+    color: #596c6d;
+}
+
+.collection-item h4 {
+    margin: 9px 0 3px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.collection-item p {
+    margin: 0;
+
+    font-size: 11px;
+    color: #555;
+}
+
+.collection-item small {
+    display: block;
+
+    margin-top: 8px;
+
+    font-size: 9px;
+    color: #888;
+}
+
+.curator-loading {
+    padding: 40px;
+
+    text-align: center;
+
+    color: #555;
+}
+
+.collections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.empty-collections {
+    min-height: 180px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #fff;
+
+    border: 2px solid #222;
+    border-radius: 10px;
+}
+
+.empty-collections i {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.empty-collections p {
+    margin: 0;
+    color: #666;
+}
+
+@media (max-width: 900px) {
+
+    .curator-header {
+        padding: 25px;
+    }
+
+    .curator-stats {
+        padding: 20px 25px;
+    }
+
+    .curator-collections {
+        padding: 25px;
+    }
+
+    .collection-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+
+    .curator-header {
+        flex-direction: column;
+    }
+
+    .curator-name-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .curator-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .collections-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .collection-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .collection-items {
+        grid-template-columns: 1fr;
+    }
+}

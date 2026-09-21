@@ -12,6 +12,7 @@ export interface Curator {
     profilePicture: string | null
     location: {
         id: number
+        name: string
     } | null
 }
 

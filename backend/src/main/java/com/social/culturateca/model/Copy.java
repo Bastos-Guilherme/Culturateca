@@ -6,6 +6,8 @@ import java.util.Map;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,6 +40,7 @@ public class Copy {
   @JoinColumn(name = "location")
   private Location location;
 
+  @JsonIgnore 
   @ManyToMany(mappedBy = "copies")
   private List<Collection> collections;
 }

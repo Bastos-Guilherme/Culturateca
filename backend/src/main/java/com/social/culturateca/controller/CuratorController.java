@@ -36,12 +36,12 @@ public class CuratorController {
     }
 
     @GetMapping("/email={email}")
-    public Curator getById(@PathVariable String email){
+    public Curator getById(@PathVariable("email") String email){
         return curatorService.findByEmail(email);
     }
 
     @GetMapping("/name={name}")
-    public List<Curator> getByName(@PathVariable String name){
+    public List<Curator> getByName(@PathVariable("name") String name){
         return curatorService.findByName(name);
     }
 
@@ -56,7 +56,7 @@ public class CuratorController {
     }
 
     @DeleteMapping("/{email}")
-    public void delete(@PathVariable String email){
+    public void delete(@PathVariable("email") String email){
         curatorService.deleteCurator(email);
     }
 

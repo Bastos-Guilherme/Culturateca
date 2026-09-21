@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.social.culturateca.model.Collection;
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.service.CollectionService;
+import com.social.culturateca.service.CuratorService;
 
 @RestController
 @RequestMapping("/collection")
@@ -23,23 +24,27 @@ public class CollectionController {
   @Autowired
   CollectionService collectionService;
 
+  @Autowired
+  CuratorService curatorService;
+
   @GetMapping
   public List<Collection> getAllCollection(){
     return collectionService.collectionAll();
   }
 
-  @GetMapping("/curator={curator}")
-  public List<Collection> getAllByCurator(@PathVariable Curator curator) {
-    return collectionService.findCollectionsByOwner(curator);
+  @GetMapping("/curator={email}")
+  public List<Collection> getAllByCurator(@PathVariable("email") String email) {
+      Curator curator = curatorService.findByEmail(email);
+      return collectionService.findCollectionsByOwner(curator);
   }
 
   @GetMapping("/id={id}")
-  public Collection getById(@PathVariable Long id) {
+  public Collection getById(@PathVariable("id") Long id) {
     return collectionService.findById(id);
   }
 
   @GetMapping("/name={name}")
-  public List<Collection> getByName(@PathVariable String name) {
+  public List<Collection> getByName(@PathVariable("name") String name) {
     return collectionService.findByName(name);
   }
   
@@ -54,7 +59,7 @@ public class CollectionController {
   }
 
   @DeleteMapping("/{id}")
-  public void delete(@PathVariable Long id) {
+  public void delete(@PathVariable("id") Long id) {
     collectionService.deleteCollection(id);
   }
 }
