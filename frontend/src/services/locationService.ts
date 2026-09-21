@@ -11,7 +11,7 @@ export interface Location {
 }
 
 export async function getAllLocation() {
-    const response = await fetch("http://localhost:8080/location");
+    const response = await apiFetch("http://localhost:8080/location");
 
     if (!response.ok) {
         throw new Error("Erro ao buscar locations");
@@ -46,7 +46,7 @@ export async function createLocation(
     longitude: number,
     location?: number
 ) {
-    const response = await fetch("http://localhost:8080/location", {
+    const response = await apiFetch("http://localhost:8080/location", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
