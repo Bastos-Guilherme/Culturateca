@@ -112,7 +112,7 @@ function Curator() {
                     {curator.location && (
                         <p className="curator-location">
                             <i className="bi bi-geo-alt"></i>
-                            Localização # {curator.location.name}
+                            {curator.location.name}
                         </p>
                     )}
 

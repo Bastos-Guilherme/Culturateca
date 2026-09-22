@@ -1,5 +1,5 @@
 import { useState } from 'react' 
-import { Link, useNavigate, Outlet } from 'react-router-dom' 
+import { NavLink, useNavigate, Outlet } from 'react-router-dom' 
 import { useAuth } from '../context/AuthContext' 
 import '../styles/Navbar.css'
 
@@ -22,7 +22,10 @@ function Navbar() {
     <div className={`layout ${sidebarOpen ? 'sidebar-open' : ''}`}>
 
       <header className="topbar">
-        <h1 className="logo">Culturateca</h1>
+        <h1 className="logo" onClick={() => navigate('/')}>
+          <i className="bi bi-archive"></i>
+          Culturateca
+        </h1>
 
         <div className="user-menu">
           <button
@@ -69,20 +72,20 @@ function Navbar() {
         </button>
 
         <nav>
-          <Link to="/">
+          <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>
             <i className="bi bi-house"></i>
             <span>Home</span>
-          </Link>
+          </NavLink>
 
-          <Link to="/curator">
+          <NavLink to="/curator" className={({ isActive }) => (isActive ? 'active' : '')}>
             <i className="bi bi-person"></i>
             <span>Perfil</span>
-          </Link>
+          </NavLink>
 
-          <Link to="/property">
+          <NavLink to="/property" className={({ isActive }) => (isActive ? 'active' : '')}>
             <i className="bi bi-box-fill"></i>
             <span>Property</span>
-          </Link>
+          </NavLink>
         </nav>
       </aside>
 

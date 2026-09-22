@@ -5,19 +5,38 @@
 }
 
 .topbar {
-  width: 100%; 
-  height: 60px; 
-  background-color: #ffffff; 
-  border-bottom: 1px solid #ddd; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
 .logo {
   font-size: 24px;
   font-weight: bold;
+  gap: 10px;
+  display: flex;
+
+  align-items: center;
+}
+
+.logo i {
+  color: black;
+  padding: 3px;
+
+  border-radius: 5px;
+
+  font-weight: 600;
+  text-decoration: none;
+
+  background-color: #fcf99c;
+  border: 2px solid #222;
+  border-right-width: 4px;
+  border-bottom-width: 4px;
 }
 
 .user-menu {
@@ -135,23 +154,42 @@
 }
 
 .sidebar a {
-  height: 50px;
-
   display: flex;
   align-items: center;
 
+  width: 42px;
+  height: 42px;
+
+  margin: 4px 9px;
+
+  gap: 7px;
+
+  color: black;
+  padding: 9px;
+
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 5px;
+
+  font-weight: 600;
   text-decoration: none;
-  color: #333;
 
-  padding: 0 18px;
-
-  white-space: nowrap;
-
-  transition: background-color 0.2s;
+  transition:
+    width 0.25s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.sidebar a:hover {
-  background-color: #f0f0f0;
+.sidebar.open a {
+  width: calc(100% - 18px);
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background-color: #b0affd;
+  border-color: #222;
+  border-right-width: 4px;
+  border-bottom-width: 4px;
 }
 
 .sidebar i {
@@ -159,7 +197,7 @@
 
   min-width: 24px;
 
-  margin-right: 18px;
+  margin-right: 0;
 }
 
 .sidebar span {
@@ -173,7 +211,7 @@
 }
 
 .content {
-  padding-left: 90px;
+  padding-left: 60px;
 
   text-align: center;
 
@@ -181,67 +219,68 @@
 }
 
 .sidebar-open .content {
-  padding-left: 260px;
+  padding-left: 220px;
 }
 
-.logout-overlay { 
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
-  background-color: rgba(0, 0, 0, 0.45); 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  z-index: 2000; 
+.logout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
 }
 
-.logout-modal { 
-  width: 400px; 
-  max-width: 90%; 
-  background-color: white; 
-  border-radius: 10px; 
-  padding: 30px; 
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25); 
-  text-align: center; 
-} 
-
-.logout-modal h3 { 
-  margin-bottom: 15px; 
-} 
-
-.logout-modal p { 
-  margin-bottom: 25px; 
-  color: #555; 
+.logout-modal {
+  width: 400px;
+  max-width: 90%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  text-align: center;
 }
 
-.logout-buttons { 
-  display: flex; 
-  justify-content: center; 
-  gap: 15px; } 
-  
-.logout-buttons button { 
-  border: none; 
-  border-radius: 6px; 
-  padding: 9px 20px; 
-  cursor: pointer; 
-  font-size: 14px; 
-} 
+.logout-modal h3 {
+  margin-bottom: 15px;
+}
 
-.btn-cancel { 
-  background-color: #ddd; 
-} 
+.logout-modal p {
+  margin-bottom: 25px;
+  color: #555;
+}
 
-.btn-cancel:hover { 
-  background-color: #ccc; 
-} 
+.logout-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
 
-.btn-confirm { 
-  background-color: #dc3545; 
-  color: white; 
-} 
-  
-.btn-confirm:hover { 
-  background-color: #bb2d3b; 
+.logout-buttons button {
+  border: none;
+  border-radius: 6px;
+  padding: 9px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-cancel {
+  background-color: #ddd;
+}
+
+.btn-cancel:hover {
+  background-color: #ccc;
+}
+
+.btn-confirm {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: #bb2d3b;
 }
