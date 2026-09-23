@@ -35,8 +35,7 @@
 
   background-color: #fcf99c;
   border: 2px solid #222;
-  border-right-width: 4px;
-  border-bottom-width: 4px;
+  box-shadow: 2px 2px 0 #222;
 }
 
 .user-menu {
@@ -188,8 +187,7 @@
 .sidebar a.active {
   background-color: #b0affd;
   border-color: #222;
-  border-right-width: 4px;
-  border-bottom-width: 4px;
+  box-shadow: 2px 2px 0 #222;
 }
 
 .sidebar i {
