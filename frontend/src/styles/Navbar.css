@@ -8,7 +8,7 @@
   width: 100%;
   height: 60px;
   background-color: #ffffff;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 2px solid #020202;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,7 +134,7 @@
   height: 100%;
 
   background-color: #ffffff;
-  border-right: 1px solid #ddd;
+  border-right: 3px solid #020202;
 
   overflow: hidden;
 

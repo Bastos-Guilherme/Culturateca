@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { authenticate } from '../services/loginService'
 import { useAuth } from '../context/AuthContext'
 
+import '../styles/Login.css'
+
 function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -17,11 +19,11 @@ function Login() {
         try {
             const token = await authenticate(email, password)
             login(token)
-        
+
             alert('Login realizado com sucesso!')
             setEmail('')
             setPassword('')
-        
+
             navigate('/')
 
         } catch (error) {
@@ -31,43 +33,66 @@ function Login() {
     }
 
     return (
-        <div className="container mt-5">
-            <h1>Login</h1>
-            <form onSubmit={submitLogin}>
-                <div className="mb-3 pt-4">
-                    <label htmlFor="email" className="form-label">
-                        Digite seu e-mail:
-                    </label><br/>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                    />
-                </div>
-                <div className="mb-3 pt-4">
-                    <label htmlFor="password" className="form-label">
-                        Digite sua senha:
-                    </label><br/>
-                    <input
-                        type="password"
-                        className="form-control"
-                        id="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                    Login
-                </button>
-            </form>
+        <main className="login-page">
+            <section className="login-header">
+                <h1>Login</h1>
+                <p>Seu arquivo digital de memórias e artefatos culturais.</p>
+            </section>
 
-            <hr className="my-5" />
+            <section className="login-card">
+                <form onSubmit={submitLogin} className="login-form">
+                    <div className="login-field">
+                        <label htmlFor="email">
+                            E-mail
+                        </label>
 
-            <h3>Não está cadastrado? </h3>
-            <Link to="/createCurator">Fazer cadastro</Link>
-        </div>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="exemplo@email.com"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="login-field">
+                        <div className="login-password-header">
+                            <label htmlFor="password">
+                                Senha
+                            </label>
+                        </div>
+
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                            required
+                        />
+
+                        <div className="login-password-bottom">
+                            <span className="forgot-password">
+                                Esqueci minha senha
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="submit" className="login-button">
+                        ENTRAR
+                        <i className="bi bi-arrow-right"></i>
+                    </button>
+                </form>
+            </section>
+
+            <div className="login-register">
+                <span>Não tem uma conta?</span>
+
+                <Link to="/createCurator">
+                    Criar nova conta
+                </Link>
+            </div>
+        </main>
     )
 }
 

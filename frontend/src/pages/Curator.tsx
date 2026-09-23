@@ -209,7 +209,7 @@ function Curator() {
                     <div className="empty-collections">
                         <i className="bi bi-archive"></i>
                         <p>
-                            Este curador ainda não possui collections.
+                            Este curador ainda não possui coleções.
                         </p>
                     </div>
 
