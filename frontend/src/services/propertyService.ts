@@ -1,5 +1,10 @@
 import { apiFetch } from "./api";
 
+export interface Property {
+    id: number
+    name: string
+}
+
 export async function getAllProperty() {
   const response = await apiFetch("http://localhost:8080/property");
 

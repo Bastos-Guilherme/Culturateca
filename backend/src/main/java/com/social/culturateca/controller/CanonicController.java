@@ -28,17 +28,17 @@ public class CanonicController {
     }
 
     @GetMapping("/id={id}")
-    public Canonic getById(@PathVariable long id){
+    public Canonic getById(@PathVariable("id") long id){
         return canonicService.findById(id);
     }
 
     @GetMapping("/category={categoryId}")
-    public List<Canonic> getByCategory(@PathVariable Long categoryId){
+    public List<Canonic> getByCategory(@PathVariable("categoryId") Long categoryId){
         return canonicService.findByCategory(categoryId);
     }
 
     @GetMapping("/property={propertyId}")
-    public List<Canonic> getAllByProperty(@PathVariable long propertyId){
+    public List<Canonic> getAllByProperty(@PathVariable("propertyId") long propertyId){
         return canonicService.findAllByProperty(propertyId);
     }
 
@@ -53,7 +53,7 @@ public class CanonicController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable("id") Long id){
         canonicService.deleteCanonic(id);
     }
 }

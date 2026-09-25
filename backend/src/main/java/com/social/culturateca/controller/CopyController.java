@@ -28,17 +28,17 @@ public class CopyController {
     }
 
     @GetMapping("/id={id}")
-    public Copy getById(@PathVariable long id){
+    public Copy getById(@PathVariable("id") long id){
         return copyService.findById(id);
     }
 
     @GetMapping("/property={propertyId}")
-    public List<Copy> getAllByProperty(@PathVariable long propertyId){
+    public List<Copy> getAllByProperty(@PathVariable("propertyId") long propertyId){
         return copyService.findAllByProperty(propertyId);
     }
 
     @GetMapping("/canonic={canonicId}")
-    public List<Copy> getByCanonic(@PathVariable Long canonicId){
+    public List<Copy> getByCanonic(@PathVariable("canonicId") Long canonicId){
         return copyService.findByCanonic(canonicId);
     }
 
@@ -53,7 +53,7 @@ public class CopyController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable("id") Long id){
         copyService.deleteCopy(id);
     }
 

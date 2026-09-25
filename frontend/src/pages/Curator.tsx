@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { useNavigate } from 'react-router-dom'
+
 import { getCurrentCurator, getAllCurator, type Curator } from '../services/curatorService'
 
 import { getCollectionsByCurator, type Collection } from '../services/collectionService'
@@ -11,6 +13,8 @@ function Curator() {
     const [collections, setCollections] = useState<Collection[]>([])
     const [followersCount, setFollowersCount] = useState(0)
     const [loading, setLoading] = useState(true)
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         async function loadProfile() {
@@ -241,7 +245,9 @@ function Curator() {
                                         </p>
                                     </div>
 
-                                    <button className="collection-button">
+                                    <button className="collection-button"
+                                        onClick={() => navigate(`/collection/${collection.id}`)}
+                                    >
                                         Ver coleção
                                         <i className="bi bi-arrow-right"></i>
                                     </button>

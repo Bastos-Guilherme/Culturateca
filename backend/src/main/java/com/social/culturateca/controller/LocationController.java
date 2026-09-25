@@ -28,12 +28,12 @@ public class LocationController {
     }
 
     @GetMapping("/id={id}")
-    public Location getById(@PathVariable long id){
+    public Location getById(@PathVariable("id") long id){
         return locationService.findById(id);
     }
 
     @GetMapping("/name={name}")
-    public List<Location> getByName(@PathVariable String name){
+    public List<Location> getByName(@PathVariable("name") String name){
         return locationService.findByName(name);
     }
 
@@ -48,7 +48,7 @@ public class LocationController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable("id") Long id){
         locationService.deleteLocation(id);
     }
 }

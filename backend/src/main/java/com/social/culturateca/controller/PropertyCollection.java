@@ -27,12 +27,12 @@ public class PropertyCollection {
     }
 
     @GetMapping("/id={id}")
-    public Property getById(@PathVariable long id){
+    public Property getById(@PathVariable("id") long id){
         return propertyService.findById(id);
     }
 
     @GetMapping("/name={name}")
-    public List<Property> getByName(@PathVariable String name){
+    public List<Property> getByName(@PathVariable("name") String name){
         return propertyService.findByName(name);
     }
 
@@ -47,7 +47,7 @@ public class PropertyCollection {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable("id") Long id){
         propertyService.deleteProperty(id);
     }
 }
