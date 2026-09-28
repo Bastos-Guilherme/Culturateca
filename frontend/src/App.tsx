@@ -10,6 +10,7 @@ import CreateCurator from './pages/CreateCurator'
 import Login from './pages/Login'
 import Collection from './pages/Collection'
 import Curator from './pages/Curator'
+import Settings from './pages/Settings'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/curator" element={<Curator />} />
           <Route path="/login" element={<Login />} />
           <Route path="/collection/:id" element={<Collection />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         </Route>
       </Routes>

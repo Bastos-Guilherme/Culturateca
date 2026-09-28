@@ -16,6 +16,20 @@ export interface Curator {
     } | null
 }
 
+export interface UpdateCuratorData {
+    password?: string
+    name?: string
+    gender?: string | null
+    phone?: string | null
+    isPublic?: boolean
+    bio?: string | null
+    following?: string[] | null
+    profilePicture?: string | null
+    location?: {
+        id: number
+    } | null
+}
+
 export async function getAllCurator(): Promise<Curator[]> {
     const response = await apiFetch('http://localhost:8080/curator')
 
@@ -105,15 +119,7 @@ export async function createCurator(
 
 export async function updateCurator(
     email: string,
-    password: string,
-    name: string,
-    gender: string | null,
-    phone: string | null,
-    isPublic: boolean,
-    bio: string | null,
-    following: string[] | null,
-    profilePicture: string | null,
-    locationId: number | null
+    data: UpdateCuratorData
 ) {
     const response = await apiFetch(
         'http://localhost:8080/curator',
@@ -124,17 +130,7 @@ export async function updateCurator(
             },
             body: JSON.stringify({
                 email: email,
-                password: password,
-                name: name,
-                gender: gender,
-                phone: phone,
-                isPublic: isPublic,
-                bio: bio,
-                following: following,
-                profilePicture: profilePicture,
-                location: locationId !== null
-                    ? { id: locationId }
-                    : null
+                ...data
             })
         }
     )

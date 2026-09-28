@@ -45,8 +45,8 @@ function Navbar() {
               )}
 
               {isAuthenticated && (
-                <button onClick={() => {navigate('/curator'), setMenuOpen(!menuOpen)}}>
-                  <i className="bi bi-box-arrow-in-right"></i>
+                <button onClick={() => {navigate('/settings'), setMenuOpen(!menuOpen)}}>
+                  <i className="bi bi-gear"></i>
                   Configurações
                 </button>
               )}

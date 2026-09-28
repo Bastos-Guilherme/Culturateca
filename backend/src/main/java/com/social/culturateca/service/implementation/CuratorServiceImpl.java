@@ -105,13 +105,18 @@ public class CuratorServiceImpl implements CuratorService{
     @Override
     public Curator editCurator(Curator curator){
         try {
+            
+
             if (curator.getEmail() == null) {
                 throw new RuntimeException("Email deve ser específicado");
             }
 
-            if (!curatorRepository.findById(curator.getEmail()).isEmpty()) {
-                throw new RuntimeException("Email já em uso por outro Curator");
+            if (curatorRepository.findById(curator.getEmail()).isEmpty()) {
+                throw new RuntimeException("Curator não encontrado");
             }
+
+            Curator existingCurator = curatorRepository.findById(curator.getEmail())
+                .orElseThrow(() -> new RuntimeException("Curator não encontrado"));
 
             if (curator.getLocation() != null) {
 
@@ -124,22 +129,44 @@ public class CuratorServiceImpl implements CuratorService{
                 Location parent = locationRepository.findById(locationId)
                     .orElseThrow(() -> new RuntimeException("Location não encontrada"));
 
-                curator.setLocation(parent);
+                existingCurator.setLocation(parent);
             }
 
-            if (curator.getPassword() == null) {
-                throw new RuntimeException("Password é necessária");
+            if (curator.getPassword() != null) {
+                existingCurator.setPassword(
+                    passwordEncoder.encode(curator.getPassword())
+                );
             }
 
-            if (curator.getName() == null) {
-                throw new RuntimeException("Name é necessário");
+            if (curator.getName() != null) {
+                existingCurator.setName(curator.getName());
             }
 
-            if (curator.getIsPublic() == null) {
-                curator.setIsPublic(true);
+            if(curator.getGender() != null) {
+                existingCurator.setGender(curator.getGender());
             }
 
-            return curatorRepository.save(curator);
+            if(curator.getPhone() != null) {
+                existingCurator.setPhone(curator.getPhone());
+            }
+
+            if (curator.getIsPublic() != null) {
+                existingCurator.setIsPublic(curator.getIsPublic());
+            }
+
+            if (curator.getBio() != null) {
+                existingCurator.setBio(curator.getBio());
+            }
+
+            if (curator.getFollowing() != null) {
+                existingCurator.setFollowing(curator.getFollowing());
+            }
+
+            if (curator.getProfilePicture() != null) {
+                existingCurator.setProfilePicture(curator.getProfilePicture());
+            }
+
+            return curatorRepository.save(existingCurator);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

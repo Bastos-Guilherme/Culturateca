@@ -107,9 +107,9 @@ function Curator() {
                                 @{curator.email.split('@')[0]}
                             </p>
                         </div>
-                        <button className="curator-edit-button">
-                            <i className="bi bi-pencil"></i>
-                            Editar perfil
+                        <button className="curator-edit-button" onClick={() => navigate('/settings')}>
+                            <i className="bi bi-gear"></i>
+                            Editar conta
                         </button>
                     </div>
 
