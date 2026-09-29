@@ -8,7 +8,7 @@ import { getCollectionsByCurator, type Collection } from '../services/collection
 
 import '../styles/Curator.css'
 
-function Curator() {
+function CuratorPage() {
     const [curator, setCurator] = useState<Curator | null>(null)
     const [collections, setCollections] = useState<Collection[]>([])
     const [followersCount, setFollowersCount] = useState(0)
@@ -290,4 +290,4 @@ function Curator() {
     )
 }
 
-export default Curator
+export default CuratorPage

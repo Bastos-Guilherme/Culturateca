@@ -39,6 +39,10 @@ public class SecurityConfig {
                     "/login",
                     "/curator/register"
                 ).permitAll()
+                .requestMatchers(HttpMethod.OPTIONS,
+                    "/login",
+                    "/curator/register"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
 

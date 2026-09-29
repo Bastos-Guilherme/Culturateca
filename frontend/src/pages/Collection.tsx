@@ -15,7 +15,7 @@ import { getAllCategory, type Category } from '../services/categoryService'
 
 import '../styles/Collection.css'
 
-function Collection() {
+function CollectionPage() {
 
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
@@ -386,4 +386,4 @@ function Collection() {
     )
 }
 
-export default Collection
+export default CollectionPage
