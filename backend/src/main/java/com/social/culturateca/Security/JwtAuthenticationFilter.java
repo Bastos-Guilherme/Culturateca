@@ -1,4 +1,4 @@
-package com.social.culturateca.Secutiry;
+package com.social.culturateca.Security;
 
 import java.io.IOException;
 
