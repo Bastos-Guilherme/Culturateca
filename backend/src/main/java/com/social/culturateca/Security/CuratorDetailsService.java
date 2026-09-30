@@ -1,4 +1,4 @@
-package com.social.culturateca.Secutiry;
+package com.social.culturateca.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
