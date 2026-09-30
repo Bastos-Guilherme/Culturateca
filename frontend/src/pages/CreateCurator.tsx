@@ -10,7 +10,6 @@ function CreateCurator() {
     const [name, setName] = useState('')
     const [gender, setGender] = useState<string | null>(null)
     const [phone, setPhone] = useState<string | null>(null)
-    const locationId = null
     const [bio, setBio] = useState<string | null>(null)
     const [profilePicture, setProfilePicture] = useState<string | null>(null)
     const [isPublic, setIsPublic] = useState(true)
@@ -32,9 +31,7 @@ function CreateCurator() {
                 bio,
                 following,
                 profilePicture,
-                locationId === ''
-                    ? null
-                    : Number(locationId)
+                null
             )
 
             alert('Cadastro realizado com sucesso!')
