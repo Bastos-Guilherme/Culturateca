@@ -6,6 +6,7 @@ import { getLocationById, type Location } from '../services/locationService'
 import { useAuth } from '../context/AuthContext'
 
 import '../styles/Settings.css'
+import DeleteCuratorModal from '../components/DeleteCuratorModal'
 
 export default function Settings() {
 
@@ -501,44 +502,12 @@ export default function Settings() {
                 </section>
             </div>
 
-            {showDeleteModal && (
-                <div
-                    className="logout-overlay"
-                    onClick={() => setShowDeleteModal(false)}
-                >
-                    <div
-                        className="logout-modal"
-                        onClick={event => event.stopPropagation()}
-                    >
-                        <i className="bi bi-exclamation-triangle settings-warning-icon"></i>
-                        <h3>
-                            Excluir conta?
-                        </h3>
-                        <p>
-                            Essa ação não pode ser desfeita.
-                            Todos os dados da sua conta serão excluídos.
-                        </p>
-                        <div className="logout-buttons">
-                            <button
-                                className="btn-cancel"
-                                onClick={() => setShowDeleteModal(false)}
-                                disabled={deleting}
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                className="btn-confirm"
-                                onClick={handleDelete}
-                                disabled={deleting}
-                            >
-                                {deleting
-                                    ? 'Excluindo...'
-                                    : 'Excluir conta'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <DeleteCuratorModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onDelete={handleDelete}
+            />
+            {deleting && <span className="deleting-text">Saindo...</span>}
         </div>
     )
 }

@@ -19,19 +19,12 @@ function CollectionPage() {
 
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
-
     const [collection, setCollection] = useState<Collection | null>(null)
-
     const [copies, setCopies] = useState<Copy[]>([])
-
     const [canonics, setCanonics] = useState<Record<number, Canonic>>({})
-
     const [locations, setLocations] = useState<Record<number, Location>>({})
-
     const [properties, setProperties] = useState<Record<number, Property>>({})
-
     const [categories, setCategories] = useState<Record<number, Category>>({})
-
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {

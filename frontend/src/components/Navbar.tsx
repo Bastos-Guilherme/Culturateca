@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { NavLink, useNavigate, Outlet } from 'react-router-dom' 
 import { useAuth } from '../context/AuthContext' 
 import '../styles/Navbar.css'
+import LogoutModal from './LogoutModal'
 
 function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -93,22 +94,11 @@ function Navbar() {
         <Outlet />
       </main>
 
-      {logoutModalOpen && (
-        <div className="logout-overlay">
-          <div className="logout-modal">
-            <h3>Confirmar Logout</h3>
-            <p>Tem certeza que deseja sair?</p>
-            <div className="logout-buttons">
-              <button className="btn-cancel" onClick={() => setLogoutModalOpen(false)}>
-              Cancelar
-              </button>
-              <button className="btn-confirm" onClick={handleLogout}>
-              Sair
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <LogoutModal
+        isOpen={logoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
+        onLogout={handleLogout}
+      />
     </div>
   )
 }
