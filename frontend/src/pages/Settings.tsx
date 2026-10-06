@@ -98,6 +98,7 @@ export default function Settings() {
     }
 
     const hasChanges =
+        formData.email !== originalData.email ||
         formData.name !== originalData.name ||
         formData.gender !== originalData.gender ||
         formData.phone !== originalData.phone ||
@@ -116,6 +117,10 @@ export default function Settings() {
             setSaving(true)
 
             const changes: UpdateCuratorData = {}
+
+            if (formData.email !== originalData.email) {
+                changes.email = formData.email
+            }
 
             if (formData.name !== originalData.name) {
                 changes.name = formData.name
@@ -160,10 +165,18 @@ export default function Settings() {
                         : null
             }
 
+            const emailChanged = formData.email !== curator.email
+
             await updateCurator(
-                curator.email,
+                curator.id,
                 changes
             )
+
+            if (emailChanged) {
+                logout()
+                navigate('/login')
+                return
+            }
 
             loadCurator()
             setEditing(false)
@@ -189,7 +202,7 @@ export default function Settings() {
         try {
             setDeleting(true)
 
-            await deleteCurator(curator.email)
+            await deleteCurator(curator.id)
 
             logout()
             navigate('/login')
@@ -265,14 +278,18 @@ export default function Settings() {
                                 E-mail
                             </label>
 
-                            <div className="settings-value">
-                                {curator.email}
-                            </div>
-
-                            {editing && (
-                                <small>
-                                    O e-mail não pode ser alterado por esta tela.
-                                </small>
+                            {editing ? (
+                                <input
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={event =>
+                                        handleChange('email', event.target.value)
+                                    }
+                                />
+                            ) : (
+                                <div className="settings-value">
+                                    {curator.email}
+                                </div>
                             )}
                         </div>
 

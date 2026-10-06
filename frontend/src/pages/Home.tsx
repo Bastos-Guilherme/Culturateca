@@ -17,8 +17,8 @@ function Home() {
 
             <NewItem
               icon="bi-plus"
-              title="Inserir novo item."
-              description="Cadastrar livros, mídias ou relíquias"
+              title="Inserir nova property."
+              description="cadastro de porperty"
               route="/property"
             />
 

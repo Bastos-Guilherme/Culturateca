@@ -142,7 +142,7 @@ function CuratorPage() {
             <section className="curator-stats">
                 <div className="curator-stat">
                     <strong>
-                        {String(publicCollections.length).padStart(2, '0')}
+                        {String(publicCollections.length)}
                     </strong>
 
                     <span>
