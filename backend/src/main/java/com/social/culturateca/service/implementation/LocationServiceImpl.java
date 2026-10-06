@@ -5,18 +5,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Location;
+import com.social.culturateca.model.repository.CuratorRepository;
 import com.social.culturateca.model.repository.LocationRepository;
 import com.social.culturateca.service.LocationService;
 
 @Service
-public class LocationServiceImpl implements LocationService{
-    
+public class LocationServiceImpl implements LocationService {
+
+    @Autowired
+    CuratorRepository curatorRepository;
+
     @Autowired
     LocationRepository locationRepository;
 
     @Override
-    public List<Location> locationAll(){
+    public List<Location> locationAll() {
         try {
             return locationRepository.findAll();
         } catch (Exception e) {
@@ -26,7 +31,7 @@ public class LocationServiceImpl implements LocationService{
     }
 
     @Override
-    public List<Location> findByName(String name){
+    public List<Location> findByName(String name) {
         try {
             return locationRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
@@ -36,7 +41,7 @@ public class LocationServiceImpl implements LocationService{
     }
 
     @Override
-    public Location findById(Long id){
+    public Location findById(Long id) {
         try {
             return locationRepository.findById(id).get();
         } catch (Exception e) {
@@ -46,7 +51,17 @@ public class LocationServiceImpl implements LocationService{
     }
 
     @Override
-    public Location createLocation(Location location){
+    public List<Location> findAllByCuratorId(Long curatorId) {
+        try {
+            return locationRepository.findAllByCuratorId(curatorId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Location createLocation(Location location) {
         try {
             if (location.getId() != null) {
                 throw new RuntimeException("ID não deve ser específicado");
@@ -73,9 +88,23 @@ public class LocationServiceImpl implements LocationService{
                 Long locationId = location.getLocation().getId();
 
                 Location parent = locationRepository.findById(locationId)
-                    .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+                        .orElseThrow(() -> new RuntimeException("Location não encontrada"));
 
                 location.setLocation(parent);
+            }
+
+            if (location.getCurator() != null) {
+
+                if (location.getCurator().getId() == null) {
+                    throw new RuntimeException("Curator deve possuir ID");
+                }
+
+                Long curatorId = location.getCurator().getId();
+
+                Curator curator = curatorRepository.findById(curatorId)
+                        .orElseThrow(() -> new RuntimeException("Curator não encontrado"));
+
+                location.setCurator(curator);
             }
 
             return locationRepository.save(location);
@@ -86,18 +115,24 @@ public class LocationServiceImpl implements LocationService{
     }
 
     @Override
-    public Location editLocation(Location location){
+    public Location editLocation(Location location) {
         try {
             if (location.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");
             }
 
-            if(locationRepository.findById(location.getId()).isEmpty()){
-                throw new RuntimeException("Location não encontrada");
-            }
-                
-            if (!locationRepository.findByNameContainingIgnoreCase(location.getName()).isEmpty()) {
+            Location existingLocation = locationRepository.findById(location.getId())
+                    .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+
+            if (location.getName() != null &&
+                    !location.getName().equalsIgnoreCase(existingLocation.getName()) &&
+                    !locationRepository.findByNameContainingIgnoreCase(location.getName()).isEmpty()) {
+
                 throw new RuntimeException("nome da Location ja existe");
+            }
+
+            if (location.getName() != null) {
+                existingLocation.setName(location.getName());
             }
 
             if (location.getLatitude() < -90 || location.getLatitude() > 90) {
@@ -108,6 +143,9 @@ public class LocationServiceImpl implements LocationService{
                 throw new RuntimeException("Longitude inválida");
             }
 
+            existingLocation.setLatitude(location.getLatitude());
+            existingLocation.setLongitude(location.getLongitude());
+
             if (location.getLocation() != null) {
 
                 if (location.getLocation().getId() == null) {
@@ -117,12 +155,27 @@ public class LocationServiceImpl implements LocationService{
                 Long locationId = location.getLocation().getId();
 
                 Location parent = locationRepository.findById(locationId)
-                    .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+                        .orElseThrow(() -> new RuntimeException("Location não encontrada"));
 
-                location.setLocation(parent);
+                existingLocation.setLocation(parent);
             }
 
-            return locationRepository.save(location);
+            if (location.getCurator() != null) {
+
+                if (location.getCurator().getId() == null) {
+                    throw new RuntimeException("Curator deve possuir ID");
+                }
+
+                Long curatorId = location.getCurator().getId();
+
+                Curator curator = curatorRepository.findById(curatorId)
+                        .orElseThrow(() -> new RuntimeException("Curator não encontrado"));
+
+                existingLocation.setCurator(curator);
+            }
+
+            return locationRepository.save(existingLocation);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -130,7 +183,7 @@ public class LocationServiceImpl implements LocationService{
     }
 
     @Override
-    public void deleteLocation(Long id){
+    public void deleteLocation(Long id) {
         try {
             locationRepository.deleteById(id);
         } catch (Exception e) {
@@ -138,5 +191,4 @@ public class LocationServiceImpl implements LocationService{
         }
     }
 
-    
 }

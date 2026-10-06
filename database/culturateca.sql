@@ -19,7 +19,8 @@ create table location (
 	name varchar(255) not null,
 	latitude float,
 	longitude float,
-    location bigint references location(id)
+    location bigint references location(id),
+	curator bigint references curator(id)
 );
 
 create table copy (
@@ -30,23 +31,24 @@ create table copy (
 );
 
 create table curator (
-	email varchar(255) primary key,
-	location bigint references location(id),
-	password varchar(255) not null,
-	name varchar(255) not null,
-	gender varchar(255),
-	phone varchar(255),
-	isPublic bool,
-	bio text,
-	following jsonb,
-	profilePicture varchar(255)
+    id bigserial primary key,
+    email varchar(255) not null unique,
+    location bigint references location(id),
+    password varchar(255) not null,
+    name varchar(255) not null,
+    gender varchar(255),
+    phone varchar(255),
+    isPublic bool,
+    bio text,
+    following jsonb,
+    profilePicture varchar(255)
 );
 
 create table collection (
-	id bigserial primary key,
-	curator varchar(255) references curator(email),
-	name varchar(255) not null,
-	isPublic bool
+    id bigserial primary key,
+    curator bigint references curator(id),
+    name varchar(255) not null,
+    isPublic bool
 );
 
 create table collection_copy (

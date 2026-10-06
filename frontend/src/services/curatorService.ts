@@ -1,6 +1,7 @@
 import { apiFetch } from "./api"
 
 export interface Curator {
+    id: number
     email: string
     name: string
     password: string
@@ -8,7 +9,7 @@ export interface Curator {
     phone: string | null
     isPublic: boolean
     bio: string | null
-    following: string[] | null
+    following: number[] | null
     profilePicture: string | null
     location: {
         id: number
@@ -17,13 +18,14 @@ export interface Curator {
 }
 
 export interface UpdateCuratorData {
+    email?: string
     password?: string
     name?: string
     gender?: string | null
     phone?: string | null
     isPublic?: boolean
     bio?: string | null
-    following?: string[] | null
+    following?: number[] | null
     profilePicture?: string | null
     location?: {
         id: number
@@ -45,6 +47,18 @@ export async function getCurrentCurator(): Promise<Curator> {
 
     if (!response.ok) {
         throw new Error('Erro ao buscar usuário')
+    }
+
+    return response.json()
+}
+
+export async function getCuratorById(id: number): Promise<Curator> {
+    const response = await apiFetch(
+        `http://localhost:8080/curator/id=${id}`
+    )
+
+    if (!response.ok) {
+        throw new Error('Erro ao buscar curator')
     }
 
     return response.json()
@@ -118,7 +132,7 @@ export async function createCurator(
 }
 
 export async function updateCurator(
-    email: string,
+    id: number,
     data: UpdateCuratorData
 ) {
     const response = await apiFetch(
@@ -129,7 +143,7 @@ export async function updateCurator(
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: email,
+                id: id,
                 ...data
             })
         }
@@ -142,9 +156,9 @@ export async function updateCurator(
     return response.json()
 }
 
-export async function deleteCurator(email: string) {
+export async function deleteCurator(id: number) {
     const response = await apiFetch(
-        `http://localhost:8080/curator/${email}`,
+        `http://localhost:8080/curator/${id}`,
         {
             method: 'DELETE'
         }

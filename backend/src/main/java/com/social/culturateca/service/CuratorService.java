@@ -8,6 +8,8 @@ public interface CuratorService {
     
     public List<Curator> curatorAll();
 
+    public Curator findById(Long id);
+
     public Curator findByEmail(String email);
 
     public List<Curator> findByName(String name);
@@ -16,6 +18,6 @@ public interface CuratorService {
 
     public Curator editCurator(Curator curator);
     
-    public void deleteCurator(String email);
+    public void deleteCurator(Long id);
 
 }

@@ -20,8 +20,12 @@ public class CuratorDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) 
         throws UsernameNotFoundException {
         
-        Curator user = curatorRepository.findById(email)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Curator user = curatorRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        
         return User
             .withUsername(user.getEmail())
             .password(user.getPassword())

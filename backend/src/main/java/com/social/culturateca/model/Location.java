@@ -1,5 +1,7 @@
 package com.social.culturateca.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,4 +30,9 @@ public class Location {
   @ManyToOne
   @JoinColumn(name = "location")
   private Location location;
+
+  @JsonIgnore
+  @ManyToOne
+  @JoinColumn(name = "curator")
+  private Curator curator;
 }

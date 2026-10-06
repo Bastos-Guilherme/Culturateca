@@ -5,11 +5,12 @@ import java.util.List;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +23,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Curator {
+
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(unique = true, nullable = false)
   private String email;
 
   @ManyToOne
@@ -44,7 +50,7 @@ public class Curator {
   private String bio;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  private List<String> following;
+  private List<Long> following;
 
   @Column(name = "profilepicture")
   private String profilePicture;

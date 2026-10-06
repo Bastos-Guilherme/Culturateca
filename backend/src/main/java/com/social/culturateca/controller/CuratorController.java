@@ -19,45 +19,50 @@ import com.social.culturateca.service.CuratorService;
 @RestController
 @RequestMapping("/curator")
 public class CuratorController {
-    
+
     @Autowired
     CuratorService curatorService;
 
     @GetMapping
-    public List<Curator> getAllCurator(){
+    public List<Curator> getAllCurator() {
         return curatorService.curatorAll();
     }
 
     @GetMapping("/me")
-    public Curator getCurrentCurator(Authentication authentication){
+    public Curator getCurrentCurator(Authentication authentication) {
         String email = authentication.getName();
 
         return curatorService.findByEmail(email);
     }
 
+    @GetMapping("/id={id}")
+    public Curator getById(@PathVariable("id") Long id) {
+        return curatorService.findById(id);
+    }
+
     @GetMapping("/email={email}")
-    public Curator getById(@PathVariable("email") String email){
+    public Curator getById(@PathVariable("email") String email) {
         return curatorService.findByEmail(email);
     }
 
     @GetMapping("/name={name}")
-    public List<Curator> getByName(@PathVariable("name") String name){
+    public List<Curator> getByName(@PathVariable("name") String name) {
         return curatorService.findByName(name);
     }
 
     @PostMapping("/register")
-    public Curator create(@RequestBody Curator curator){
+    public Curator create(@RequestBody Curator curator) {
         return curatorService.createCurator(curator);
     }
 
     @PutMapping
-    public Curator edit(@RequestBody Curator curator){
+    public Curator edit(@RequestBody Curator curator) {
         return curatorService.editCurator(curator);
     }
 
-    @DeleteMapping("/{email}")
-    public void delete(@PathVariable("email") String email){
-        curatorService.deleteCurator(email);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        curatorService.deleteCurator(id);
     }
 
 }

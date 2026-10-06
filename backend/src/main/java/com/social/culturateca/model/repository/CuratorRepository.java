@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.social.culturateca.model.Curator;
 
 @Repository
-public interface CuratorRepository extends JpaRepository<Curator, String> {
+public interface CuratorRepository extends JpaRepository<Curator, Long> {
   
+  Curator findByEmail(String email);
+
   List<Curator> findByNameContainingIgnoreCase(String name);
 }

@@ -12,6 +12,8 @@ public interface LocationService {
 
     public List<Location> findByName(String name);
 
+    public List<Location> findAllByCuratorId(Long curatorId);
+
     public Location createLocation(Location location);
 
     public Location editLocation(Location location);

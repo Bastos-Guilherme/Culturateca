@@ -42,7 +42,7 @@ public class CollectionServiceImpl implements CollectionService {
         throw new RuntimeException("ID não deve ser específicado");
       }
 
-      if (!curatorRepository.existsById(collection.getCurator().getEmail())) {
+      if (!curatorRepository.existsById(collection.getCurator().getId())) {
         throw new RuntimeException();
       }
 
@@ -77,7 +77,7 @@ public class CollectionServiceImpl implements CollectionService {
         throw new RuntimeException("Collection não encontrada");
       }
 
-      if (!curatorRepository.existsById(collection.getCurator().getEmail())) {
+      if (!curatorRepository.existsById(collection.getCurator().getId())) {
         throw new RuntimeException("Curator não encontrada");
       }
 

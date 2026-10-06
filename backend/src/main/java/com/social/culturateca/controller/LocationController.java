@@ -37,6 +37,11 @@ public class LocationController {
         return locationService.findByName(name);
     }
 
+    @GetMapping("/curator={curatorId}")
+    public List<Location> getByCurator(@PathVariable("curatorId") Long curatorId){
+        return locationService.findAllByCuratorId(curatorId);
+    }
+
     @PostMapping
     public Location create(@RequestBody Location location){
         return locationService.createLocation(location);

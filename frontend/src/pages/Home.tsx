@@ -15,14 +15,19 @@ function Home() {
               Selecione uma opção para começarmos.
             </p>
 
-            <NewItem />
+            <NewItem
+              icon="bi-plus"
+              title="Inserir novo item."
+              description="Cadastrar livros, mídias ou relíquias"
+              route="/property"
+            />
 
           </div>
           <div className="col-12 col-md-6 home-feed">
 
-              <h3 className='home-text'>Destaques</h3>
-              <p>Confira favoritos e Curadores seguidos</p>
-            
+            <h3 className='home-text'>Destaques</h3>
+            <p>Confira favoritos e Curadores seguidos</p>
+
           </div>
         </div>
       </div>

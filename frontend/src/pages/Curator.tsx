@@ -8,6 +8,8 @@ import { getCollectionsByCurator, type Collection } from '../services/collection
 
 import '../styles/Curator.css'
 
+import NewItem from '../components/NewItem'
+
 function CuratorPage() {
     const [curator, setCurator] = useState<Curator | null>(null)
     const [collections, setCollections] = useState<Collection[]>([])
@@ -30,12 +32,10 @@ function CuratorPage() {
 
                 setCollections(curatorCollections)
 
-                console.log(collections)
-
                 setFollowersCount(
                     allCurators.filter(
                         otherCurator =>
-                            otherCurator.following?.includes(currentCurator.email)
+                            otherCurator.following?.includes(currentCurator.id)
                     ).length
                 )
 
@@ -245,12 +245,23 @@ function CuratorPage() {
                                         </p>
                                     </div>
 
-                                    <button className="collection-button"
-                                        onClick={() => navigate(`/collection/${collection.id}`)}
-                                    >
-                                        Ver coleção
-                                        <i className="bi bi-arrow-right"></i>
-                                    </button>
+                                    <div className="collection-card-actions">
+                                        <NewItem
+                                            icon="bi-plus"
+                                            title="Adicionar item"
+                                            description="Adicionar novo item a esta coleção"
+                                            route={``}
+                                            className="collection-new-item"
+                                        />
+
+                                        <button
+                                            className="collection-button"
+                                            onClick={() => navigate(`/collection/${collection.id}`)}
+                                        >
+                                            Ver coleção
+                                            <i className="bi bi-arrow-right"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {collection.copies.length > 0 && (

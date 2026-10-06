@@ -40,6 +40,15 @@ export async function getLocationByName(name: string) {
     return response.json();
 }
 
+export async function getAllLocationsByCuratorId(curatorId: number) {
+    const response = await apiFetch(`http://localhost:8080/location/curator=${curatorId}`);
+
+    if (!response.ok) {
+        throw new Error("Erro ao buscar location");
+    }
+    return response.json();
+}
+
 export async function createLocation(
     name: string,
     latitude: number,

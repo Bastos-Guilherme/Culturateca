@@ -13,8 +13,8 @@ import com.social.culturateca.model.repository.LocationRepository;
 import com.social.culturateca.service.CuratorService;
 
 @Service
-public class CuratorServiceImpl implements CuratorService{
-    
+public class CuratorServiceImpl implements CuratorService {
+
     @Autowired
     CuratorRepository curatorRepository;
 
@@ -25,7 +25,7 @@ public class CuratorServiceImpl implements CuratorService{
     PasswordEncoder passwordEncoder;
 
     @Override
-    public List<Curator> curatorAll(){
+    public List<Curator> curatorAll() {
         try {
             return curatorRepository.findAll();
         } catch (Exception e) {
@@ -35,9 +35,9 @@ public class CuratorServiceImpl implements CuratorService{
     }
 
     @Override
-    public Curator findByEmail(String email){
+    public Curator findById(Long id) {
         try {
-            return curatorRepository.findById(email).get();
+            return curatorRepository.findById(id).get();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -45,7 +45,17 @@ public class CuratorServiceImpl implements CuratorService{
     }
 
     @Override
-    public List<Curator> findByName(String name){
+    public Curator findByEmail(String email) {
+        try {
+            return curatorRepository.findByEmail(email);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Curator> findByName(String name) {
         try {
             return curatorRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
@@ -55,13 +65,13 @@ public class CuratorServiceImpl implements CuratorService{
     }
 
     @Override
-    public Curator createCurator(Curator curator){
+    public Curator createCurator(Curator curator) {
         try {
             if (curator.getEmail() == null) {
                 throw new RuntimeException("Email deve ser específicado");
             }
 
-            if (!curatorRepository.findById(curator.getEmail()).isEmpty()) {
+            if (curatorRepository.findByEmail(curator.getEmail()) != null) {
                 throw new RuntimeException("Email já em uso por outro Curator");
             }
 
@@ -74,7 +84,7 @@ public class CuratorServiceImpl implements CuratorService{
                 Long locationId = curator.getLocation().getId();
 
                 Location parent = locationRepository.findById(locationId)
-                    .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+                        .orElseThrow(() -> new RuntimeException("Location não encontrada"));
 
                 curator.setLocation(parent);
             }
@@ -84,8 +94,7 @@ public class CuratorServiceImpl implements CuratorService{
             }
 
             curator.setPassword(
-                passwordEncoder.encode(curator.getPassword())
-            );
+                    passwordEncoder.encode(curator.getPassword()));
 
             if (curator.getName() == null) {
                 throw new RuntimeException("Name é necessário");
@@ -103,20 +112,25 @@ public class CuratorServiceImpl implements CuratorService{
     }
 
     @Override
-    public Curator editCurator(Curator curator){
+    public Curator editCurator(Curator curator) {
         try {
-            
 
-            if (curator.getEmail() == null) {
-                throw new RuntimeException("Email deve ser específicado");
+            if (curator.getId() == null) {
+                throw new RuntimeException("ID deve ser especificado");
             }
 
-            if (curatorRepository.findById(curator.getEmail()).isEmpty()) {
-                throw new RuntimeException("Curator não encontrado");
-            }
+            Curator existingCurator = curatorRepository.findById(curator.getId())
+                    .orElseThrow(() -> new RuntimeException("Curator não encontrado"));
 
-            Curator existingCurator = curatorRepository.findById(curator.getEmail())
-                .orElseThrow(() -> new RuntimeException("Curator não encontrado"));
+            if (curator.getEmail() != null &&
+                    !curator.getEmail().equals(existingCurator.getEmail())) {
+
+                if (curatorRepository.findByEmail(curator.getEmail()) != null) {
+                    throw new RuntimeException("Email já em uso por outro Curator");
+                }
+
+                existingCurator.setEmail(curator.getEmail());
+            }
 
             if (curator.getLocation() != null) {
 
@@ -127,26 +141,27 @@ public class CuratorServiceImpl implements CuratorService{
                 Long locationId = curator.getLocation().getId();
 
                 Location parent = locationRepository.findById(locationId)
-                    .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+                        .orElseThrow(() -> new RuntimeException("Location não encontrada"));
 
                 existingCurator.setLocation(parent);
             }
+            else {
+                existingCurator.setLocation(null);
+            }
 
             if (curator.getPassword() != null) {
-                existingCurator.setPassword(
-                    passwordEncoder.encode(curator.getPassword())
-                );
+                existingCurator.setPassword(passwordEncoder.encode(curator.getPassword()));
             }
 
             if (curator.getName() != null) {
                 existingCurator.setName(curator.getName());
             }
 
-            if(curator.getGender() != null) {
+            if (curator.getGender() != null) {
                 existingCurator.setGender(curator.getGender());
             }
 
-            if(curator.getPhone() != null) {
+            if (curator.getPhone() != null) {
                 existingCurator.setPhone(curator.getPhone());
             }
 
@@ -174,9 +189,9 @@ public class CuratorServiceImpl implements CuratorService{
     }
 
     @Override
-    public void deleteCurator(String email){
+    public void deleteCurator(Long id) {
         try {
-            curatorRepository.deleteById(email);
+            curatorRepository.deleteById(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
