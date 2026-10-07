@@ -29,6 +29,7 @@ public class Collection {
   @JoinColumn(name = "curator")
   private Curator curator;
 
+  @Column(nullable = false)
   private String name;
 
   @Column(name = "ispublic")

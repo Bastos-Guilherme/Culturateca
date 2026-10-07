@@ -76,6 +76,12 @@ public class CanonicServiceImpl implements CanonicService {
                 throw new RuntimeException("Não deve possuir ID específico");
             }
 
+            if (canonic.getName() == null || canonic.getName().isEmpty()) {
+                throw new RuntimeException(
+                    "Nome é obrigatório"
+                );
+            }
+
             if (canonic.getProperty() == null || canonic.getProperty().isEmpty()) {
                 throw new RuntimeException(
                     "Property é obrigatória"
@@ -124,6 +130,12 @@ public class CanonicServiceImpl implements CanonicService {
         try {
             if (canonic.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");
+            }
+
+            if (canonic.getName() == null || canonic.getName().isEmpty()) {
+                throw new RuntimeException(
+                    "Nome é obrigatório"
+                );
             }
 
             if(canonicRepository.findById(canonic.getId()).isEmpty()){

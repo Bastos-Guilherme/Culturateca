@@ -10,6 +10,7 @@ create table category (
 
 create table canonic (
 	id bigserial primary key,
+	name varchar(255) not null unique,
 	property jsonb not null,
 	category bigint references category(id)
 );
@@ -20,11 +21,12 @@ create table location (
 	latitude float,
 	longitude float,
     location bigint references location(id),
-	curator bigint references curator(id)
+	cu
 );
 
 create table copy (
 	id bigserial primary key,
+	name varchar(255) unique,
 	property jsonb not null,
 	canonic bigint references canonic(id),
 	location bigint references location(id)
