@@ -40,7 +40,7 @@ export async function getLocationByName(name: string) {
     return response.json();
 }
 
-export async function getAllLocationsByCuratorId(curatorId: number) {
+export async function getLocationsByCurator(curatorId: number) {
     const response = await apiFetch(`http://localhost:8080/location/curator=${curatorId}`);
 
     if (!response.ok) {

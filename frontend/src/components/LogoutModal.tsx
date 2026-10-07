@@ -6,7 +6,7 @@ interface logoutModalProps {
     onLogout: () => void;
 }
 
-export default function LogoutModal({ isOpen, onClose, onLogout }: logoutModalProps) {
+function LogoutModal({ isOpen, onClose, onLogout }: logoutModalProps) {
     if (!isOpen) return null;
 
     return (
@@ -26,3 +26,5 @@ export default function LogoutModal({ isOpen, onClose, onLogout }: logoutModalPr
         </div>
     );
 }
+
+export default LogoutModal;

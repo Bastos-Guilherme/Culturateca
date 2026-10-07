@@ -250,7 +250,7 @@ function CuratorPage() {
                                             icon="bi-plus"
                                             title="Adicionar item"
                                             description="Adicionar novo item a esta coleção"
-                                            route={``}
+                                            route={`/createItem`}
                                             className="collection-new-item"
                                         />
 

@@ -9,7 +9,7 @@ interface NewItemProps {
     className?: string
 }
 
-export default function NewItem({
+function NewItem({
     icon,
     title,
     description,
@@ -41,3 +41,5 @@ export default function NewItem({
         </button>
     )
 }
+
+export default NewItem

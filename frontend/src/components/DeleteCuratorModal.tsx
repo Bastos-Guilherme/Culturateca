@@ -6,7 +6,7 @@ interface DeleteCuratorModalProps {
   onDelete: () => void;
 }
 
-export default function DeleteCuratorModal({ isOpen, onClose, onDelete }: DeleteCuratorModalProps){
+function DeleteCuratorModal({ isOpen, onClose, onDelete }: DeleteCuratorModalProps){
     if (!isOpen) return null;
 
     return (
@@ -44,3 +44,5 @@ export default function DeleteCuratorModal({ isOpen, onClose, onDelete }: Delete
         </div>
     )
 }
+
+export default DeleteCuratorModal

@@ -11,6 +11,7 @@ import Login from './pages/Login'
 import CuratorPage from './pages/Curator'
 import CollectionPage from './pages/Collection'
 import Settings from './pages/Settings'
+import CreateItem from './pages/CreateItem'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/collection/:id" element={<CollectionPage />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/createItem" element={<CreateItem />} />
           <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         </Route>
       </Routes>
