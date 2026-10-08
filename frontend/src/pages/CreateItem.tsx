@@ -7,6 +7,8 @@ import { getCollectionsByCurator, type Collection } from '../services/collection
 import { getLocationsByCurator, type Location } from '../services/locationService'
 import { getCurrentCurator } from '../services/curatorService'
 import AddPropertyModal from '../components/AddPropertyModal'
+import AddCategoryModal from '../components/AddCategoryModal'
+import AllCategoriesModal from '../components/AllCategoriesModal'
 
 import '../styles/CreateItem.css'
 
@@ -29,6 +31,8 @@ export default function CreateItem() {
     const [selectedCollection, setSelectedCollection] = useState<number | null>(null)
     const [selectedLocation, setSelectedLocation] = useState<number | null>(null)
     const [showPropertyModal, setShowPropertyModal] = useState(false)
+    const [showCategoryModal, setShowCategoryModal] = useState(false)
+    const [showAllCategoriesModal, setShowAllCategoriesModal] = useState(false)
 
     const [loading, setLoading] = useState(true)
 
@@ -88,10 +92,7 @@ export default function CreateItem() {
         )
     }
 
-    function updatePropertyField(
-        index: number,
-        propertyId: number | null
-    ) {
+    function updatePropertyField(index: number, propertyId: number | null) {
         setItemProperties(previous =>
             previous.map((itemProperty, propertyIndex) =>
                 propertyIndex === index
@@ -104,10 +105,7 @@ export default function CreateItem() {
         )
     }
 
-    function updatePropertyValue(
-        index: number,
-        value: string
-    ) {
+    function updatePropertyValue(index: number, value: string) {
         setItemProperties(previous =>
             previous.map((itemProperty, propertyIndex) =>
                 propertyIndex === index
@@ -120,9 +118,22 @@ export default function CreateItem() {
         )
     }
 
-    function handlePropertyCreated(
-        property: Property
-    ) {
+    const firstCategories = categories.slice(0, 3)
+
+    const selectedCategoryData = categories.find(category => category.id === selectedCategory)
+
+    const visibleCategories =
+        selectedCategoryData &&
+            !firstCategories.some(
+                category => category.id === selectedCategory
+            )
+            ? [
+                ...categories.slice(0, 2),
+                selectedCategoryData
+            ]
+            : firstCategories
+
+    function handlePropertyCreated(property: Property) {
         setProperties(previous => [
             ...previous,
             property
@@ -135,6 +146,21 @@ export default function CreateItem() {
             }
         ])
         setShowPropertyModal(false)
+    }
+
+    function handleCategoryCreated(category: Category) {
+        setCategories(previous => {
+            const alreadyExists = previous.some(
+                item => item.id === category.id
+            )
+
+            return alreadyExists
+                ? previous
+                : [...previous, category]
+        })
+
+        setSelectedCategory(category.id)
+        setShowCategoryModal(false)
     }
 
     function handleSave() {
@@ -196,31 +222,23 @@ export default function CreateItem() {
                         </p>
                     </div>
                     <div className="category-list">
-                        {categories.map(category => (
+                        {visibleCategories.map(category => (
                             <button
                                 key={category.id}
                                 type="button"
-                                className={
-                                    `create-item-category ${
-                                        selectedCategory === category.id
-                                            ? 'selected'
-                                            : ''
-                                    }`
-                                }
-                                onClick={() =>
-                                    setSelectedCategory(category.id)
-                                }
+                                className={`create-item-category ${selectedCategory === category.id
+                                    ? 'selected'
+                                    : ''
+                                    }`}
+                                onClick={() => setSelectedCategory(category.id)}
                             >
                                 <div className="category-icon">
                                     <i className="bi bi-box"></i>
                                 </div>
                                 <div className="category-content">
-                                    <strong>
-                                        {category.name}
-                                    </strong>
+                                    <strong>{category.name}</strong>
                                     <span>
-                                        Categoria disponível
-                                        para este acervo.
+                                        Categoria disponível para este acervo.
                                     </span>
                                 </div>
                                 <div className="category-check">
@@ -234,27 +252,39 @@ export default function CreateItem() {
                                 </div>
                             </button>
                         ))}
+
                         <button
                             type="button"
                             className="create-item-category new-category"
+                            onClick={() => setShowCategoryModal(true)}
                         >
                             <div className="category-icon">
                                 <i className="bi bi-plus-lg"></i>
                             </div>
+
                             <div className="category-content">
-                                <strong>
-                                    Criar nova categoria
-                                </strong>
+                                <strong>Criar nova categoria</strong>
 
                                 <span>
-                                    Crie uma nova categoria
-                                    para seu acervo.
+                                    Crie uma nova categoria para seu acervo.
                                 </span>
                             </div>
+
                             <div className="category-check">
                                 <i className="bi bi-arrow-right"></i>
                             </div>
                         </button>
+
+                        {categories.length > 3 && (
+                            <button
+                                type="button"
+                                className="show-all-categories"
+                                onClick={() => setShowAllCategoriesModal(true)}
+                            >
+                                Mostrar todas as categorias
+                                <i className="bi bi-arrow-right"></i>
+                            </button>
+                        )}
                     </div>
                 </section>
                 <section className="create-item-form">
@@ -468,6 +498,24 @@ export default function CreateItem() {
                         setShowPropertyModal(false)
                     }
                     onCreated={handlePropertyCreated}
+                />
+            )}
+            {showCategoryModal && (
+                <AddCategoryModal
+                    categories={categories}
+                    onClose={() =>
+                        setShowCategoryModal(false)
+                    }
+                    onCreated={handleCategoryCreated}
+                />
+            )}
+            {showAllCategoriesModal && (
+                <AllCategoriesModal
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onSelect={setSelectedCategory}
+                    onClose={() => setShowAllCategoriesModal(false)}
+                    onCreateCategory={() => setShowCategoryModal(true)}
                 />
             )}
         </div>

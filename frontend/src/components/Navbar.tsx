@@ -82,11 +82,6 @@ function Navbar() {
             <i className="bi bi-person"></i>
             <span>Perfil</span>
           </NavLink>
-
-          <NavLink to="/property" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-box-fill"></i>
-            <span>Property</span>
-          </NavLink>
         </nav>
       </aside>
 

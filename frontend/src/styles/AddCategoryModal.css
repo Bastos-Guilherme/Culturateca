@@ -1,4 +1,4 @@
-.add-property-overlay {
+.add-category-overlay {
     position: fixed;
 
     inset: 0;
@@ -14,7 +14,7 @@
     background-color: rgba(0, 0, 0, 0.45);
 }
 
-.add-property-modal {
+.add-category-modal {
     width: min(520px, 100%);
 
     max-height: 90vh;
@@ -32,7 +32,7 @@
     overflow: hidden;
 }
 
-.add-property-header {
+.add-category-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -43,13 +43,13 @@
     border-bottom: 1px solid #ddd;
 }
 
-.add-property-header h2 {
+.add-category-header h2 {
     margin: 4px 0 0;
 
     font-size: 23px;
 }
 
-.add-property-close {
+.add-category-close {
     width: 30px;
     height: 30px;
 
@@ -65,17 +65,17 @@
     cursor: pointer;
 }
 
-.add-property-close:hover {
+.add-category-close:hover {
     background-color: #f3f1ef;
 }
 
-.add-property-body {
+.add-category-body {
     padding: 20px 22px;
 
     overflow-y: auto;
 }
 
-.add-property-description {
+.add-category-description {
     margin: 0 0 18px;
 
     font-size: 12px;
@@ -84,20 +84,20 @@
     color: #666;
 }
 
-.add-property-existing {
+.add-category-existing {
     display: flex;
     flex-direction: column;
 
     gap: 7px;
 }
 
-.add-property-existing > label,
-.add-property-field label {
+.add-category-existing > label,
+.add-category-field label {
     font-size: 11px;
     font-weight: 700;
 }
 
-.add-property-list {
+.add-category-list {
     max-height: 150px;
 
     display: flex;
@@ -116,7 +116,7 @@
     overflow-y: auto;
 }
 
-.add-property-item {
+.add-category-item {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -131,12 +131,12 @@
     font-size: 10px;
 }
 
-.add-property-list > span {
+.add-category-list > span {
     font-size: 10px;
     color: #888;
 }
 
-.add-property-divider {
+.add-category-divider {
     display: flex;
     align-items: center;
 
@@ -148,8 +148,8 @@
     color: #888;
 }
 
-.add-property-divider::before,
-.add-property-divider::after {
+.add-category-divider::before,
+.add-category-divider::after {
     content: '';
 
     flex: 1;
@@ -159,14 +159,14 @@
     background-color: #ddd;
 }
 
-.add-property-field {
+.add-category-field {
     display: flex;
     flex-direction: column;
 
     gap: 6px;
 }
 
-.add-property-field input {
+.add-category-field input {
     padding: 10px 12px;
 
     border: 1.5px solid #333;
@@ -178,18 +178,18 @@
     outline: none;
 }
 
-.add-property-field input:focus {
+.add-category-field input:focus {
     border-color: #596c6d;
 }
 
-.add-property-error {
+.add-category-error {
     margin: 8px 0 0;
 
     font-size: 10px;
     color: #a33;
 }
 
-.add-property-actions {
+.add-category-actions {
     display: flex;
     justify-content: flex-end;
 
@@ -200,8 +200,8 @@
     border-top: 1px solid #ddd;
 }
 
-.add-property-cancel,
-.add-property-save {
+.add-category-cancel,
+.add-category-save {
     padding: 8px 12px;
 
     border-radius: 4px;
@@ -212,21 +212,21 @@
     cursor: pointer;
 }
 
-.add-property-cancel {
+.add-category-cancel {
     background-color: #fff;
 
     border: 1.5px solid #333;
 }
 
-.add-property-save {
+.add-category-save {
     background-color: #fff47a;
 
     border: 1.5px solid #222;
     box-shadow: 2px 2px 0 #222;
 }
 
-.add-property-save:disabled,
-.add-property-cancel:disabled {
+.add-category-save:disabled,
+.add-category-cancel:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
