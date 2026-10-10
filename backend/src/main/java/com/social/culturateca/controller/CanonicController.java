@@ -24,7 +24,7 @@ public class CanonicController {
 
     @GetMapping
     public List<Canonic> getAllCanonic(){
-        return canonicService.canonicAll();
+        return canonicService.findAllCanonics();
     }
 
     @GetMapping("/id={id}")

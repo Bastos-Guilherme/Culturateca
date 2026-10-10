@@ -6,7 +6,7 @@ import com.social.culturateca.model.Canonic;
 
 public interface CanonicService {
 
-    public List<Canonic> canonicAll();
+    public List<Canonic> findAllCanonics();
 
     public Canonic findById(Long id);
 

@@ -23,7 +23,7 @@ public class PropertyCollection {
 
     @GetMapping
     public List<Property> getAllProperty(){
-        return propertyService.propertyAll();
+        return propertyService.findAllProperties();
     }
 
     @GetMapping("/id={id}")

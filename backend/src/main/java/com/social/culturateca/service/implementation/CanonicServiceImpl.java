@@ -11,9 +11,9 @@ import com.social.culturateca.model.Canonic;
 import com.social.culturateca.model.Category;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.CanonicRepository;
-import com.social.culturateca.model.repository.CategoryRepository;
-import com.social.culturateca.model.repository.PropertyRepository;
 import com.social.culturateca.service.CanonicService;
+import com.social.culturateca.service.CategoryService;
+import com.social.culturateca.service.PropertyService;
 
 @Service
 public class CanonicServiceImpl implements CanonicService {
@@ -22,13 +22,13 @@ public class CanonicServiceImpl implements CanonicService {
     CanonicRepository canonicRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    CategoryService categoryService;
 
     @Autowired
-    PropertyRepository propertyRepository;
+    PropertyService propertyService;
 
     @Override
-    public List<Canonic> canonicAll(){
+    public List<Canonic> findAllCanonics(){
         try {
             return canonicRepository.findAll();
         } catch (Exception e) {
@@ -50,8 +50,10 @@ public class CanonicServiceImpl implements CanonicService {
     @Override
     public List<Canonic> findByCategory(Long categoryId){
         try {
-            Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+            Category category = categoryService.findById(categoryId);
+            if (null == category) {
+                throw new RuntimeException("Categoria não encontrada");
+            }
             return canonicRepository.findByCategory(category);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -86,11 +88,11 @@ public class CanonicServiceImpl implements CanonicService {
                 throw new RuntimeException(
                     "Property é obrigatória"
                 );
-            }   
+            }
 
             Set<Long> propertyIds = canonic.getProperty().keySet();
 
-            List<Property> properties = propertyRepository.findAllById(propertyIds);
+            List<Property> properties = propertyService.findAllPropertiesById(propertyIds.stream().toList());
 
             Set<Long> existingIds = properties.stream()
                     .map(Property::getId)
@@ -111,10 +113,8 @@ public class CanonicServiceImpl implements CanonicService {
                 );
             }
 
-            if (!categoryRepository.existsById(canonic.getCategory().getId())) {
-                throw new RuntimeException(
-                    "ID de Category inexistente"
-                );
+            if (null == categoryService.findById(canonic.getCategory().getId())) {
+                throw new RuntimeException("ID de Category inexistente");
             }
 
             return canonicRepository.save(canonic);
@@ -150,7 +150,7 @@ public class CanonicServiceImpl implements CanonicService {
 
             Set<Long> propertyIds = canonic.getProperty().keySet();
 
-            List<Property> properties = propertyRepository.findAllById(propertyIds);
+            List<Property> properties = propertyService.findAllPropertiesById(propertyIds.stream().toList());
 
             Set<Long> existingIds = properties.stream()
                     .map(Property::getId)
@@ -171,7 +171,7 @@ public class CanonicServiceImpl implements CanonicService {
                 );
             }
 
-            if (!categoryRepository.existsById(canonic.getCategory().getId())) {
+            if (null == categoryService.findById(canonic.getCategory().getId())) {
                 throw new RuntimeException(
                     "ID de Category inexistente"
                 );

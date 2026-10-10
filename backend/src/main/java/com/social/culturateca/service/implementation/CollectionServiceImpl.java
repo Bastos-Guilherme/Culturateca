@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.social.culturateca.model.Collection;
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.repository.CollectionRepository;
-import com.social.culturateca.model.repository.CuratorRepository;
 import com.social.culturateca.service.CollectionService;
+import com.social.culturateca.service.CuratorService;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
@@ -22,10 +22,10 @@ public class CollectionServiceImpl implements CollectionService {
   CollectionRepository collectionRepository;
 
   @Autowired
-  CuratorRepository curatorRepository;
+  CuratorService curatorService;
 
   @Override
-  public List<Collection> collectionAll(){
+  public List<Collection> findAllCollections(){
       try {
           return collectionRepository.findAll();
       } catch (Exception e) {
@@ -42,7 +42,7 @@ public class CollectionServiceImpl implements CollectionService {
         throw new RuntimeException("ID não deve ser específicado");
       }
 
-      if (!curatorRepository.existsById(collection.getCurator().getId())) {
+      if (null == curatorService.findById(collection.getCurator().getId())) {
         throw new RuntimeException();
       }
 
@@ -77,7 +77,7 @@ public class CollectionServiceImpl implements CollectionService {
         throw new RuntimeException("Collection não encontrada");
       }
 
-      if (!curatorRepository.existsById(collection.getCurator().getId())) {
+      if (null == curatorService.findById(collection.getCurator().getId())) {
         throw new RuntimeException("Curator não encontrada");
       }
 

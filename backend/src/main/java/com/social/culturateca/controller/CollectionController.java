@@ -29,7 +29,7 @@ public class CollectionController {
 
   @GetMapping
   public List<Collection> getAllCollection(){
-    return collectionService.collectionAll();
+    return collectionService.findAllCollections();
   }
 
   @GetMapping("/curator={email}")

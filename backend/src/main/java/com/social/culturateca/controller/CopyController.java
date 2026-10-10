@@ -24,7 +24,7 @@ public class CopyController {
 
     @GetMapping
     public List<Copy> getAllCopy(){
-        return copyService.copyAll();
+        return copyService.findAllCopies();
     }
 
     @GetMapping("/id={id}")

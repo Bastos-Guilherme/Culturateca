@@ -7,21 +7,21 @@ import org.springframework.stereotype.Service;
 
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Location;
-import com.social.culturateca.model.repository.CuratorRepository;
 import com.social.culturateca.model.repository.LocationRepository;
+import com.social.culturateca.service.CuratorService;
 import com.social.culturateca.service.LocationService;
 
 @Service
 public class LocationServiceImpl implements LocationService {
 
     @Autowired
-    CuratorRepository curatorRepository;
+    CuratorService curatorService;
 
     @Autowired
     LocationRepository locationRepository;
 
     @Override
-    public List<Location> locationAll() {
+    public List<Location> findAllLocations() {
         try {
             return locationRepository.findAll();
         } catch (Exception e) {
@@ -101,8 +101,10 @@ public class LocationServiceImpl implements LocationService {
 
                 Long curatorId = location.getCurator().getId();
 
-                Curator curator = curatorRepository.findById(curatorId)
-                        .orElseThrow(() -> new RuntimeException("Curator não encontrado"));
+                Curator curator = curatorService.findById(curatorId);
+                if (null == curator) {
+                    throw new RuntimeException("Curator não encontrado");
+                }
 
                 location.setCurator(curator);
             }
@@ -168,8 +170,10 @@ public class LocationServiceImpl implements LocationService {
 
                 Long curatorId = location.getCurator().getId();
 
-                Curator curator = curatorRepository.findById(curatorId)
-                        .orElseThrow(() -> new RuntimeException("Curator não encontrado"));
+                Curator curator = curatorService.findById(curatorId);
+                if (null == curator) {
+                    throw new RuntimeException("Curator não encontrado");
+                }
 
                 existingLocation.setCurator(curator);
             }

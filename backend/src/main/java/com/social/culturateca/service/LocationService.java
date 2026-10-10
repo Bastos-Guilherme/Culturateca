@@ -6,7 +6,7 @@ import com.social.culturateca.model.Location;
 
 public interface LocationService {
     
-    public List<Location> locationAll();
+    public List<Location> findAllLocations();
 
     public Location findById(Long id);
 

@@ -6,7 +6,7 @@ import com.social.culturateca.model.Copy;
 
 public interface CopyService {
     
-    public List<Copy> copyAll();
+    public List<Copy> findAllCopies();
 
     public Copy findById(Long id);
 

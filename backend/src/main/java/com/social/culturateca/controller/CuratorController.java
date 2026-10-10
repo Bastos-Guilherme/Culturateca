@@ -25,7 +25,7 @@ public class CuratorController {
 
     @GetMapping
     public List<Curator> getAllCurator() {
-        return curatorService.curatorAll();
+        return curatorService.findAllCurators();
     }
 
     @GetMapping("/me")

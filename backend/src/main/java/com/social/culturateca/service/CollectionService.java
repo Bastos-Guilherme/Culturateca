@@ -7,7 +7,7 @@ import com.social.culturateca.model.Curator;
 
 public interface CollectionService {
 
-  public List<Collection> collectionAll();
+  public List<Collection> findAllCollections();
 
   public Collection createCollection(Collection collection);
 

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Location;
 import com.social.culturateca.model.repository.CuratorRepository;
-import com.social.culturateca.model.repository.LocationRepository;
 import com.social.culturateca.service.CuratorService;
+import com.social.culturateca.service.LocationService;
 
 @Service
 public class CuratorServiceImpl implements CuratorService {
@@ -19,13 +19,13 @@ public class CuratorServiceImpl implements CuratorService {
     CuratorRepository curatorRepository;
 
     @Autowired
-    LocationRepository locationRepository;
+    LocationService locationService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @Override
-    public List<Curator> curatorAll() {
+    public List<Curator> findAllCurators() {
         try {
             return curatorRepository.findAll();
         } catch (Exception e) {
@@ -83,8 +83,10 @@ public class CuratorServiceImpl implements CuratorService {
 
                 Long locationId = curator.getLocation().getId();
 
-                Location parent = locationRepository.findById(locationId)
-                        .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+                Location parent = locationService.findById(locationId);
+                if (null == parent) {
+                    throw new RuntimeException("Location não encontrada");
+                }
 
                 curator.setLocation(parent);
             }
@@ -140,8 +142,10 @@ public class CuratorServiceImpl implements CuratorService {
 
                 Long locationId = curator.getLocation().getId();
 
-                Location parent = locationRepository.findById(locationId)
-                        .orElseThrow(() -> new RuntimeException("Location não encontrada"));
+                Location parent = locationService.findById(locationId);
+                if (null == parent) {
+                    throw new RuntimeException("Location não encontrada");
+                }
 
                 existingCurator.setLocation(parent);
             }

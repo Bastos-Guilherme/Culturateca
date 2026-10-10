@@ -24,7 +24,7 @@ public class LocationController {
 
     @GetMapping
     public List<Location> getAllLocation(){
-        return locationService.locationAll();
+        return locationService.findAllLocations();
     }
 
     @GetMapping("/id={id}")

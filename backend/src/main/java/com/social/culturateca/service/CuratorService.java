@@ -6,7 +6,7 @@ import com.social.culturateca.model.Curator;
 
 public interface CuratorService {
     
-    public List<Curator> curatorAll();
+    public List<Curator> findAllCurators();
 
     public Curator findById(Long id);
 

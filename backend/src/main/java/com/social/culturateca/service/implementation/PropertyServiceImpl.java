@@ -1,6 +1,7 @@
 package com.social.culturateca.service.implementation;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class PropertyServiceImpl implements PropertyService {
     PropertyRepository propertyRepository;
 
     @Override
-    public List<Property> propertyAll(){
+    public List<Property> findAllProperties(){
         try {
             return propertyRepository.findAll();
         } catch (Exception e) {
@@ -25,9 +26,9 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public List<Property> findByName(String name){
+    public List<Property> findAllPropertiesById(List<Long> ids){
         try {
-            return propertyRepository.findByNameContainingIgnoreCase(name);
+            return propertyRepository.findAllById(ids);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -38,6 +39,16 @@ public class PropertyServiceImpl implements PropertyService {
     public Property findById(Long id){
         try {
             return propertyRepository.findById(id).get();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Property> findByName(String name){
+        try {
+            return propertyRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -74,7 +85,7 @@ public class PropertyServiceImpl implements PropertyService {
             }
 
             if (!propertyRepository.findByNameContainingIgnoreCase(property.getName()).isEmpty()) {
-                throw new RuntimeException();
+                throw new RuntimeException("Property ja cadastrada");
             }
 
             return propertyRepository.save(property);

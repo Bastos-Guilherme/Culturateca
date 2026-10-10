@@ -5,15 +5,17 @@ import com.social.culturateca.model.Property;
 
 public interface PropertyService {
     
-    public List<Property> propertyAll();
+    public List<Property> findAllProperties();
+
+    public List<Property> findAllPropertiesById(List<Long> ids);
+
+    public Property findById(Long id);
+
+    public List<Property> findByName(String name);
 
     public Property createProperty(Property property);
 
     public Property editProperty(Property property);
     
     public void deleteProperty(Long id);
-
-    public Property findById(Long id);
-
-    public List<Property> findByName(String name);
 }

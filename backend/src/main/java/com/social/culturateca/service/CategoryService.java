@@ -6,7 +6,7 @@ import com.social.culturateca.model.Category;
 
 public interface CategoryService {
 
-    public List<Category> categoryAll();
+    public List<Category> findAllCategories();
 
     public Category findById(Long id);
 
