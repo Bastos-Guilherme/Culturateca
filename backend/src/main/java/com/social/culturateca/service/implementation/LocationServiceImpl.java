@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Location;
 import com.social.culturateca.model.repository.LocationRepository;
-import com.social.culturateca.service.CuratorService;
+import com.social.culturateca.model.repository.CuratorRepository;
 import com.social.culturateca.service.LocationService;
 
 @Service
 public class LocationServiceImpl implements LocationService {
 
     @Autowired
-    CuratorService curatorService;
+    CuratorRepository curatorRepository;
 
     @Autowired
     LocationRepository locationRepository;
@@ -101,7 +101,7 @@ public class LocationServiceImpl implements LocationService {
 
                 Long curatorId = location.getCurator().getId();
 
-                Curator curator = curatorService.findById(curatorId);
+                Curator curator = curatorRepository.findById(curatorId).orElse(null);
                 if (null == curator) {
                     throw new RuntimeException("Curator não encontrado");
                 }
@@ -170,7 +170,7 @@ public class LocationServiceImpl implements LocationService {
 
                 Long curatorId = location.getCurator().getId();
 
-                Curator curator = curatorService.findById(curatorId);
+                Curator curator = curatorRepository.findById(curatorId).orElse(null);
                 if (null == curator) {
                     throw new RuntimeException("Curator não encontrado");
                 }

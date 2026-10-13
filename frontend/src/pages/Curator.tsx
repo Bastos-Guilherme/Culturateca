@@ -9,12 +9,16 @@ import { getCollectionsByCurator, type Collection } from '../services/collection
 import '../styles/Curator.css'
 
 import NewItem from '../components/NewItem'
+import AddCollectionModal from '../components/AddCollectionModal'
 
 function CuratorPage() {
     const [curator, setCurator] = useState<Curator | null>(null)
+    const [curatorEmail, setCuratorEmail] = useState<string>('')
     const [collections, setCollections] = useState<Collection[]>([])
     const [followersCount, setFollowersCount] = useState(0)
     const [loading, setLoading] = useState(true)
+
+    const [showAddCollectionModal, setShowAddCollectionModal] = useState(false)
 
     const navigate = useNavigate()
 
@@ -24,6 +28,7 @@ function CuratorPage() {
                 const currentCurator = await getCurrentCurator()
 
                 setCurator(currentCurator)
+                setCuratorEmail(currentCurator.email)
 
                 const [curatorCollections, allCurators] = await Promise.all([
                     getCollectionsByCurator(currentCurator.email),
@@ -48,6 +53,18 @@ function CuratorPage() {
 
         loadProfile()
     }, [])
+
+    function handleCollectionCreated(collection: Collection) {
+        setCollections(previous => {
+            const alreadyExists = previous.some(
+                item => item.id === collection.id
+            )
+            return alreadyExists
+                ? previous
+                : [...previous, collection]
+        })
+        setShowAddCollectionModal(false)
+    }
 
     if (loading) {
         return (
@@ -183,26 +200,28 @@ function CuratorPage() {
 
             <section className="curator-collections">
                 <div className="collections-header">
-                    <div>
+                    <div className="collections-title">
                         <span className="section-label">
                             ACERVO SALVAGUARDADO
                         </span>
 
-                        <h2>
-                            Acervos & Coleções
-                        </h2>
+                        <h2>Acervos & Coleções</h2>
                     </div>
-
                     <div className="collection-filters">
+                        <NewItem
+                            icon="bi-plus"
+                            title="Adicionar coleção"
+                            description="Criar uma nova coleção"
+                            className="collection-new-item collections-header-new-item"
+                            onClick={() => setShowAddCollectionModal(true)}
+                        />
+
                         <button className="active">
                             Todos os Acervos
                         </button>
-
                         <button>
-
                             Mais Recentes
                         </button>
-
                         <button>
                             Mais Populares
                         </button>
@@ -297,6 +316,14 @@ function CuratorPage() {
                     </div>
                 )}
             </section>
+            {showAddCollectionModal && (
+                <AddCollectionModal
+                    collections={collections}
+                    curatorEmail={curatorEmail}
+                    onClose={() => setShowAddCollectionModal(false)}
+                    onCreated={handleCollectionCreated}
+                />
+            )}
         </div>
     )
 }

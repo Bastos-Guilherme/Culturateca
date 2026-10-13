@@ -21,7 +21,7 @@ create table location (
 	latitude float,
 	longitude float,
     location bigint references location(id),
-	cu
+	curator bigint references curator(id)
 );
 
 create table copy (

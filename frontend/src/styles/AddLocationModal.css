@@ -1,0 +1,223 @@
+
+.add-location-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.add-location-modal {
+    width: min(520px, 100%);
+    max-height: 90vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: #fff;
+
+    border: 2px solid #222;
+    border-radius: 10px;
+
+    box-shadow: 5px 5px 0 #222;
+
+    overflow: hidden;
+}
+
+.add-location-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    text-align: left;
+
+    padding: 20px 22px;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.add-location-header h2 {
+    margin: 4px 0 0;
+    font-size: 23px;
+}
+
+.add-location-close {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: transparent;
+    border: 1px solid #333;
+    border-radius: 4px;
+
+    cursor: pointer;
+}
+
+.add-location-close:hover {
+    background-color: #f3f1ef;
+}
+
+.add-location-close:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.add-location-body {
+    padding: 20px 22px;
+    overflow-y: auto;
+}
+
+.add-location-description {
+    margin: 0 0 20px;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    color: #666;
+}
+
+.add-location-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.add-location-field > label {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.add-location-field input,
+.add-location-field select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    padding: 10px 12px;
+
+    border: 1.5px solid #333;
+    border-radius: 5px;
+
+    background-color: #fff;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    outline: none;
+}
+
+.add-location-field input:focus,
+.add-location-field select:focus {
+    border-color: #596c6d;
+}
+
+.add-location-field input:disabled,
+.add-location-field select:disabled {
+    background-color: #f3f1ef;
+}
+
+.add-location-coordinates {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+
+    margin-top: 18px;
+}
+
+.add-location-coordinates input {
+    padding: 10px 8px;
+}
+
+.add-location-body > .add-location-field:last-of-type {
+    margin-top: 20px;
+}
+
+.add-location-field small {
+    font-size: 10px;
+    line-height: 1.5;
+    color: #777;
+}
+
+.add-location-error {
+    margin: 12px 0 0;
+
+    font-size: 11px;
+    line-height: 1.5;
+
+    color: #a33;
+}
+
+.add-location-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    padding: 15px 22px;
+
+    border-top: 1px solid #ddd;
+}
+
+.add-location-cancel,
+.add-location-save {
+    padding: 8px 12px;
+
+    border-radius: 4px;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.add-location-cancel {
+    background-color: #fff;
+    border: 1.5px solid #333;
+}
+
+.add-location-cancel:hover {
+    background-color: #f3f1ef;
+}
+
+.add-location-save {
+    background-color: #fff47a;
+
+    border: 1.5px solid #222;
+    box-shadow: 2px 2px 0 #222;
+}
+
+.add-location-save:hover {
+    background-color: #f5e96d;
+}
+
+.add-location-save:disabled,
+.add-location-cancel:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .add-location-coordinates {
+        grid-template-columns: 1fr;
+    }
+
+    .add-location-header,
+    .add-location-body {
+        padding: 18px;
+    }
+
+    .add-location-actions {
+        padding: 14px 18px;
+    }
+}

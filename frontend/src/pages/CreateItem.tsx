@@ -9,6 +9,8 @@ import { getCurrentCurator } from '../services/curatorService'
 import AddPropertyModal from '../components/AddPropertyModal'
 import AddCategoryModal from '../components/AddCategoryModal'
 import AllCategoriesModal from '../components/AllCategoriesModal'
+import AddCollectionModal from '../components/AddCollectionModal'
+import AddLocationModal from '../components/AddLocationModal'
 
 import '../styles/CreateItem.css'
 
@@ -24,15 +26,19 @@ export default function CreateItem() {
     const [properties, setProperties] = useState<Property[]>([])
     const [collections, setCollections] = useState<Collection[]>([])
     const [locations, setLocations] = useState<Location[]>([])
+    const [curatorEmail, setCuratorEmail] = useState('')
+    const [curatorId, setCuratorId] = useState<number | null>(null)
 
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
     const [itemName, setItemName] = useState('')
     const [itemProperties, setItemProperties] = useState<ItemProperty[]>([])
     const [selectedCollection, setSelectedCollection] = useState<number | null>(null)
     const [selectedLocation, setSelectedLocation] = useState<number | null>(null)
-    const [showPropertyModal, setShowPropertyModal] = useState(false)
-    const [showCategoryModal, setShowCategoryModal] = useState(false)
+    const [showAddPropertyModal, setShowAddPropertyModal] = useState(false)
+    const [showAddCategoryModal, setShowAddCategoryModal] = useState(false)
     const [showAllCategoriesModal, setShowAllCategoriesModal] = useState(false)
+    const [showAddCollectionModal, setShowAddCollectionModal] = useState(false)
+    const [showAddLocationModal, setShowAddLocationModal] = useState(false)
 
     const [loading, setLoading] = useState(true)
 
@@ -51,6 +57,8 @@ export default function CreateItem() {
 
                 setCategories(categoryData)
                 setProperties(propertyData)
+                setCuratorEmail(curatorData.email)
+                setCuratorId(curatorData.id)
 
                 const [
                     collectionData,
@@ -71,6 +79,7 @@ export default function CreateItem() {
                 setLoading(false)
             }
         }
+
         loadData()
     }, [])
 
@@ -145,7 +154,7 @@ export default function CreateItem() {
                 value: ''
             }
         ])
-        setShowPropertyModal(false)
+        setShowAddPropertyModal(false)
     }
 
     function handleCategoryCreated(category: Category) {
@@ -153,15 +162,40 @@ export default function CreateItem() {
             const alreadyExists = previous.some(
                 item => item.id === category.id
             )
-
             return alreadyExists
                 ? previous
                 : [...previous, category]
         })
-
         setSelectedCategory(category.id)
-        setShowCategoryModal(false)
+        setShowAddCategoryModal(false)
     }
+
+    function handleCollectionCreated(collection: Collection) {
+        setCollections(previous => {
+            const alreadyExists = previous.some(
+                item => item.id === collection.id
+            )
+            return alreadyExists
+                ? previous
+                : [...previous, collection]
+        })
+        setSelectedCollection(collection.id)
+        setShowAddCollectionModal(false)
+    }
+
+    function handleLocationCreated(location: Location) {
+        setLocations(previous => {
+            const alreadyExists = previous.some(
+                item => item.id === location.id
+            )
+            return alreadyExists
+                ? previous
+                : [...previous, location]
+        })
+        setSelectedLocation(location.id)
+        setShowAddLocationModal(false)
+    }
+
 
     function handleSave() {
         console.log({
@@ -256,7 +290,7 @@ export default function CreateItem() {
                         <button
                             type="button"
                             className="create-item-category new-category"
-                            onClick={() => setShowCategoryModal(true)}
+                            onClick={() => setShowAddCategoryModal(true)}
                         >
                             <div className="category-icon">
                                 <i className="bi bi-plus-lg"></i>
@@ -330,7 +364,7 @@ export default function CreateItem() {
                                 type="button"
                                 className="create-item-add-property"
                                 onClick={() =>
-                                    setShowPropertyModal(true)
+                                    setShowAddPropertyModal(true)
                                 }
                             >
                                 <i className="bi bi-plus-circle"></i>
@@ -432,6 +466,8 @@ export default function CreateItem() {
                             <button
                                 type="button"
                                 className="create-item-inline-action"
+                                onClick={() => setShowAddCollectionModal(true)}
+                                disabled={!curatorEmail || loading}
                             >
                                 <i className="bi bi-plus"></i>
                                 Adicionar coleção
@@ -466,6 +502,8 @@ export default function CreateItem() {
                             <button
                                 type="button"
                                 className="create-item-inline-action"
+                                onClick={() => setShowAddLocationModal(true)}
+                                disabled={loading || curatorId === null}
                             >
                                 <i className="bi bi-plus"></i>
                                 Adicionar localização
@@ -491,20 +529,20 @@ export default function CreateItem() {
                     </div>
                 </section>
             </main>
-            {showPropertyModal && (
+            {showAddPropertyModal && (
                 <AddPropertyModal
                     properties={properties}
                     onClose={() =>
-                        setShowPropertyModal(false)
+                        setShowAddPropertyModal(false)
                     }
                     onCreated={handlePropertyCreated}
                 />
             )}
-            {showCategoryModal && (
+            {showAddCategoryModal && (
                 <AddCategoryModal
                     categories={categories}
                     onClose={() =>
-                        setShowCategoryModal(false)
+                        setShowAddCategoryModal(false)
                     }
                     onCreated={handleCategoryCreated}
                 />
@@ -515,7 +553,23 @@ export default function CreateItem() {
                     selectedCategory={selectedCategory}
                     onSelect={setSelectedCategory}
                     onClose={() => setShowAllCategoriesModal(false)}
-                    onCreateCategory={() => setShowCategoryModal(true)}
+                    onCreateCategory={() => setShowAddCategoryModal(true)}
+                />
+            )}
+            {showAddCollectionModal && (
+                <AddCollectionModal
+                    collections={collections}
+                    curatorEmail={curatorEmail}
+                    onClose={() => setShowAddCollectionModal(false)}
+                    onCreated={handleCollectionCreated}
+                />
+            )}
+            {showAddLocationModal && curatorId !== null && (
+                <AddLocationModal
+                    locations={locations}
+                    curatorId={curatorId}
+                    onClose={() => setShowAddLocationModal(false)}
+                    onCreated={handleLocationCreated}
                 />
             )}
         </div>

@@ -8,6 +8,9 @@ export interface Location {
     location: {
         id: number
     } | null
+    curator: {
+        id: number
+    }
 }
 
 export async function getAllLocation() {
@@ -49,12 +52,14 @@ export async function getLocationsByCurator(curatorId: number) {
     return response.json();
 }
 
+
 export async function createLocation(
     name: string,
     latitude: number,
     longitude: number,
-    location?: number
-) {
+    location?: number,
+    curatorId?: number
+): Promise<Location> {
     const response = await apiFetch("http://localhost:8080/location", {
         method: "POST",
         headers: {
@@ -64,7 +69,8 @@ export async function createLocation(
             name: name,
             latitude: latitude,
             longitude: longitude,
-            location: location ? { id: location } : null,
+            location: location != null ? { id: location } : null,
+            curator: curatorId != null ? { id: curatorId } : null
         }),
     });
 
@@ -75,12 +81,14 @@ export async function createLocation(
     return response.json();
 }
 
+
 export async function updateLocation(
     id: number,
     name: string,
     latitude: number,
     longitude: number,
-    location?: number
+    location?: number,
+    curatorId?: number
 ) {
     const response = await apiFetch("http://localhost:8080/location", {
         method: "PUT",
@@ -93,6 +101,7 @@ export async function updateLocation(
             latitude: latitude,
             longitude: longitude,
             location: location ? { id: location } : null,
+            curator: curatorId != null ? { id: curatorId } : null
         }),
     });
 

@@ -14,9 +14,8 @@ import com.social.culturateca.service.CuratorService;
 @Service
 public class CollectionServiceImpl implements CollectionService {
   List<String> BLACKLIST = List.of(
-    "armas",
-    "drogas"
-  );
+      "armas",
+      "drogas");
 
   @Autowired
   CollectionRepository collectionRepository;
@@ -25,29 +24,30 @@ public class CollectionServiceImpl implements CollectionService {
   CuratorService curatorService;
 
   @Override
-  public List<Collection> findAllCollections(){
-      try {
-          return collectionRepository.findAll();
-      } catch (Exception e) {
-          System.out.println(e.getMessage());
-          return null;
-      }
+  public List<Collection> findAllCollections() {
+    try {
+      return collectionRepository.findAll();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return null;
+    }
   }
-
 
   @Override
   public Collection createCollection(Collection collection) {
     try {
       if (collection.getId() != null) {
-        throw new RuntimeException("ID não deve ser específicado");
+        throw new RuntimeException("ID não deve ser especificado");
       }
 
-      if (null == curatorService.findById(collection.getCurator().getId())) {
-        throw new RuntimeException();
+      Curator curator = curatorService.findByEmail(collection.getCurator().getEmail());
+      if (curator == null) {
+        throw new RuntimeException("Curator não encontrado");
       }
+      collection.setCurator(curator);
 
       if (BLACKLIST.contains(collection.getName().toLowerCase())) {
-        throw new RuntimeException();
+        throw new RuntimeException("Nome de coleção não permitido");
       }
 
       return collectionRepository.save(collection);
@@ -73,16 +73,18 @@ public class CollectionServiceImpl implements CollectionService {
         throw new RuntimeException("ID não pode ser nulo");
       }
 
-      if(collectionRepository.findById(collection.getId()).isEmpty()){
+      if (collectionRepository.findById(collection.getId()).isEmpty()) {
         throw new RuntimeException("Collection não encontrada");
       }
 
-      if (null == curatorService.findById(collection.getCurator().getId())) {
-        throw new RuntimeException("Curator não encontrada");
+      Curator curator = curatorService.findByEmail(collection.getCurator().getEmail());
+      if (curator == null) {
+        throw new RuntimeException("Curator não encontrado");
       }
+      collection.setCurator(curator);
 
       if (BLACKLIST.contains(collection.getName().toLowerCase())) {
-        throw new RuntimeException();
+        throw new RuntimeException("Nome de coleção não permitido");
       }
 
       if (collection.getIsPublic() == null) {
@@ -129,5 +131,5 @@ public class CollectionServiceImpl implements CollectionService {
       return null;
     }
   }
-  
+
 }
