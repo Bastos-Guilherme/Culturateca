@@ -290,6 +290,15 @@
     text-decoration: underline;
 }
 
+.create-curator-error {
+    margin: 12px 0;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    color: #a33;
+}
+
 @media (max-width: 550px) {
 
     .create-curator-page {

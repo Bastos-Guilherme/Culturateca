@@ -1,8 +1,11 @@
 import '../styles/CreateCurator.css'
+
+import { useState, type SyntheticEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { createCurator } from '../services/curatorService'
-import { useState, type SyntheticEvent } from 'react'
+import { requestRegistrationCode, type RegisterCuratorData } from '../services/curatorService'
+
+import VerifyRegistrationModal from '../components/verifyRegistrationModal'
 
 function CreateCurator() {
     const [email, setEmail] = useState('')
@@ -13,45 +16,71 @@ function CreateCurator() {
     const [bio, setBio] = useState<string | null>(null)
     const [profilePicture, setProfilePicture] = useState<string | null>(null)
     const [isPublic, setIsPublic] = useState(true)
-    const following: string[] = []
+
+    const [showVerifyRegistrationModal, setShowVerifyRegistrationModal] = useState(false)
+    const [registrationData, setRegistrationData] = useState<RegisterCuratorData | null>(null)
+
+    const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState('')
 
     const navigate = useNavigate()
 
     async function submit(event: SyntheticEvent<HTMLFormElement>) {
         event.preventDefault()
 
-        try {
-            await createCurator(
-                email,
-                password,
-                name,
-                gender,
-                phone,
-                isPublic,
-                bio,
-                following,
-                profilePicture,
-                null
-            )
+        const data: RegisterCuratorData = {
+            email: email.trim(),
+            password,
+            name: name.trim(),
+            gender,
+            phone,
+            bio,
+            isPublic,
+            profilePicture,
+            location: null
+        }
 
-            alert('Cadastro realizado com sucesso!')
-            navigate('/login')
+        try {
+            setSubmitting(true)
+            setError('')
+
+            await requestRegistrationCode(data)
+
+            setRegistrationData(data)
+            setShowVerifyRegistrationModal(true)
         } catch (error) {
             console.error(error)
-            alert('Erro ao realizar cadastro')
+
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : 'Não foi possível iniciar o cadastro.'
+            )
+        } finally {
+            setSubmitting(false)
         }
+    }
+
+    function handleVerified() {
+        setShowVerifyRegistrationModal(false)
+        alert('Cadastro realizado com sucesso!')
+        navigate('/login')
     }
 
     return (
         <main className="create-curator-page">
-
             <section className="create-curator-header">
                 <h1>Criar conta</h1>
-                <p>Crie sua conta para organizar suas memórias e artefatos culturais.</p>
+                <p>
+                    Crie sua conta para organizar suas memórias e
+                    artefatos culturais.
+                </p>
             </section>
-
             <section className="create-curator-card">
-                <form onSubmit={submit} className="create-curator-form">
+                <form
+                    onSubmit={submit}
+                    className="create-curator-form"
+                >
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">
                             E-mail *
@@ -61,13 +90,13 @@ function CreateCurator() {
                             className="form-control"
                             id="email"
                             value={email}
-                            onChange={(event) =>
+                            onChange={event =>
                                 setEmail(event.target.value)
                             }
                             required
+                            disabled={submitting}
                         />
                     </div>
-
                     <div className="mb-3">
                         <label htmlFor="password" className="form-label">
                             Senha *
@@ -77,13 +106,13 @@ function CreateCurator() {
                             className="form-control"
                             id="password"
                             value={password}
-                            onChange={(event) =>
+                            onChange={event =>
                                 setPassword(event.target.value)
                             }
                             required
+                            disabled={submitting}
                         />
                     </div>
-
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">
                             Nome *
@@ -93,13 +122,13 @@ function CreateCurator() {
                             className="form-control"
                             id="name"
                             value={name}
-                            onChange={(event) =>
+                            onChange={event =>
                                 setName(event.target.value)
                             }
                             required
+                            disabled={submitting}
                         />
                     </div>
-
                     <div className="mb-3">
                         <label htmlFor="gender" className="form-label">
                             Gênero
@@ -107,10 +136,15 @@ function CreateCurator() {
                         <select
                             className="form-select"
                             id="gender"
-                            value={gender ?? ""}
-                            onChange={(event) =>
-                                setGender(event.target.value === "" ? null : event.target.value)
+                            value={gender ?? ''}
+                            onChange={event =>
+                                setGender(
+                                    event.target.value === ''
+                                        ? null
+                                        : event.target.value
+                                )
                             }
+                            disabled={submitting}
                         >
                             <option value="">
                                 Prefiro não informar
@@ -123,7 +157,6 @@ function CreateCurator() {
                             </option>
                         </select>
                     </div>
-
                     <div className="mb-3">
                         <label htmlFor="phone" className="form-label">
                             Telefone
@@ -132,13 +165,13 @@ function CreateCurator() {
                             type="tel"
                             className="form-control"
                             id="phone"
-                            value={phone ?? ""}
-                            onChange={(event) =>
+                            value={phone ?? ''}
+                            onChange={event =>
                                 setPhone(event.target.value || null)
                             }
+                            disabled={submitting}
                         />
                     </div>
-
                     <div className="mb-3">
                         <label htmlFor="bio" className="form-label">
                             Bio
@@ -147,32 +180,37 @@ function CreateCurator() {
                             className="form-control"
                             id="bio"
                             rows={3}
-                            value={bio ?? ""}
-                            onChange={(event) =>
+                            value={bio ?? ''}
+                            onChange={event =>
                                 setBio(event.target.value || null)
                             }
+                            disabled={submitting}
                         />
                     </div>
-
                     <div className="mb-3">
-                        <label htmlFor="profilePicture" className="form-label">
+                        <label
+                            htmlFor="profilePicture"
+                            className="form-label"
+                        >
                             Foto de perfil
                         </label>
                         <input
                             type="url"
                             className="form-control"
                             id="profilePicture"
-                            value={profilePicture ?? ""}
-                            onChange={(event) =>
-                                setProfilePicture(event.target.value || null)
+                            value={profilePicture ?? ''}
+                            onChange={event =>
+                                setProfilePicture(
+                                    event.target.value || null
+                                )
                             }
                             placeholder="https://exemplo.com/imagem.jpg"
+                            disabled={submitting}
                         />
                         <div className="form-text">
-                            informe o caminho da imagem.
+                            Informe o caminho da imagem.
                         </div>
                     </div>
-
                     <div className="public-profile">
                         <span>Perfil público?</span>
 
@@ -181,21 +219,30 @@ function CreateCurator() {
                                 type="checkbox"
                                 id="isPublic"
                                 checked={isPublic}
-                                onChange={(event) =>
+                                onChange={event =>
                                     setIsPublic(event.target.checked)
                                 }
+                                disabled={submitting}
                             />
-
                             <span className="slider"></span>
                         </label>
                     </div>
-
-                    <button type="submit" className="create-curator-button">
-                        Criar conta
+                    {error && (
+                        <p role="alert" className="create-curator-error">
+                            {error}
+                        </p>
+                    )}
+                    <button
+                        type="submit"
+                        className="create-curator-button"
+                        disabled={submitting}
+                    >
+                        {submitting
+                            ? 'Enviando código...'
+                            : 'Criar conta'}
                     </button>
                 </form>
             </section>
-
             <div className="create-curator-login">
                 <span>Já tem uma conta?</span>
                 <button
@@ -205,6 +252,15 @@ function CreateCurator() {
                     Fazer login
                 </button>
             </div>
+            {showVerifyRegistrationModal && registrationData && (
+                <VerifyRegistrationModal
+                    registrationData={registrationData}
+                    onClose={() =>
+                        setShowVerifyRegistrationModal(false)
+                    }
+                    onVerified={handleVerified}
+                />
+            )}
         </main>
     )
 }

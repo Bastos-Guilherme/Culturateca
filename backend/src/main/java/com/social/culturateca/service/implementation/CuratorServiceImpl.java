@@ -65,52 +65,49 @@ public class CuratorServiceImpl implements CuratorService {
     }
 
     @Override
-    public Curator createCurator(Curator curator) {
-        try {
-            if (curator.getEmail() == null) {
-                throw new RuntimeException("Email deve ser específicado");
-            }
-
-            if (curatorRepository.findByEmail(curator.getEmail()) != null) {
-                throw new RuntimeException("Email já em uso por outro Curator");
-            }
-
-            if (curator.getLocation() != null) {
-
-                if (curator.getLocation().getId() == null) {
-                    throw new RuntimeException("Location deve possuir ID");
-                }
-
-                Long locationId = curator.getLocation().getId();
-
-                Location parent = locationService.findById(locationId);
-                if (null == parent) {
-                    throw new RuntimeException("Location não encontrada");
-                }
-
-                curator.setLocation(parent);
-            }
-
-            if (curator.getPassword() == null) {
-                throw new RuntimeException("Password é necessária");
-            }
-
-            curator.setPassword(
-                    passwordEncoder.encode(curator.getPassword()));
-
-            if (curator.getName() == null) {
-                throw new RuntimeException("Name é necessário");
-            }
-
-            if (curator.getIsPublic() == null) {
-                curator.setIsPublic(true);
-            }
-
-            return curatorRepository.save(curator);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+    public Curator createVerifiedCurator(Curator curator) {
+        if (curator.getEmail() == null || curator.getEmail().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Email deve ser especificado");
         }
+
+        if (curatorRepository.findByEmail(curator.getEmail().trim().toLowerCase()) != null) {
+            throw new IllegalArgumentException(
+                    "Email já em uso por outro Curator");
+        }
+
+        if (curator.getName() == null || curator.getName().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Name é necessário");
+        }
+
+        if (curator.getPassword() == null || curator.getPassword().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Password é necessária");
+        }
+
+        if (curator.getLocation() != null) {
+            if (curator.getLocation().getId() == null) {
+                throw new IllegalArgumentException(
+                        "Location deve possuir ID");
+            }
+
+            Location location = locationService.findById(
+                    curator.getLocation().getId());
+
+            if (location == null) {
+                throw new IllegalArgumentException(
+                        "Location não encontrada");
+            }
+
+            curator.setLocation(location);
+        }
+
+        if (curator.getIsPublic() == null) {
+            curator.setIsPublic(true);
+        }
+
+        return curatorRepository.save(curator);
     }
 
     @Override
@@ -148,8 +145,7 @@ public class CuratorServiceImpl implements CuratorService {
                 }
 
                 existingCurator.setLocation(parent);
-            }
-            else {
+            } else {
                 existingCurator.setLocation(null);
             }
 
