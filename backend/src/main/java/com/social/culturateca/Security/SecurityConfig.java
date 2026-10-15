@@ -37,12 +37,14 @@ public class SecurityConfig {
                 .requestMatchers(
                     HttpMethod.POST,
                     "/login",
+                    "/login/verify-code",
                     "/curator/register/request-code",
                     "/curator/register/verify-code"
                 ).permitAll()
                 .requestMatchers(
                     HttpMethod.OPTIONS,
                     "/login",
+                    "/login/verify-code",
                     "/curator/register/request-code",
                     "/curator/register/verify-code"
                 ).permitAll()

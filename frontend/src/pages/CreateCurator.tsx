@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { requestRegistrationCode, type RegisterCuratorData } from '../services/curatorService'
 
-import VerifyRegistrationModal from '../components/verifyRegistrationModal'
+import VerifyRegistrationModal from '../components/verifyRegistrationModal.tsx'
 
 function CreateCurator() {
     const [email, setEmail] = useState('')

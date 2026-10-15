@@ -397,6 +397,25 @@
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 }
 
+.settings-mfa-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.settings-mfa-status {
+    font-size: 12px;
+    color: #666;
+}
+
+.settings-mfa-description {
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #777;
+}
+
 @media (max-width: 900px) {
 
     .settings-header {

@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.social.culturateca.model.PendingCurator;
 
 @Repository
-public interface PendingCuratorRepository
-        extends JpaRepository<PendingCurator, Long> {
+public interface PendingCuratorRepository extends JpaRepository<PendingCurator, Long> {
 
     Optional<PendingCurator> findByEmail(String email);
 }

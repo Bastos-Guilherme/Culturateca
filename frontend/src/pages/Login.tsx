@@ -1,14 +1,19 @@
+
 import { useState, type SyntheticEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { authenticate } from '../services/loginService'
+import { authenticate, type LoginMfaResponse } from '../services/loginService'
 import { useAuth } from '../context/AuthContext'
+import VerifyLoginModal from '../components/VerifyLoginModal'
 
 import '../styles/Login.css'
 
 function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [challengeId, setChallengeId] = useState<string | null>(null)
+    const [showVerification, setShowVerification] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
 
     const { login } = useAuth()
     const navigate = useNavigate()
@@ -17,19 +22,54 @@ function Login() {
         event.preventDefault()
 
         try {
-            const token = await authenticate(email, password)
-            login(token)
+            setSubmitting(true)
 
-            alert('Login realizado com sucesso!')
-            setEmail('')
-            setPassword('')
+            const response = await authenticate(email, password)
 
-            navigate('/')
+            if (typeof response === 'string') {
+                login(response)
 
+                setEmail('')
+                setPassword('')
+
+                alert('Login realizado com sucesso!')
+                navigate('/')
+                return
+            }
+
+            const mfaResponse = response as LoginMfaResponse
+
+            if (mfaResponse.mfaRequired) {
+                setChallengeId(mfaResponse.challengeId)
+                setShowVerification(true)
+            }
         } catch (error) {
             console.error(error)
-            alert('Erro ao realizar o Login')
+
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : 'Erro ao realizar o login.'
+            )
+        } finally {
+            setSubmitting(false)
         }
+    }
+
+    function handleVerified(token: string) {
+        login(token)
+        setShowVerification(false)
+        setChallengeId(null)
+        setEmail('')
+        setPassword('')
+
+        alert('Login realizado com sucesso!')
+        navigate('/')
+    }
+
+    function handleCloseVerification() {
+        setShowVerification(false)
+        setChallengeId(null)
     }
 
     return (
@@ -53,6 +93,7 @@ function Login() {
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
                             required
+                            disabled={submitting}
                         />
                     </div>
 
@@ -69,6 +110,7 @@ function Login() {
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
                             required
+                            disabled={submitting}
                         />
 
                         <div className="login-password-bottom">
@@ -78,8 +120,12 @@ function Login() {
                         </div>
                     </div>
 
-                    <button type="submit" className="login-button">
-                        ENTRAR
+                    <button
+                        type="submit"
+                        className="login-button"
+                        disabled={submitting}
+                    >
+                        {submitting ? 'AGUARDE...' : 'ENTRAR'}
                         <i className="bi bi-arrow-right"></i>
                     </button>
                 </form>
@@ -92,6 +138,13 @@ function Login() {
                     Criar nova conta
                 </Link>
             </div>
+            {showVerification && challengeId && (
+                <VerifyLoginModal
+                    challengeId={challengeId}
+                    onClose={handleCloseVerification}
+                    onVerified={handleVerified}
+                />
+            )}
         </main>
     )
 }

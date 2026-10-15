@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { getCurrentCurator, updateCurator, deleteCurator, type Curator, type UpdateCuratorData } from '../services/curatorService'
+import { getCurrentCurator, updateCurator, updateEmailMfaEnabled, deleteCurator, type Curator, type UpdateCuratorData } from '../services/curatorService'
 import { getLocationById, type Location } from '../services/locationService'
 import { useAuth } from '../context/AuthContext'
 
@@ -19,6 +19,7 @@ export default function Settings() {
     const [loading, setLoading] = useState(true)
     const [editing, setEditing] = useState(false)
     const [saving, setSaving] = useState(false)
+    const [savingEmailMfa, setSavingEmailMfa] = useState(false)
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [deleting, setDeleting] = useState(false)
@@ -213,6 +214,41 @@ export default function Settings() {
         }
     }
 
+    async function handleEmailMfaChange(enabled: boolean) {
+        if (!curator || savingEmailMfa) {
+            return
+        }
+
+        const previousValue = curator.emailMfaEnabled
+
+        setCurator({
+            ...curator,
+            emailMfaEnabled: enabled
+        })
+
+        setSavingEmailMfa(true)
+
+        try {
+            await updateEmailMfaEnabled(enabled)
+        } catch (error) {
+            setCurator(current =>
+                current
+                    ? { ...current, emailMfaEnabled: previousValue }
+                    : current
+            )
+
+            console.error('Erro ao alterar autenticação em duas etapas:', error)
+
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : 'Não foi possível alterar a autenticação em duas etapas.'
+            )
+        } finally {
+            setSavingEmailMfa(false)
+        }
+    }
+
     if (loading) {
         return (
             <div className="settings-page">
@@ -388,6 +424,39 @@ export default function Settings() {
                                     {curator.isPublic ? 'Sim' : 'Não'}
                                 </div>
                             )}
+                        </div>
+
+                        <div className="settings-field settings-field-full">
+                            <label>
+                                Autenticação em duas etapas por e-mail
+                            </label>
+
+                            <div className="settings-mfa-control">
+                                <label className="switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={Boolean(curator.emailMfaEnabled)}
+                                        onChange={event =>
+                                            handleEmailMfaChange(event.target.checked)
+                                        }
+                                        disabled={savingEmailMfa}
+                                    />
+                                    <span className="slider"></span>
+                                </label>
+
+                                <span className="settings-mfa-status">
+                                    {savingEmailMfa
+                                        ? 'Salvando alteração...'
+                                        : curator.emailMfaEnabled
+                                            ? 'Ativada'
+                                            : 'Desativada'}
+                                </span>
+                            </div>
+
+                            <p className="settings-mfa-description">
+                                Quando ativada, será necessário informar um código enviado
+                                ao seu e-mail para concluir o login.
+                            </p>
                         </div>
 
                         <div className="settings-field settings-field-full">

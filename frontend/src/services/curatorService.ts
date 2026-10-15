@@ -8,6 +8,7 @@ export interface Curator {
     gender: string | null
     phone: string | null
     isPublic: boolean
+    emailMfaEnabled: boolean
     bio: string | null
     following: number[] | null
     profilePicture: string | null
@@ -50,10 +51,7 @@ export interface ApiMessage {
     message: string
 }
 
-async function getApiMessage(
-    response: Response,
-    fallback: string
-): Promise<string> {
+async function getApiMessage( response: Response, fallback: string ): Promise<string> {
     try {
         const data = await response.json() as ApiMessage
         return data.message || fallback
@@ -80,6 +78,25 @@ export async function getCurrentCurator(): Promise<Curator> {
     }
 
     return response.json()
+}
+
+export async function updateEmailMfaEnabled(enabled: boolean): Promise<void> {
+    const response = await apiFetch('http://localhost:8080/curator/me/email-mfa', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ enabled })
+    })
+
+    if (!response.ok) {
+        throw new Error(
+            await getApiMessage(
+                response,
+                'Não foi possível alterar a autenticação em duas etapas.'
+            )
+        )
+    }
 }
 
 export async function getCuratorById(id: number): Promise<Curator> {
@@ -119,7 +136,7 @@ export async function getCuratorByName(name: string): Promise<Curator[]> {
 }
 
 export async function requestRegistrationCode(data: RegisterCuratorData): Promise<ApiMessage> {
-    const response = await fetch('http://localhost:8080/curator/register/request-code',{
+    const response = await fetch('http://localhost:8080/curator/register/request-code', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -150,7 +167,7 @@ export async function requestRegistrationCode(data: RegisterCuratorData): Promis
 }
 
 export async function verifyRegistrationCode(email: string, code: string): Promise<ApiMessage> {
-    const response = await fetch('http://localhost:8080/curator/register/verify-code',{
+    const response = await fetch('http://localhost:8080/curator/register/verify-code', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -174,7 +191,7 @@ export async function verifyRegistrationCode(email: string, code: string): Promi
 }
 
 export async function updateCurator(id: number, data: UpdateCuratorData) {
-    const response = await apiFetch('http://localhost:8080/curator',{
+    const response = await apiFetch('http://localhost:8080/curator', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

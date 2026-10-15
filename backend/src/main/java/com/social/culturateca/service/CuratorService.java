@@ -8,6 +8,8 @@ public interface CuratorService {
     
     public List<Curator> findAllCurators();
 
+    public void updateEmailMfaEnabled(String email, boolean enabled);
+
     public Curator findById(Long id);
 
     public Curator findByEmail(String email);

@@ -35,6 +35,19 @@ public class CuratorServiceImpl implements CuratorService {
     }
 
     @Override
+    public void updateEmailMfaEnabled(String email, boolean enabled) {
+        Curator curator = curatorRepository.findByEmail(email);
+
+        if (curator == null) {
+            throw new IllegalArgumentException("Curador não encontrado.");
+        }
+
+        curator.setEmailMfaEnabled(enabled);
+
+        curatorRepository.save(curator);
+    }
+
+    @Override
     public Curator findById(Long id) {
         try {
             return curatorRepository.findById(id).get();

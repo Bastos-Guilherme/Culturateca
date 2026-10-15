@@ -56,4 +56,6 @@ public class Curator {
   @Column(name = "profilepicture")
   private String profilePicture;
 
+  @Column(name = "emailmfaenabled", nullable = false)
+  private Boolean emailMfaEnabled = false;
 }
