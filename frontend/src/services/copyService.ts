@@ -2,18 +2,12 @@ import { apiFetch } from "./api"
 
 export interface Copy {
     id: number
-    property: {
-        [key: number]: string
-    }
-    canonic: {
-        id: number
-    } | null
-    location: {
-        id: number
-    } | null
-    collections: {
-        id: number
-    }[]
+    name: string | null
+    property: { [key: number]: string }
+    hiddenProperties: number[]
+    canonic: { id: number } | null
+    location: { id: number } | null
+    collections: { id: number }[]
 }
 
 export async function getAllCopy(): Promise<Copy[]> {
@@ -72,8 +66,10 @@ export async function getCopiesByCanonic(
 
 export async function createCopy(
     property: { [key: number]: string },
-    canonicId: number | null,
-    locationId: number | null
+    canonicId: number,
+    locationId: number,
+    name?: string | null,
+    hiddenProperties?: number[]
 ) {
     const response = await apiFetch(
         'http://localhost:8080/copy',
@@ -89,7 +85,11 @@ export async function createCopy(
                     : null,
                 location: locationId !== null
                     ? { id: locationId }
-                    : null
+                    : null,
+                ...(name !== undefined ? { name } : {}),
+                ...(hiddenProperties !== undefined
+                    ? { hiddenProperties }
+                    : {})
             })
         }
     )
@@ -104,31 +104,35 @@ export async function createCopy(
 export async function updateCopy(
     id: number,
     property: { [key: number]: string },
-    canonicId: number | null,
-    locationId: number | null
-) {
+    canonicId: number,
+    locationId: number,
+    name?: string | null,
+    hiddenProperties?: number[]
+): Promise<Copy> {
+    const body = {
+        id,
+        property,
+        canonic: { id: canonicId },
+        location: { id: locationId },
+        ...(name !== undefined ? { name } : {}),
+        ...(hiddenProperties !== undefined
+            ? { hiddenProperties }
+            : {})
+    }
+
     const response = await apiFetch(
-        'http://localhost:8080/copy',
+        "http://localhost:8080/copy",
         {
-            method: 'PUT',
+            method: "PUT",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                id: id,
-                property: property,
-                canonic: canonicId !== null
-                    ? { id: canonicId }
-                    : null,
-                location: locationId !== null
-                    ? { id: locationId }
-                    : null
-            })
+            body: JSON.stringify(body)
         }
     )
 
     if (!response.ok) {
-        throw new Error('Erro ao atualizar copy')
+        throw new Error("Erro ao atualizar cópia")
     }
 
     return response.json()

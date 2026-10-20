@@ -2,6 +2,7 @@ import { apiFetch } from "./api"
 
 export interface Canonic {
     id: number
+    name: string
     property: {
         [key: number]: string
     }
@@ -52,6 +53,7 @@ export async function getCanonicsByProperty(propertyId: number): Promise<Canonic
 
 export async function createCanonic(
     property: { [key: number]: string },
+    name: string,
     categoryId: number | null
 ) {
     const response = await apiFetch(
@@ -63,6 +65,7 @@ export async function createCanonic(
             },
             body: JSON.stringify({
                 property: property,
+                name: name,
                 category: categoryId !== null
                     ? { id: categoryId }
                     : null
@@ -79,6 +82,7 @@ export async function createCanonic(
 
 export async function updateCanonic(
     id: number,
+    name: string,
     property: { [key: number]: string },
     categoryId: number | null
 ) {
@@ -91,6 +95,7 @@ export async function updateCanonic(
             },
             body: JSON.stringify({
                 id: id,
+                name: name,
                 property: property,
                 category: categoryId !== null
                     ? { id: categoryId }

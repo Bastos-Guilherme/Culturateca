@@ -1,6 +1,7 @@
 package com.social.culturateca.service.implementation;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,11 @@ import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.CulturatecaService;
 import com.social.culturateca.service.LocationService;
 import com.social.culturateca.service.PropertyService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CopyServiceImpl implements CopyService {
@@ -37,7 +43,7 @@ public class CopyServiceImpl implements CopyService {
     CulturatecaService culturatecaService;
 
     @Override
-    public List<Copy> findAllCopies(){
+    public List<Copy> findAllCopies() {
         try {
             return copyRepository.findAll();
         } catch (Exception e) {
@@ -47,7 +53,7 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public Copy findById(Long id){
+    public Copy findById(Long id) {
         try {
             return copyRepository.findById(id).get();
         } catch (Exception e) {
@@ -57,7 +63,7 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public List<Copy> findByCanonic(Long canonicId){
+    public List<Copy> findByCanonic(Long canonicId) {
         try {
             Canonic canonic = canonicService.findById(canonicId);
             if (null == canonic) {
@@ -71,7 +77,7 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public List<Copy> findAllByProperty(Long propertyId){
+    public List<Copy> findAllByProperty(Long propertyId) {
         try {
             return copyRepository.findAllByProperty(propertyId);
         } catch (Exception e) {
@@ -81,7 +87,7 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public Copy createCopy(Copy copy){
+    public Copy createCopy(Copy copy) {
         try {
             if (copy.getId() != null) {
                 throw new RuntimeException("Não deve possuir ID específico");
@@ -89,9 +95,8 @@ public class CopyServiceImpl implements CopyService {
 
             if (copy.getProperty() == null || copy.getProperty().isEmpty()) {
                 throw new RuntimeException(
-                    "Property é obrigatória"
-                );
-            }   
+                        "Property é obrigatória");
+            }
 
             Set<Long> propertyIds = copy.getProperty().keySet();
 
@@ -105,21 +110,18 @@ public class CopyServiceImpl implements CopyService {
 
                 if (!existingIds.contains(propertyId)) {
                     throw new RuntimeException(
-                        "Property com ID " + propertyId + " não existe"
-                    );
+                            "Property com ID " + propertyId + " não existe");
                 }
             }
 
             if (copy.getCanonic() == null || copy.getCanonic().getId() == null) {
                 throw new RuntimeException(
-                    "Canonic é obrigatória"
-                );
+                        "Canonic é obrigatória");
             }
 
             if (null == canonicService.findById(copy.getCanonic().getId())) {
                 throw new RuntimeException(
-                    "ID de Canonic inexistente"
-                );
+                        "ID de Canonic inexistente");
             }
 
             if (copy.getLocation() != null) {
@@ -138,6 +140,10 @@ public class CopyServiceImpl implements CopyService {
                 copy.setLocation(parent);
             }
 
+            if (copy.getHiddenProperties() == null) {
+                copy.setHiddenProperties(new ArrayList<>());
+            }
+
             return copyRepository.save(copy);
 
         } catch (Exception e) {
@@ -147,80 +153,84 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public Copy editCopy(Copy copy){
+    public Copy editCopy(Copy copy) {
         try {
             if (copy.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");
             }
 
-            if(copyRepository.findById(copy.getId()).isEmpty()){
-                throw new RuntimeException("Copy não encontrada");
+            Copy existingCopy = copyRepository.findById(copy.getId())
+                    .orElseThrow(() -> new RuntimeException("Copy não encontrada"));
+
+            if (copy.getCanonic() == null
+                    || copy.getCanonic().getId() == null) {
+                throw new RuntimeException("Canonic é obrigatória");
             }
 
-            if (copy.getProperty() == null || copy.getProperty().isEmpty()) {
-                throw new RuntimeException(
-                    "Property é obrigatória"
-                );
-            }   
+            Canonic canonic = canonicService.findById(
+                    copy.getCanonic().getId());
 
-            Set<Long> propertyIds = copy.getProperty().keySet();
+            if (canonic == null) {
+                throw new RuntimeException("Canonic não encontrada");
+            }
 
-            List<Property> properties = propertyService.findAllPropertiesById(propertyIds.stream().toList());
+            if (copy.getLocation() == null
+                    || copy.getLocation().getId() == null) {
+                throw new RuntimeException("Location é obrigatória");
+            }
 
-            Set<Long> existingIds = properties.stream()
-                    .map(Property::getId)
-                    .collect(Collectors.toSet());
+            Location location = locationService.findById(
+                    copy.getLocation().getId());
 
-            for (Long propertyId : propertyIds) {
+            if (location == null) {
+                throw new RuntimeException("Location não encontrada");
+            }
 
-                if (!existingIds.contains(propertyId)) {
-                    throw new RuntimeException(
-                        "Property com ID " + propertyId + " não existe"
-                    );
+            Map<Long, String> properties = copy.getProperty() != null
+                    ? copy.getProperty()
+                    : new HashMap<>();
+
+            if (!properties.isEmpty()) {
+                Set<Long> propertyIds = properties.keySet();
+
+                List<Property> existingProperties = propertyService.findAllPropertiesById(propertyIds.stream().toList());
+
+                Set<Long> existingPropertyIds = existingProperties.stream()
+                        .map(Property::getId)
+                        .collect(Collectors.toSet());
+
+                for (Long propertyId : propertyIds) {
+                    if (!existingPropertyIds.contains(propertyId)) {
+                        throw new RuntimeException(
+                                "Property com ID " + propertyId + " não existe");
+                    }
                 }
             }
 
-            if (copy.getCanonic() == null || copy.getCanonic().getId() == null) {
-                throw new RuntimeException(
-                    "Canonic é obrigatória"
-                );
-            }
+            List<Long> hiddenProperties = copy.getHiddenProperties() != null
+                ? copy.getHiddenProperties()
+                : new ArrayList<>();
 
-            if (copy.getCanonic() == null || copy.getCanonic().getId() == null) {
-                throw new RuntimeException(
-                    "Canonic é obrigatória"
-                );
-            }
+            Set<Long> canonicPropertyIds = canonic.getProperty() != null
+                ? canonic.getProperty().keySet()
+                : new HashSet<>();
 
-            if (null == canonicService.findById(copy.getCanonic().getId())) {
-                throw new RuntimeException(
-                    "ID de Canonic inexistente"
-                );
-            }
+            hiddenProperties = hiddenProperties.stream()
+                .filter(canonicPropertyIds::contains)
+                .distinct()
+                .toList();
 
-            if (copy.getLocation() != null) {
+            existingCopy.setName(copy.getName() != null && !copy.getName().isBlank()
+                ? copy.getName().trim()
+                : null);
 
-                if (copy.getLocation().getId() == null) {
-                    throw new RuntimeException("Location deve possuir ID");
-                }
+            existingCopy.setProperty(new HashMap<>(properties));
+            existingCopy.setHiddenProperties(new ArrayList<>(hiddenProperties));
+            existingCopy.setCanonic(canonic);
+            existingCopy.setLocation(location);
 
-                Long locationId = copy.getLocation().getId();
+            return copyRepository.save(existingCopy);
 
-                Location parent = locationService.findById(locationId);
-                if (null == parent) {
-                    throw new RuntimeException("Location não encontrada");
-                }
-
-                copy.setLocation(parent);
-            }
-            
-            if (copy.getCollections() != null && !copy.getCollections().isEmpty()) {
-                throw new RuntimeException(
-                    "Collections não devem ser informadas na criação de uma Copy"
-                );
-            }
-
-            return copyRepository.save(copy);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -228,12 +238,14 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public void deleteCopy(Long id){
-        try {
-            copyRepository.deleteById(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    @Transactional
+    public void deleteCopy(Long id) {
+        Copy copy = copyRepository.findById(id).orElseThrow(() ->
+            new RuntimeException("Cópia não encontrada"));
+
+        copyRepository.deleteCollectionLinksByCopyId(id);
+
+        copyRepository.delete(copy);
     }
 
 }

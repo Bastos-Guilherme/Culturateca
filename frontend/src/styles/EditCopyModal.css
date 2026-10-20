@@ -1,0 +1,540 @@
+
+.edit-copy-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    background: rgba(31, 31, 30, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+.edit-copy-modal {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    max-height: 85dvh;
+    min-height: 0;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(31, 31, 30, 0.18);
+    overflow: hidden;
+    color: #1F1F1E;
+    box-sizing: border-box;
+}
+
+.edit-copy-modal * {
+    box-sizing: border-box;
+}
+
+.edit-copy-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+
+    flex-shrink: 0;
+    padding: 24px 24px 18px;
+
+    border-bottom: 1px solid #f0f0ed;
+    background: #fff;
+}
+
+.edit-copy-header h2 {
+    margin: 0 0 8px;
+
+    color: #1F1F1E;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.edit-copy-header p {
+    margin: 0;
+
+    color: #777;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.edit-copy-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 20px 24px;
+
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #C1D7D5 transparent;
+}
+
+.edit-copy-content .edit-copy-error {
+    margin: 0 0 18px;
+}
+
+.edit-copy-content .edit-copy-field {
+    margin: 0 0 18px;
+}
+
+.edit-copy-content .edit-copy-properties-header {
+    margin: 4px 0 14px;
+}
+
+.edit-copy-content .edit-copy-properties {
+    padding: 0 0 18px;
+}
+
+.edit-copy-content .edit-copy-create-property {
+    margin: 0 0 20px;
+}
+
+.edit-copy-eyebrow {
+    display: inline-block;
+    margin-bottom: 8px;
+
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.edit-copy-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #666;
+
+    font-size: 1.6rem;
+    line-height: 1;
+
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.edit-copy-close:hover {
+    background: #f0efed;
+    color: #1F1F1E;
+}
+
+/* Mensagem de erro */
+
+.edit-copy-error {
+    flex-shrink: 0;
+
+    margin: 16px 24px 0;
+    padding: 12px 14px;
+
+    border: 1px solid #f0caca;
+    border-radius: 10px;
+
+    background: #fff3f3;
+    color: #9b3333;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Campos */
+
+.edit-copy-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    flex-shrink: 0;
+    margin: 0 24px 18px;
+}
+
+.edit-copy-field:first-of-type {
+    margin-top: 20px;
+}
+
+.edit-copy-field label {
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.edit-copy-field small {
+    color: #777;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.edit-copy-field input,
+.edit-copy-field select,
+.edit-copy-field textarea,
+.edit-copy-property-row input,
+.edit-copy-property-row select {
+    width: 100%;
+    min-width: 0;
+
+    padding: 11px 13px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+
+    background: #fff;
+    color: #1F1F1E;
+    font: inherit;
+    font-size: 0.95rem;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.edit-copy-field input:focus,
+.edit-copy-field select:focus,
+.edit-copy-field textarea:focus,
+.edit-copy-property-row input:focus,
+.edit-copy-property-row select:focus {
+    border-color: #B0AFFD;
+    box-shadow: 0 0 0 3px rgba(176, 175, 253, 0.22);
+}
+
+.edit-copy-field input::placeholder,
+.edit-copy-field textarea::placeholder,
+.edit-copy-property-row input::placeholder {
+    color: #999;
+}
+
+.edit-copy-field textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* Cabeçalho das propriedades */
+
+.edit-copy-properties-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    flex-shrink: 0;
+    margin: 4px 24px 14px;
+}
+
+.edit-copy-properties-header label {
+    color: #1F1F1E;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* Lista de propriedades */
+
+.edit-copy-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    flex-shrink: 0;
+    padding: 0 24px 18px;
+}
+
+.edit-copy-property-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) auto;
+    align-items: center;
+    gap: 10px;
+
+    padding: 14px;
+
+    border: 1px solid #e9e9e6;
+    border-radius: 14px;
+
+    background: #fafaf8;
+}
+
+.edit-copy-property-row input,
+.edit-copy-property-row select {
+    background: #fff;
+}
+
+.edit-copy-property-row > * {
+    min-width: 0;
+}
+
+.edit-copy-property-row label {
+    color: #444;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.edit-copy-secondary-button,
+.edit-copy-create-property,
+.edit-copy-remove-button,
+.edit-copy-cancel,
+.edit-copy-save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 40px;
+    padding: 10px 14px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        border-color 0.2s,
+        transform 0.15s,
+        box-shadow 0.2s;
+}
+
+.edit-copy-secondary-button,
+.edit-copy-create-property {
+    flex-shrink: 0;
+
+    background: #fff;
+    color: #1F1F1E;
+}
+
+.edit-copy-secondary-button:hover,
+.edit-copy-create-property:hover {
+    border-color: #B0AFFD;
+    background: #f3f2ff;
+}
+
+.edit-copy-remove-button {
+    min-width: 38px;
+    padding: 9px 11px;
+
+    border-color: #f0dada;
+    background: #fff;
+    color: #8b4545;
+}
+
+.edit-copy-remove-button:hover {
+    border-color: #e4baba;
+    background: #fff1f1;
+}
+
+.edit-copy-create-property {
+    align-self: flex-start;
+
+    margin: 0 24px 20px;
+
+    border-color: #B0AFFD;
+    background: #f3f2ff;
+}
+
+.edit-copy-create-property:hover {
+    border-color: #9998f0;
+    background: #e8e7ff;
+}
+
+.edit-copy-secondary-button:active,
+.edit-copy-create-property:active,
+.edit-copy-remove-button:active,
+.edit-copy-cancel:active,
+.edit-copy-save:active {
+    transform: scale(0.98);
+}
+
+.edit-copy-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    flex-shrink: 0;
+    margin-top: auto;
+    padding: 16px 24px;
+
+    border-top: 1px solid #eee;
+    background: #fff;
+}
+
+.edit-copy-cancel {
+    border-color: #ddd;
+    background: #fff;
+    color: #333;
+}
+
+.edit-copy-cancel:hover {
+    border-color: #C1D7D5;
+    background: #f2f8f7;
+}
+
+.edit-copy-save {
+    border-color: #B0AFFD;
+    background: #B0AFFD;
+    color: #1F1F1E;
+    font-weight: 600;
+}
+
+.edit-copy-save:hover {
+    border-color: #9998f0;
+    background: #9998f0;
+    box-shadow: 0 3px 10px rgba(176, 175, 253, 0.25);
+}
+
+.edit-copy-save:disabled,
+.edit-copy-cancel:disabled,
+.edit-copy-secondary-button:disabled,
+.edit-copy-create-property:disabled,
+.edit-copy-remove-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.edit-copy-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.edit-copy-modal::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #C1D7D5;
+}
+
+.edit-copy-modal::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.edit-copy-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 40px;
+    margin-right: auto;
+    padding: 10px 14px;
+
+    border: 1px solid #f0dada;
+    border-radius: 10px;
+
+    background: #fff;
+    color: #b63c3c;
+
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.edit-copy-delete:hover:not(:disabled) {
+    border-color: #e4baba;
+    background: #fff1f1;
+}
+
+.edit-copy-delete:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .edit-copy-footer .edit-copy-delete {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .edit-copy-overlay {
+        padding: 12px;
+    }
+
+    .edit-copy-modal {
+        max-height: 90vh;
+        max-height: 90dvh;
+        border-radius: 14px;
+    }
+
+    .edit-copy-header {
+        padding: 20px 16px 14px;
+    }
+
+    .edit-copy-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .edit-copy-error {
+        margin-right: 16px;
+        margin-left: 16px;
+    }
+
+    .edit-copy-field {
+        margin-right: 16px;
+        margin-left: 16px;
+    }
+
+    .edit-copy-properties-header {
+        align-items: flex-start;
+        margin-right: 16px;
+        margin-left: 16px;
+    }
+
+    .edit-copy-properties {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+
+    .edit-copy-property-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+        padding: 12px;
+    }
+
+    .edit-copy-property-row .edit-copy-remove-button {
+        justify-self: end;
+    }
+
+    .edit-copy-create-property {
+        margin-right: 16px;
+        margin-left: 16px;
+    }
+
+    .edit-copy-footer {
+        padding: 14px 16px;
+    }
+
+    .edit-copy-footer > button {
+        flex: 1;
+    }
+}
+
+@media (max-width: 380px) {
+    .edit-copy-header {
+        gap: 8px;
+    }
+
+    .edit-copy-footer {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .edit-copy-footer > button {
+        width: 100%;
+    }
+}

@@ -3,6 +3,7 @@ package com.social.culturateca.model.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,12 @@ public interface CopyRepository extends JpaRepository<Copy, Long> {
         where jsonb_exists(property, CAST(:propertyId AS text))
         """, nativeQuery = true)
     List<Copy> findAllByProperty(@Param("propertyId") Long propertyId);
+
+    @Modifying
+    @Query(value = """
+        DELETE FROM collection_copy
+        WHERE copy = :copyId
+        """, nativeQuery = true)
+    void deleteCollectionLinksByCopyId(@Param("copyId") Long copyId);
 
 }

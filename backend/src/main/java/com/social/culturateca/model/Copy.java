@@ -30,7 +30,6 @@ public class Copy {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
   private String name;
 
   @JdbcTypeCode(SqlTypes.JSON)
@@ -47,4 +46,8 @@ public class Copy {
   @JsonIgnore 
   @ManyToMany(mappedBy = "copies")
   private List<Collection> collections;
+
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(name = "hiddenproperties", nullable = false)
+  private List<Long> hiddenProperties = new java.util.ArrayList<>();
 }

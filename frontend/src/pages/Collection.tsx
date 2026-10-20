@@ -1,116 +1,161 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { getCollectionById, type Collection } from '../services/collectionService'
-
 import { getCopyById, type Copy } from '../services/copyService'
-
 import { getCanonicById, type Canonic } from '../services/canonicService'
-
 import { getLocationById, type Location } from '../services/locationService'
-
 import { getAllProperty, type Property } from '../services/propertyService'
-
 import { getAllCategory, type Category } from '../services/categoryService'
+import EditCopyModal from '../components/EditCopyModal'
 
 import '../styles/Collection.css'
 
 function CollectionPage() {
-
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
+
     const [collection, setCollection] = useState<Collection | null>(null)
     const [copies, setCopies] = useState<Copy[]>([])
+
     const [canonics, setCanonics] = useState<Record<number, Canonic>>({})
     const [locations, setLocations] = useState<Record<number, Location>>({})
     const [properties, setProperties] = useState<Record<number, Property>>({})
     const [categories, setCategories] = useState<Record<number, Category>>({})
+    const [editingCopy, setEditingCopy] = useState<Copy | null>(null)
+
     const [loading, setLoading] = useState(true)
 
+    const loadCollection = useCallback(async () => {
+        setLoading(true)
+
+        try {
+            if (!id) {
+                setCollection(null)
+                setCopies([])
+                return
+            }
+
+            const collectionData = await getCollectionById(Number(id))
+            setCollection(collectionData)
+
+            const copyData = await Promise.all(
+                collectionData.copies.map(copy =>
+                    getCopyById(copy.id)
+                )
+            )
+
+            setCopies(copyData)
+
+            const [propertyData, categoryData] = await Promise.all([
+                getAllProperty(),
+                getAllCategory()
+            ])
+
+            const propertyMap: Record<number, Property> = {}
+
+            propertyData.forEach((property: Property) => {
+                propertyMap[property.id] = property
+            })
+
+            setProperties(propertyMap)
+
+            const categoryMap: Record<number, Category> = {}
+
+            categoryData.forEach(category => {
+                categoryMap[category.id] = category
+            })
+
+            setCategories(categoryMap)
+
+            const canonicIds = [
+                ...new Set(
+                    copyData
+                        .filter(copy => copy.canonic !== null)
+                        .map(copy => copy.canonic!.id)
+                )
+            ]
+
+            const canonicData = await Promise.all(
+                canonicIds.map(canonicId =>
+                    getCanonicById(canonicId)
+                )
+            )
+
+            const canonicMap: Record<number, Canonic> = {}
+
+            canonicData.forEach(canonic => {
+                canonicMap[canonic.id] = canonic
+            })
+
+            setCanonics(canonicMap)
+
+            const locationIds = [
+                ...new Set(
+                    copyData
+                        .filter(copy => copy.location !== null)
+                        .map(copy => copy.location!.id)
+                )
+            ]
+
+            const locationData = await Promise.all(
+                locationIds.map(locationId =>
+                    getLocationById(locationId)
+                )
+            )
+
+            const locationMap: Record<number, Location> = {}
+
+            locationData.forEach(location => {
+                locationMap[location.id] = location
+            })
+
+            setLocations(locationMap)
+        } catch (error) {
+            console.error("Erro ao carregar coleção:", error)
+        } finally {
+            setLoading(false)
+        }
+    }, [id])
+
     useEffect(() => {
-        async function loadCollection() {
+        loadCollection()
+    }, [loadCollection])
+
+    async function handleCopySaved(updatedCopy: Copy) {
+        setCopies(current =>
+            current.map(copy =>
+                copy.id === updatedCopy.id
+                    ? { ...copy, ...updatedCopy }
+                    : copy
+            )
+        )
+
+        if (updatedCopy.location?.id != null) {
             try {
-                if (!id) {
-                    return
-                }
-
-                const collectionData = await getCollectionById(Number(id))
-
-                setCollection(collectionData)
-
-                const copyData = await Promise.all(
-                    collectionData.copies.map(copy => getCopyById(copy.id))
+                const updatedLocation = await getLocationById(
+                    updatedCopy.location.id
                 )
 
-                setCopies(copyData)
-
-                const propertyData = await getAllProperty()
-
-                const propertyMap: Record<number, Property> = {}
-
-                propertyData.forEach((property: Property) => {
-                    propertyMap[property.id] = property
-                })
-
-                setProperties(propertyMap)
-
-                const categoryData = await getAllCategory()
-
-                const categoryMap: Record<number, Category> = {}
-
-                categoryData.forEach(category => {
-                    categoryMap[category.id] = category
-                })
-
-                setCategories(categoryMap)
-
-                const canonicIds = [
-                    ...new Set(
-                        copyData
-                            .filter(copy => copy.canonic !== null)
-                            .map(copy => copy.canonic!.id)
-                    )
-                ]
-
-                const canonicData = await Promise.all(
-                    canonicIds.map(canonicId => getCanonicById(canonicId))
-                )
-
-                const canonicMap: Record<number, Canonic> = {}
-
-                canonicData.forEach(canonic => {
-                    canonicMap[canonic.id] = canonic
-                })
-
-                setCanonics(canonicMap)
-
-                const locationIds = [
-                    ...new Set(
-                        copyData
-                            .filter(copy => copy.location !== null)
-                            .map(copy => copy.location!.id)
-                    )
-                ]
-
-                const locationData = await Promise.all(
-                    locationIds.map(locationId => getLocationById(locationId))
-                )
-
-                const locationMap: Record<number, Location> = {}
-
-                locationData.forEach(location => {
-                    locationMap[location.id] = location
-                })
-
-                setLocations(locationMap)
+                setLocations(current => ({
+                    ...current,
+                    [updatedLocation.id]: updatedLocation
+                }))
             } catch (error) {
-                console.error(error)
-            } finally {
-                setLoading(false)
+                console.error(
+                    'Erro ao atualizar a localização da cópia:',
+                    error
+                )
             }
         }
-        loadCollection()
-    }, [id])
+
+        setEditingCopy(null)
+    }
+
+    async function handleCopyDeleted(_copyId: number) {
+        await loadCollection()
+        setEditingCopy(null)
+    }
 
     if (loading) {
         return (
@@ -149,51 +194,46 @@ function CollectionPage() {
                                     ? 'bi bi-globe2'
                                     : 'bi bi-lock'
                             }
-                        ></i>
+                        />
                         {collection.isPublic
                             ? 'Coleção pública'
                             : 'Coleção privada'}
                     </p>
                 </div>
-
                 <button
+                    type="button"
                     className="collection-back-button"
                     onClick={() => navigate('/curator')}
                 >
-                    <i className="bi bi-arrow-left"></i>
+                    <i className="bi bi-arrow-left" />
                     Voltar para o perfil
                 </button>
             </section>
-
             <section className="collection-info">
                 <div className="collection-stat">
                     <strong>
                         {copies.length}
                     </strong>
+
                     <span>
-                        {copies.length === 1
-                            ? 'Item'
-                            : 'Itens'}
+                        {copies.length === 1 ? 'Item' : 'Itens'}
                     </span>
                 </div>
             </section>
-
             <section className="collection-content">
                 <div className="collection-content-header">
                     <div>
                         <span className="section-label">
                             ACERVO
                         </span>
-
                         <h2>
                             Itens da coleção
                         </h2>
                     </div>
                 </div>
-
                 {copies.length === 0 ? (
                     <div className="empty-collection">
-                        <i className="bi bi-box"></i>
+                        <i className="bi bi-box" />
                         <p>
                             Esta coleção ainda não possui itens.
                         </p>
@@ -201,67 +241,99 @@ function CollectionPage() {
                 ) : (
                     <div className="collection-grid">
                         {copies.map(copy => {
-                            const canonic =
-                                copy.canonic
-                                    ? canonics[copy.canonic.id]
-                                    : null
-                            const location =
-                                copy.location
-                                    ? locations[copy.location.id]
-                                    : null
+                            const canonic = copy.canonic
+                                ? canonics[copy.canonic.id]
+                                : null
 
+                            const location = copy.location
+                                ? locations[copy.location.id]
+                                : null
+                            const hiddenProperties = new Set(
+                                (copy.hiddenProperties ?? []).map(Number)
+                            )
+                            const displayedProperties =
+                                new Map<number, string>()
+                            Object.entries(canonic?.property ?? {})
+                                .forEach(([propertyId, value]) => {
+                                    const numericId = Number(propertyId)
+
+                                    if (!hiddenProperties.has(numericId)) {
+                                        displayedProperties.set(
+                                            numericId,
+                                            value
+                                        )
+                                    }
+                                })
+                            Object.entries(copy.property ?? {})
+                                .forEach(([propertyId, value]) => {
+                                    displayedProperties.set(
+                                        Number(propertyId),
+                                        value
+                                    )
+                                })
+                            const displayName = copy.name?.trim() || canonic?.name || `Item #${copy.id}`
                             return (
-                                <div
+                                <article
                                     className="collection-detail-item"
                                     key={copy.id}
                                 >
                                     <div className="detail-item-header">
                                         <div className="detail-item-image">
-                                            <i className="bi bi-box"></i>
+                                            <i className="bi bi-box" />
                                         </div>
-
-                                        <div>
-                                            <h3>
-                                                Item #{copy.id}
+                                        <div className="detail-item-heading">
+                                            <h3 title={displayName}>
+                                                {displayName}
                                             </h3>
-                                            <small>
-                                                Cód. COP-
-                                                {String(copy.id).padStart(3, '0')}
-                                            </small>
                                         </div>
+                                        <button
+                                            type="button"
+                                            className="detail-item-edit"
+                                            onClick={() => {
+                                                if (canonic) {
+                                                    setEditingCopy(copy)
+                                                }
+                                            }}
+                                            disabled={!canonic}
+                                            aria-label={`Editar ${displayName}`}
+                                            title={
+                                                canonic
+                                                    ? 'Editar item'
+                                                    : 'Este item não possui uma obra associada'
+                                            }
+                                        >
+                                            <i className="bi bi-pencil" />
+                                        </button>
                                     </div>
                                     <div className="detail-section">
                                         <h4>
-                                            <i className="bi bi-tags"></i>
-                                            Propriedades da cópia
+                                            <i className="bi bi-tags" />
+                                            Propriedades
                                         </h4>
-
-                                        {Object.entries(copy.property).length > 0 ? (
+                                        {displayedProperties.size > 0 ? (
                                             <div className="property-list">
-                                                {Object.entries(copy.property).map(
-                                                    ([propertyId, value]) => {
-                                                        const property =
-                                                            properties[
-                                                            Number(propertyId)
-                                                            ]
+                                                {Array.from(
+                                                    displayedProperties.entries()
+                                                ).map(([propertyId, value]) => {
+                                                    const property =
+                                                        properties[propertyId]
+                                                    return (
+                                                        <div
+                                                            className="property-row"
+                                                            key={propertyId}
+                                                        >
+                                                            <span>
+                                                                {property
+                                                                    ? property.name
+                                                                    : `Propriedade #${propertyId}`}
+                                                            </span>
 
-                                                        return (
-                                                            <div
-                                                                className="property-row"
-                                                                key={propertyId}
-                                                            >
-                                                                <span>
-                                                                    {property
-                                                                        ? property.name
-                                                                        : `Propriedade #${propertyId}`}
-                                                                </span>
-                                                                <strong>
-                                                                    {value}
-                                                                </strong>
-                                                            </div>
-                                                        )
-                                                    }
-                                                )}
+                                                            <strong>
+                                                                {value}
+                                                            </strong>
+                                                        </div>
+                                                    )
+                                                })}
                                             </div>
                                         ) : (
                                             <p className="detail-empty">
@@ -269,87 +341,36 @@ function CollectionPage() {
                                             </p>
                                         )}
                                     </div>
-
                                     <div className="detail-section">
                                         <h4>
-                                            <i className="bi bi-book"></i>
-                                            Obra
+                                            <i className="bi bi-book" />
+                                            Informações da obra
                                         </h4>
-
                                         {canonic ? (
-                                            <>
-                                                <p className="detail-id">
+                                            <div className="category-info">
+                                                <span>
+                                                    Categoria
+                                                </span>
+                                                <strong>
                                                     {canonic.category
                                                         ? categories[
                                                             canonic.category.id
-                                                        ]?.name
-                                                        ?? `Categoria #${canonic.category.id}`
-                                                        : 'Sem categoria'
-                                                    } # {canonic.id}
-                                                </p>
-
-                                                {Object.entries(
-                                                    canonic.property
-                                                ).length > 0 && (
-                                                        <div className="property-list">
-                                                            {Object.entries(
-                                                                canonic.property
-                                                            ).map(
-                                                                ([propertyId, value]) => {
-                                                                    const property =
-                                                                        properties[
-                                                                        Number(propertyId)
-                                                                        ]
-
-                                                                    return (
-                                                                        <div
-                                                                            className="property-row"
-                                                                            key={propertyId}
-                                                                        >
-                                                                            <span>
-                                                                                {property
-                                                                                    ? property.name
-                                                                                    : `Propriedade #${propertyId}`}
-                                                                            </span>
-                                                                            <strong>
-                                                                                {value}
-                                                                            </strong>
-                                                                        </div>
-                                                                    )
-                                                                }
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                <div className="category-info">
-                                                    <span>
-                                                        Categoria
-                                                    </span>
-                                                    <strong>
-                                                        {canonic.category
-                                                            ? categories[
-                                                                canonic.category.id
-                                                            ]?.name
-                                                            ?? `Categoria #${canonic.category.id}`
-
-                                                            : 'Sem categoria'
-                                                        }
-                                                    </strong>
-                                                </div>
-                                            </>
+                                                        ]?.name ??
+                                                        `Categoria #${canonic.category.id}`
+                                                        : 'Sem categoria'}
+                                                </strong>
+                                            </div>
                                         ) : (
                                             <p className="detail-empty">
-                                                Esta cópia não possui
-                                                uma obra associada.
+                                                Esta cópia não possui uma obra associada.
                                             </p>
                                         )}
                                     </div>
-
                                     <div className="detail-section">
                                         <h4>
-                                            <i className="bi bi-geo-alt"></i>
+                                            <i className="bi bi-geo-alt" />
                                             Localização
                                         </h4>
-
                                         {location ? (
                                             <div className="location-info">
                                                 <strong>
@@ -358,23 +379,33 @@ function CollectionPage() {
                                                 <span>
                                                     Latitude: {location.latitude}
                                                 </span>
+
                                                 <span>
                                                     Longitude: {location.longitude}
                                                 </span>
                                             </div>
                                         ) : (
                                             <p className="detail-empty">
-                                                Esta cópia não possui
-                                                localização.
+                                                Esta cópia não possui localização.
                                             </p>
                                         )}
                                     </div>
-                                </div>
+                                </article>
                             )
                         })}
                     </div>
                 )}
             </section>
+            {editingCopy?.canonic &&
+                canonics[editingCopy.canonic.id] && (
+                    <EditCopyModal
+                        copy={editingCopy}
+                        canonic={canonics[editingCopy.canonic.id]}
+                        onClose={() => setEditingCopy(null)}
+                        onSaved={handleCopySaved}
+                        onDeleted={handleCopyDeleted}
+                    />
+                )}
         </div>
     )
 }

@@ -77,7 +77,7 @@ public class CollectionServiceImpl implements CollectionService {
         throw new RuntimeException("Collection não encontrada");
       }
 
-      Curator curator = curatorService.findByEmail(collection.getCurator().getEmail());
+      Curator curator = curatorService.findById(collection.getCurator().getId());
       if (curator == null) {
         throw new RuntimeException("Curator não encontrado");
       }
