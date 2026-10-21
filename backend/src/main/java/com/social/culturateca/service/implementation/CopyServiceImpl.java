@@ -29,15 +29,6 @@ public class CopyServiceImpl implements CopyService {
     @Autowired
     CopyRepository copyRepository;
 
-    @Autowired
-    CanonicService canonicService;
-
-    @Autowired
-    PropertyService propertyService;
-
-    @Autowired
-    LocationService locationService;
-
     @Override
     public List<Copy> findAllCopies() {
         try {
@@ -59,7 +50,7 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public List<Copy> findByCanonic(Long canonicId) {
+    public List<Copy> findByCanonic(Long canonicId, CanonicService canonicService) {
         try {
             Canonic canonic = canonicService.findById(canonicId);
             if (null == canonic) {
@@ -83,7 +74,11 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public Copy createCopy(Copy copy) {
+    public Copy createCopy(
+            Copy copy,
+            PropertyService propertyService,
+            CanonicService canonicService,
+            LocationService locationService) {
         try {
             if (copy.getId() != null) {
                 throw new RuntimeException("Não deve possuir ID específico");
@@ -149,7 +144,11 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
-    public Copy editCopy(Copy copy) {
+    public Copy editCopy(
+            Copy copy,
+            PropertyService propertyService,
+            CanonicService canonicService,
+            LocationService locationService) {
         try {
             if (copy.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");

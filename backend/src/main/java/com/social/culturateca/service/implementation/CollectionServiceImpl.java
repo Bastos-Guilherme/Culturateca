@@ -13,15 +13,13 @@ import com.social.culturateca.service.CuratorService;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
+  
   List<String> BLACKLIST = List.of(
       "armas",
       "drogas");
 
   @Autowired
   CollectionRepository collectionRepository;
-
-  @Autowired
-  CuratorService curatorService;
 
   @Override
   public List<Collection> findAllCollections() {
@@ -34,7 +32,7 @@ public class CollectionServiceImpl implements CollectionService {
   }
 
   @Override
-  public Collection createCollection(Collection collection) {
+  public Collection createCollection(Collection collection, CuratorService curatorService) {
     try {
       if (collection.getId() != null) {
         throw new RuntimeException("ID não deve ser especificado");
@@ -67,7 +65,7 @@ public class CollectionServiceImpl implements CollectionService {
   }
 
   @Override
-  public Collection editCollection(Collection collection) {
+  public Collection editCollection(Collection collection, CuratorService curatorService) {
     try {
       if (collection.getId() == null) {
         throw new RuntimeException("ID não pode ser nulo");

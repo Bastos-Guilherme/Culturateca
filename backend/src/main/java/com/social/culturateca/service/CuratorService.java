@@ -16,9 +16,9 @@ public interface CuratorService {
 
     public List<Curator> findByName(String name);
 
-    public Curator createVerifiedCurator(Curator curator);
+    public Curator createVerifiedCurator(Curator curator, LocationService locationService);
 
-    public Curator editCurator(Curator curator);
+    public Curator editCurator(Curator curator, LocationService locationService);
     
     public void deleteCurator(Long id);
 

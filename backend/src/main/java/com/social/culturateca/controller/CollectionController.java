@@ -50,12 +50,12 @@ public class CollectionController {
   
   @PostMapping
   public Collection create(@RequestBody Collection collection) {
-    return collectionService.createCollection(collection);
+    return collectionService.createCollection(collection, curatorService);
   }
 
   @PutMapping
   public Collection edit(@RequestBody Collection collection) {
-    return collectionService.editCollection(collection);
+    return collectionService.editCollection(collection, curatorService);
   }
 
   @DeleteMapping("/{id}")

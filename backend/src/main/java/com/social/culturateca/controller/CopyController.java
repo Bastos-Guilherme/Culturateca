@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.social.culturateca.model.Copy;
+import com.social.culturateca.service.CanonicService;
 import com.social.culturateca.service.CopyService;
+import com.social.culturateca.service.LocationService;
+import com.social.culturateca.service.PropertyService;
 
 @RestController
 @RequestMapping("/copy")
@@ -21,6 +24,15 @@ public class CopyController {
     
     @Autowired
     CopyService copyService;
+    
+    @Autowired
+    PropertyService propertyService;
+    
+    @Autowired
+    CanonicService canonicService;
+    
+    @Autowired
+    LocationService locationService;
 
     @GetMapping
     public List<Copy> getAllCopy(){
@@ -39,17 +51,17 @@ public class CopyController {
 
     @GetMapping("/canonic={canonicId}")
     public List<Copy> getByCanonic(@PathVariable("canonicId") Long canonicId){
-        return copyService.findByCanonic(canonicId);
+        return copyService.findByCanonic(canonicId, canonicService);
     }
 
     @PostMapping
     public Copy create(@RequestBody Copy copy){
-        return copyService.createCopy(copy);
+        return copyService.createCopy(copy, propertyService, canonicService, locationService);
     }
 
     @PutMapping
     public Copy edit(@RequestBody Copy copy){
-        return copyService.editCopy(copy);
+        return copyService.editCopy(copy, propertyService, canonicService, locationService);
     }
 
     @DeleteMapping("/{id}")

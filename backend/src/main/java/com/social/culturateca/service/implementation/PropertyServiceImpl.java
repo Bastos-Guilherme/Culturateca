@@ -11,6 +11,7 @@ import com.social.culturateca.service.PropertyService;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
+    
     @Autowired
     PropertyRepository propertyRepository;
 

@@ -10,13 +10,21 @@ public interface CopyService {
 
     public Copy findById(Long id);
 
-    public List<Copy> findByCanonic(Long canonicId);
+    public List<Copy> findByCanonic(Long canonicId, CanonicService canonicService);
 
     public List<Copy> findAllByProperty(Long propertyId);
 
-    public Copy createCopy(Copy copy);
+    public Copy createCopy(
+            Copy copy,
+            PropertyService propertyService,
+            CanonicService canonicService,
+            LocationService locationService);
 
-    public Copy editCopy(Copy copy);
+    public Copy editCopy(
+            Copy copy,
+            PropertyService propertyService,
+            CanonicService canonicService,
+            LocationService locationService);
 
     public void deleteCopy(Long id);
 

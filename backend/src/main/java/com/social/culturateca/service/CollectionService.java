@@ -9,13 +9,13 @@ public interface CollectionService {
 
   public List<Collection> findAllCollections();
 
-  public Collection createCollection(Collection collection);
+  public Collection createCollection(Collection collection, CuratorService curatorService);
 
   public void deleteCollection(Long id);
 
   public List<Collection> findCollectionsByOwner(Curator curator);
 
-  public Collection editCollection(Collection collection);
+  public Collection editCollection(Collection collection, CuratorService curatorService);
 
   public Collection findById(Long id);
 

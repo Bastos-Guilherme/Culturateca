@@ -16,6 +16,7 @@ import com.social.culturateca.controller.DTO.UpdateEmailMfaDTO;
 
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.service.CuratorService;
+import com.social.culturateca.service.LocationService;
 
 @RestController
 @RequestMapping("/curator")
@@ -23,6 +24,9 @@ public class CuratorController {
 
     @Autowired
     CuratorService curatorService;
+
+    @Autowired
+    LocationService locationService;
 
     @GetMapping
     public List<Curator> getAllCurator() {
@@ -62,7 +66,7 @@ public class CuratorController {
 
     @PutMapping
     public Curator edit(@RequestBody Curator curator) {
-        return curatorService.editCurator(curator);
+        return curatorService.editCurator(curator, locationService);
     }
 
     @DeleteMapping("/{id}")

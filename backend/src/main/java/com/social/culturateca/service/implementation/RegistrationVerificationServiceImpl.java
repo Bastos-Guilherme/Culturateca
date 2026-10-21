@@ -202,7 +202,7 @@ public class RegistrationVerificationServiceImpl implements RegistrationVerifica
                         : pending.getFollowing());
         curator.setProfilePicture(pending.getProfilePicture());
 
-        curatorService.createVerifiedCurator(curator);
+        curatorService.createVerifiedCurator(curator, locationService);
         pendingRepository.delete(pending);
     }
 

@@ -14,9 +14,9 @@ public interface LocationService {
 
     public List<Location> findAllByCuratorId(Long curatorId);
 
-    public Location createLocation(Location location);
+    public Location createLocation(Location location, CuratorService curatorService);
 
-    public Location editLocation(Location location);
+    public Location editLocation(Location location, CuratorService curatorService);
     
     public void deleteLocation(Long id);
 

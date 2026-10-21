@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.social.culturateca.model.Location;
+import com.social.culturateca.service.CuratorService;
 import com.social.culturateca.service.LocationService;
 
 @RestController
@@ -21,6 +22,9 @@ public class LocationController {
     
     @Autowired
     LocationService locationService;
+
+    @Autowired
+    CuratorService curatorService;
 
     @GetMapping
     public List<Location> getAllLocation(){
@@ -44,12 +48,12 @@ public class LocationController {
 
     @PostMapping
     public Location create(@RequestBody Location location){
-        return locationService.createLocation(location);
+        return locationService.createLocation(location, curatorService);
     }
 
     @PutMapping
     public Location edit(@RequestBody Location location){
-        return locationService.editLocation(location);
+        return locationService.editLocation(location, curatorService);
     }
 
     @DeleteMapping("/{id}")

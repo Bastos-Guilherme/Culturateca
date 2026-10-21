@@ -19,9 +19,6 @@ public class CuratorServiceImpl implements CuratorService {
     CuratorRepository curatorRepository;
 
     @Autowired
-    LocationService locationService;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Override
@@ -78,7 +75,7 @@ public class CuratorServiceImpl implements CuratorService {
     }
 
     @Override
-    public Curator createVerifiedCurator(Curator curator) {
+    public Curator createVerifiedCurator(Curator curator, LocationService locationService) {
         if (curator.getEmail() == null || curator.getEmail().isBlank()) {
             throw new IllegalArgumentException(
                     "Email deve ser especificado");
@@ -124,7 +121,7 @@ public class CuratorServiceImpl implements CuratorService {
     }
 
     @Override
-    public Curator editCurator(Curator curator) {
+    public Curator editCurator(Curator curator, LocationService locationService) {
         try {
 
             if (curator.getId() == null) {
