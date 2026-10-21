@@ -25,48 +25,50 @@ public class SecurityConfig {
             throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())
 
-            .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())
 
-            .sessionManagement(session -> session.sessionCreationPolicy(
-                SessionCreationPolicy.STATELESS
-            ))
+                .sessionManagement(session -> session.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
 
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    HttpMethod.POST,
-                    "/login",
-                    "/login/verify-code",
-                    "/curator/register/request-code",
-                    "/curator/register/verify-code"
-                ).permitAll()
-                .requestMatchers(
-                    HttpMethod.OPTIONS,
-                    "/login",
-                    "/login/verify-code",
-                    "/curator/register/request-code",
-                    "/curator/register/verify-code"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/login",
+                                "/login/verify-code",
+                                "/curator/register/request-code",
+                                "/curator/register/verify-code",
+                                "/password-recovery/request-code",
+                                "/password-recovery/verify-code",
+                                "/password-recovery/reset-password")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.OPTIONS,
+                                "/login",
+                                "/login/verify-code",
+                                "/curator/register/request-code",
+                                "/curator/register/verify-code",
+                                "/password-recovery/request-code",
+                                "/password-recovery/verify-code",
+                                "/password-recovery/reset-password")
+                        .permitAll()
+                        .anyRequest().authenticated())
 
-            .formLogin(form -> form.disable())
+                .formLogin(form -> form.disable())
 
-            .httpBasic(basic -> basic.disable())
+                .httpBasic(basic -> basic.disable())
 
-            .addFilterBefore(
-                jwtFilter,
-                UsernamePasswordAuthenticationFilter.class
-            );
+                .addFilterBefore(
+                        jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration
-    ) throws Exception {
+            AuthenticationConfiguration configuration) throws Exception {
 
         return configuration.getAuthenticationManager();
     }

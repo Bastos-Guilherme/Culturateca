@@ -120,12 +120,18 @@
 }
 
 .forgot-password {
-    font-size: 12px;
-    font-weight: 600;
-
-    color: black;
-
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
     cursor: pointer;
+    font-size: small;
+}
+
+.forgot-password:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .forgot-password:hover {

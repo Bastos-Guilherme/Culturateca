@@ -62,7 +62,8 @@ create table copy (
     name varchar(255),
     property jsonb not null,
     canonic bigint references canonic(id),
-    location bigint references location(id)
+    location bigint references location(id),
+    hiddenproperties jsonb not null default '[]'::jsonb
 );
 
 create table collection (
@@ -109,11 +110,15 @@ create index idx_pending_curator_expires_at
 
 create table pending_login_verification (
     id varchar(36) primary key,
-    email varchar(255) not null unique,
+    email varchar(255) not null,
+    purpose varchar(30) not null default 'LOGIN_MFA',
     code_hash varchar(255) not null,
     expires_at timestamp with time zone not null,
     attempts integer not null default 0,
     created_at timestamp with time zone not null,
+
+    constraint uq_pending_login_verification_email_purpose
+        unique (email, purpose),
 
     constraint chk_pending_login_attempts
         check (attempts >= 0)

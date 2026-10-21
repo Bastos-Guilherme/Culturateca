@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.social.culturateca.model.PendingLoginVerification;
+import com.social.culturateca.model.VerificationPurpose;
 import com.social.culturateca.model.repository.PendingLoginVerificationRepository;
 import com.social.culturateca.service.EmailService;
 import com.social.culturateca.service.LoginVerificationService;
 
 @Service
-public class LoginVerificationServiceImpl implements LoginVerificationService {
+public class LoginVerificationServiceImpl
+        implements LoginVerificationService {
 
     private static final int CODE_EXPIRATION_MINUTES = 10;
     private static final int MAX_ATTEMPTS = 5;
@@ -40,10 +42,12 @@ public class LoginVerificationServiceImpl implements LoginVerificationService {
     @Transactional
     public String requestCode(String email) {
         String normalizedEmail = email.trim().toLowerCase();
+        VerificationPurpose purpose = VerificationPurpose.LOGIN_MFA;
 
         Instant now = Instant.now();
 
-        var existing = repository.findByEmail(normalizedEmail);
+        var existing = repository.findByEmailAndPurpose(
+                normalizedEmail, purpose);
 
         if (existing.isPresent()) {
             PendingLoginVerification previous = existing.get();
@@ -62,7 +66,6 @@ public class LoginVerificationServiceImpl implements LoginVerificationService {
 
         int codeNumber = secureRandom.nextInt(1_000_000);
         String code = String.format("%06d", codeNumber);
-
         String challengeId = UUID.randomUUID().toString();
 
         PendingLoginVerification challenge =
@@ -70,6 +73,7 @@ public class LoginVerificationServiceImpl implements LoginVerificationService {
 
         challenge.setId(challengeId);
         challenge.setEmail(normalizedEmail);
+        challenge.setPurpose(purpose);
         challenge.setCodeHash(passwordEncoder.encode(code));
         challenge.setCreatedAt(now);
         challenge.setExpiresAt(
@@ -104,6 +108,11 @@ public class LoginVerificationServiceImpl implements LoginVerificationService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Código inválido ou expirado."));
 
+        if (challenge.getPurpose() != VerificationPurpose.LOGIN_MFA) {
+            throw new IllegalArgumentException(
+                    "Código inválido ou expirado.");
+        }
+
         if (!Instant.now().isBefore(challenge.getExpiresAt())) {
             repository.delete(challenge);
             throw new IllegalArgumentException(
@@ -125,8 +134,7 @@ public class LoginVerificationServiceImpl implements LoginVerificationService {
                 repository.save(challenge);
             }
 
-            throw new IllegalArgumentException(
-                    "Código incorreto.");
+            throw new IllegalArgumentException("Código incorreto.");
         }
 
         String email = challenge.getEmail();

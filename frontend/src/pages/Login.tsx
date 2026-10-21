@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { authenticate, type LoginMfaResponse } from '../services/loginService'
 import { useAuth } from '../context/AuthContext'
 import VerifyLoginModal from '../components/VerifyLoginModal'
+import PasswordRecoveryModal from '../components/PasswordRecoveryModal'
 
 import '../styles/Login.css'
 
@@ -14,6 +15,7 @@ function Login() {
     const [challengeId, setChallengeId] = useState<string | null>(null)
     const [showVerification, setShowVerification] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+    const [showPasswordRecovery, setShowPasswordRecovery] = useState(false)
 
     const { login } = useAuth()
     const navigate = useNavigate()
@@ -114,9 +116,14 @@ function Login() {
                         />
 
                         <div className="login-password-bottom">
-                            <span className="forgot-password">
+                            <button
+                                type="button"
+                                className="forgot-password"
+                                onClick={() => setShowPasswordRecovery(true)}
+                                disabled={submitting}
+                            >
                                 Esqueci minha senha
-                            </span>
+                            </button>
                         </div>
                     </div>
 
@@ -143,6 +150,17 @@ function Login() {
                     challengeId={challengeId}
                     onClose={handleCloseVerification}
                     onVerified={handleVerified}
+                />
+            )}
+            {showPasswordRecovery && (
+                <PasswordRecoveryModal
+                    initialEmail={email}
+                    onClose={() => setShowPasswordRecovery(false)}
+                    onSuccess={() => {
+                        setShowPasswordRecovery(false)
+                        setPassword('')
+                        alert('Senha redefinida com sucesso! Faça login com sua nova senha.')
+                    }}
                 />
             )}
         </main>
