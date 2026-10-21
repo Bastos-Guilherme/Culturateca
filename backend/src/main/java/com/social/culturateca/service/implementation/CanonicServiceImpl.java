@@ -21,12 +21,6 @@ public class CanonicServiceImpl implements CanonicService {
     @Autowired
     CanonicRepository canonicRepository;
 
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    PropertyService propertyService;
-
     @Override
     public List<Canonic> findAllCanonics(){
         try {
@@ -48,7 +42,8 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public List<Canonic> findByCategory(Long categoryId){
+    public List<Canonic> findByCategory(Long categoryId,
+            CategoryService categoryService){
         try {
             Category category = categoryService.findById(categoryId);
             if (null == category) {
@@ -72,7 +67,9 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public Canonic createCanonic(Canonic canonic){
+    public Canonic createCanonic(Canonic canonic,
+            CategoryService categoryService,
+            PropertyService propertyService){
         try {
             if (canonic.getId() != null) {
                 throw new RuntimeException("Não deve possuir ID específico");
@@ -126,7 +123,10 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public Canonic editCanonic(Canonic canonic){
+    public Canonic editCanonic(Canonic canonic,
+        CategoryService categoryService,
+        PropertyService propertyService
+    ){
         try {
             if (canonic.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");

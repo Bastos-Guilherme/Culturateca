@@ -10,13 +10,13 @@ public interface CanonicService {
 
     public Canonic findById(Long id);
 
-    public List<Canonic> findByCategory(Long categoryId);
+    public List<Canonic> findByCategory(Long categoryId, CategoryService categoryService);
 
     public List<Canonic> findAllByProperty(Long propertyId);
 
-    public Canonic createCanonic(Canonic canonic);
+    public Canonic createCanonic(Canonic canonic, CategoryService categoryService, PropertyService propertyService);
 
-    public Canonic editCanonic(Canonic canonic);
+    public Canonic editCanonic(Canonic canonic, CategoryService categoryService, PropertyService propertyService);
 
     public void deleteCanonic(Long id);
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.social.culturateca.model.Canonic;
 import com.social.culturateca.service.CanonicService;
+import com.social.culturateca.service.CategoryService;
+import com.social.culturateca.service.PropertyService;
 
 @RestController
 @RequestMapping("/canonic")
@@ -21,6 +23,12 @@ public class CanonicController {
     
     @Autowired
     CanonicService canonicService;
+
+    @Autowired
+    PropertyService propertyService;
+
+    @Autowired 
+    CategoryService categoryService;
 
     @GetMapping
     public List<Canonic> getAllCanonic(){
@@ -34,7 +42,7 @@ public class CanonicController {
 
     @GetMapping("/category={categoryId}")
     public List<Canonic> getByCategory(@PathVariable("categoryId") Long categoryId){
-        return canonicService.findByCategory(categoryId);
+        return canonicService.findByCategory(categoryId, categoryService);
     }
 
     @GetMapping("/property={propertyId}")
@@ -44,12 +52,12 @@ public class CanonicController {
 
     @PostMapping
     public Canonic create(@RequestBody Canonic canonic){
-        return canonicService.createCanonic(canonic);
+        return canonicService.createCanonic(canonic, categoryService, propertyService);
     }
 
     @PutMapping
     public Canonic edit(@RequestBody Canonic canonic){
-        return canonicService.editCanonic(canonic);
+        return canonicService.editCanonic(canonic, categoryService, propertyService);
     }
 
     @DeleteMapping("/{id}")

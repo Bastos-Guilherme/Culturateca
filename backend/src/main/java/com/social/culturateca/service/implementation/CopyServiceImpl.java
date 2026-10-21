@@ -15,7 +15,6 @@ import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.CopyRepository;
 import com.social.culturateca.service.CanonicService;
 import com.social.culturateca.service.CopyService;
-import com.social.culturateca.service.CulturatecaService;
 import com.social.culturateca.service.LocationService;
 import com.social.culturateca.service.PropertyService;
 import java.util.ArrayList;
@@ -38,9 +37,6 @@ public class CopyServiceImpl implements CopyService {
 
     @Autowired
     LocationService locationService;
-
-    @Autowired
-    CulturatecaService culturatecaService;
 
     @Override
     public List<Copy> findAllCopies() {
