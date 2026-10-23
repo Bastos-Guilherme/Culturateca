@@ -17,6 +17,7 @@ import com.social.culturateca.service.CanonicService;
 import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.LocationService;
 import com.social.culturateca.service.PropertyService;
+import com.social.culturateca.service.CategoryService;
 
 @RestController
 @RequestMapping("/copy")
@@ -33,6 +34,9 @@ public class CopyController {
     
     @Autowired
     LocationService locationService;
+
+    @Autowired
+    CategoryService categoryService;
 
     @GetMapping
     public List<Copy> getAllCopy(){
@@ -56,12 +60,12 @@ public class CopyController {
 
     @PostMapping
     public Copy create(@RequestBody Copy copy){
-        return copyService.createCopy(copy, propertyService, canonicService, locationService);
+        return copyService.createCopy(copy, propertyService, canonicService, locationService, categoryService);
     }
 
     @PutMapping
     public Copy edit(@RequestBody Copy copy){
-        return copyService.editCopy(copy, propertyService, canonicService, locationService);
+        return copyService.editCopy(copy, propertyService, canonicService, locationService, categoryService);
     }
 
     @DeleteMapping("/{id}")

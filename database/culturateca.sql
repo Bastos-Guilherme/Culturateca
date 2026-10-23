@@ -63,7 +63,8 @@ create table copy (
     property jsonb not null,
     canonic bigint references canonic(id),
     location bigint references location(id),
-    hiddenproperties jsonb not null default '[]'::jsonb
+    hiddenproperties jsonb not null default '[]'::jsonb,
+    category bigint references category(id)
 );
 
 create table collection (

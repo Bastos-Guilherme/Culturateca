@@ -1,17 +1,25 @@
+
 import { useEffect, useState } from "react"
 
 import type { Copy } from "../services/copyService"
 import { getCopyById, updateCopy, deleteCopy } from "../services/copyService"
+
 import type { Canonic } from "../services/canonicService"
+
 import type { Property } from "../services/propertyService"
 import { getAllProperty } from "../services/propertyService"
+
+import type { Category } from "../services/categoryService"
+import { getAllCategory } from "../services/categoryService"
+
 import type { Location } from "../services/locationService"
 import { getLocationsByCurator } from "../services/locationService"
+
 import { getCurrentCurator } from "../services/curatorService"
 
 import AddPropertyModal from "./AddPropertyModal"
 import AddLocationModal from "./AddLocationModal"
-
+import AddCategoryModal from "./AddCategoryModal"
 import DeleteCopyModal from "./DeleteCopyModal"
 
 import "../styles/EditCopyModal.css"
@@ -38,12 +46,20 @@ export default function EditCopyModal({
 }: EditCopyModalProps) {
     const [name, setName] = useState("")
     const [rows, setRows] = useState<PropertyRow[]>([])
+
     const [properties, setProperties] = useState<Property[]>([])
+    const [categories, setCategories] = useState<Category[]>([])
     const [locations, setLocations] = useState<Location[]>([])
+
     const [curatorId, setCuratorId] = useState<number | null>(null)
+
+    const [selectedCategory, setSelectedCategory] = useState("")
     const [selectedLocation, setSelectedLocation] = useState("")
+
     const [showAddPropertyModal, setShowAddPropertyModal] = useState(false)
     const [showAddLocationModal, setShowAddLocationModal] = useState(false)
+    const [showAddCategoryModal, setShowAddCategoryModal] = useState(false)
+
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState("")
@@ -57,66 +73,56 @@ export default function EditCopyModal({
                 setLoading(true)
                 setError("")
 
-                const [allProperties, curator] = await Promise.all([
-                    getAllProperty(),
-                    getCurrentCurator()
-                ])
+                const [allProperties, allCategories, curator] =
+                    await Promise.all([
+                        getAllProperty(),
+                        getAllCategory(),
+                        getCurrentCurator()
+                    ])
 
                 const curatorLocations = await getLocationsByCurator(
                     curator.id
                 )
 
                 setProperties(allProperties)
+                setCategories(allCategories)
                 setCuratorId(curator.id)
                 setLocations(curatorLocations)
 
                 setName(copy.name ?? "")
+
                 setSelectedLocation(
                     copy.location?.id != null
                         ? String(copy.location.id)
                         : ""
                 )
 
-                const hidden = new Set(
-                    (copy.hiddenProperties ?? []).map(Number)
+                setSelectedCategory(
+                    copy.category?.id != null
+                        ? String(copy.category.id)
+                        : ""
                 )
 
-                const combined = new Map<number, string>()
-
-                for (const [id, value] of Object.entries(
-                    canonic.property ?? {}
-                )) {
-                    const propertyId = Number(id)
-
-                    if (!hidden.has(propertyId)) {
-                        combined.set(propertyId, value)
-                    }
-                }
-
-                for (const [id, value] of Object.entries(
-                    copy.property ?? {}
-                )) {
-                    combined.set(Number(id), value)
-                }
-
                 setRows(
-                    Array.from(combined.entries()).map(
+                    Object.entries(copy.property ?? {}).map(
                         ([propertyId, value]) => ({
-                            propertyId,
+                            propertyId: Number(propertyId),
                             value
                         })
                     )
                 )
             } catch (e) {
                 console.error(e)
-                setError("Não foi possível carregar os dados para edição.")
+                setError(
+                    "Não foi possível carregar os dados para edição."
+                )
             } finally {
                 setLoading(false)
             }
         }
 
         loadData()
-    }, [copy, canonic])
+    }, [copy])
 
     function updateRow(
         index: number,
@@ -137,7 +143,9 @@ export default function EditCopyModal({
     }
 
     function removeRow(index: number) {
-        setRows(current => current.filter((_, i) => i !== index))
+        setRows(current =>
+            current.filter((_, i) => i !== index)
+        )
     }
 
     function handlePropertyCreated(property: Property) {
@@ -160,6 +168,19 @@ export default function EditCopyModal({
         setShowAddPropertyModal(false)
     }
 
+    function handleCategoryCreated(category: Category) {
+        setCategories(current => {
+            if (current.some(item => item.id === category.id)) {
+                return current
+            }
+
+            return [...current, category]
+        })
+
+        setSelectedCategory(String(category.id))
+        setShowAddCategoryModal(false)
+    }
+
     function handleLocationCreated(location: Location) {
         setLocations(current => {
             if (current.some(item => item.id === location.id)) {
@@ -176,60 +197,45 @@ export default function EditCopyModal({
     async function handleSave() {
         setError("")
 
+        if (!copy.canonic?.id) {
+            setError("Esta cópia não possui uma obra associada.")
+            return
+        }
+
+        if (!selectedCategory) {
+            setError("Selecione uma categoria para a cópia.")
+            return
+        }
+
         if (!selectedLocation) {
             setError("Selecione uma localização para a cópia.")
             return
         }
 
-        if (rows.some(row =>
-            row.propertyId == null || !row.value.trim()
-        )) {
+        if (
+            rows.some(row =>
+                row.propertyId == null || !row.value.trim()
+            )
+        ) {
             setError(
                 "Preencha a propriedade e seu valor ou remova a linha incompleta."
             )
             return
         }
 
-        const propertyIds = rows.map(row => row.propertyId as number)
+        const propertyIds = rows.map(
+            row => row.propertyId as number
+        )
 
         if (new Set(propertyIds).size !== propertyIds.length) {
             setError("Cada propriedade pode aparecer apenas uma vez.")
             return
         }
 
-        const canonicalProperties = canonic.property ?? {}
-        const copyProperties: { [key: number]: string } = {}
-        const hiddenProperties: number[] = []
-
-        const currentValues = new Map<number, string>(
-            rows.map(row => [
-                row.propertyId as number,
-                row.value.trim()
-            ])
-        )
-
-        for (const id of Object.keys(canonicalProperties)) {
-            const propertyId = Number(id)
-            const currentValue = currentValues.get(propertyId)
-
-            if (currentValue === undefined) {
-                hiddenProperties.push(propertyId)
-                continue
-            }
-
-            if (currentValue !== canonicalProperties[propertyId]) {
-                copyProperties[propertyId] = currentValue
-                hiddenProperties.push(propertyId)
-            }
-        }
+        const copyProperties: Record<number, string> = {}
 
         for (const row of rows) {
-            const propertyId = row.propertyId as number
-            const id = String(propertyId)
-
-            if (!(id in canonicalProperties)) {
-                copyProperties[propertyId] = row.value.trim()
-            }
+            copyProperties[row.propertyId as number] = row.value.trim()
         }
 
         try {
@@ -238,10 +244,10 @@ export default function EditCopyModal({
             const updated = await updateCopy(
                 copy.id,
                 copyProperties,
-                canonic.id,
+                copy.canonic.id,
                 Number(selectedLocation),
-                name.trim() || null,
-                hiddenProperties
+                Number(selectedCategory),
+                name.trim() || null
             )
 
             const refreshed = await getCopyById(updated.id)
@@ -310,7 +316,11 @@ export default function EditCopyModal({
         <div
             className="edit-copy-overlay"
             onMouseDown={event => {
-                if (event.target === event.currentTarget && !saving) {
+                if (
+                    event.target === event.currentTarget &&
+                    !saving &&
+                    !deletingCopy
+                ) {
                     onClose()
                 }
             }}
@@ -329,38 +339,48 @@ export default function EditCopyModal({
 
                         <h2 id="edit-copy-title">Editar item</h2>
                     </div>
+
                     <button
                         type="button"
                         className="edit-copy-close"
                         onClick={onClose}
                         aria-label="Fechar"
-                        disabled={saving}
+                        disabled={saving || deletingCopy}
                     >
                         ×
                     </button>
                 </header>
+
                 <div className="edit-copy-content">
                     {error && (
                         <p className="edit-copy-error" role="alert">
                             {error}
                         </p>
                     )}
+
                     <div className="edit-copy-field">
                         <label htmlFor="edit-copy-name">
                             Nome do item
                         </label>
+
                         <input
                             id="edit-copy-name"
                             value={name}
-                            onChange={event => setName(event.target.value)}
+                            onChange={event =>
+                                setName(event.target.value)
+                            }
                             placeholder={canonic.name}
                         />
+
                         <small>
-                            Deixe vazio para usar o nome original: {canonic.name}
+                            Deixe vazio para usar o nome mais comum para esse item:{" "}
+                            {canonic.name}
                         </small>
                     </div>
+
                     <div className="edit-copy-properties-header">
                         <label>Propriedades</label>
+
                         <button
                             type="button"
                             onClick={addRow}
@@ -369,6 +389,7 @@ export default function EditCopyModal({
                             <i className="bi bi-plus" /> Adicionar
                         </button>
                     </div>
+
                     <div className="edit-copy-properties">
                         {rows.map((row, index) => (
                             <div
@@ -389,6 +410,7 @@ export default function EditCopyModal({
                                     <option value="">
                                         Selecione uma propriedade
                                     </option>
+
                                     {properties.map(property => (
                                         <option
                                             key={property.id}
@@ -403,6 +425,7 @@ export default function EditCopyModal({
                                         </option>
                                     ))}
                                 </select>
+
                                 <input
                                     value={row.value}
                                     aria-label="Valor da propriedade"
@@ -413,6 +436,7 @@ export default function EditCopyModal({
                                         })
                                     }
                                 />
+
                                 <button
                                     type="button"
                                     className="edit-copy-remove-button"
@@ -425,6 +449,7 @@ export default function EditCopyModal({
                             </div>
                         ))}
                     </div>
+
                     <button
                         type="button"
                         className="edit-copy-create-property"
@@ -432,10 +457,50 @@ export default function EditCopyModal({
                     >
                         Criar nova propriedade
                     </button>
+
+                    <div className="edit-copy-field">
+                        <label htmlFor="edit-copy-category">
+                            Categoria <span>*</span>
+                        </label>
+
+                        <select
+                            id="edit-copy-category"
+                            value={selectedCategory}
+                            onChange={event =>
+                                setSelectedCategory(event.target.value)
+                            }
+                            required
+                        >
+                            <option value="">
+                                Selecione uma categoria
+                            </option>
+
+                            {categories.map(category => (
+                                <option
+                                    key={category.id}
+                                    value={category.id}
+                                >
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <button
+                            type="button"
+                            className="edit-copy-create-property"
+                            onClick={() =>
+                                setShowAddCategoryModal(true)
+                            }
+                        >
+                            Criar nova categoria
+                        </button>
+                    </div>
+
                     <div className="edit-copy-field">
                         <label htmlFor="edit-copy-location">
                             Localização <span>*</span>
                         </label>
+
                         <select
                             id="edit-copy-location"
                             value={selectedLocation}
@@ -447,6 +512,7 @@ export default function EditCopyModal({
                             <option value="">
                                 Selecione uma localização
                             </option>
+
                             {locations.map(location => (
                                 <option
                                     key={location.id}
@@ -456,6 +522,7 @@ export default function EditCopyModal({
                                 </option>
                             ))}
                         </select>
+
                         <button
                             type="button"
                             className="edit-copy-create-property"
@@ -465,6 +532,7 @@ export default function EditCopyModal({
                         </button>
                     </div>
                 </div>
+
                 <footer className="edit-copy-footer">
                     <button
                         type="button"
@@ -475,24 +543,27 @@ export default function EditCopyModal({
                         <i className="bi bi-trash" />
                         Excluir cópia
                     </button>
+
                     <button
                         type="button"
                         className="edit-copy-cancel"
                         onClick={onClose}
-                        disabled={saving}
+                        disabled={saving || deletingCopy}
                     >
                         Cancelar
                     </button>
+
                     <button
                         type="button"
                         className="edit-copy-save"
                         onClick={handleSave}
-                        disabled={saving}
+                        disabled={saving || deletingCopy}
                     >
                         {saving ? "Salvando..." : "Salvar alterações"}
                     </button>
                 </footer>
             </section>
+
             {showAddPropertyModal && (
                 <AddPropertyModal
                     properties={properties}
@@ -500,6 +571,15 @@ export default function EditCopyModal({
                     onCreated={handlePropertyCreated}
                 />
             )}
+
+            {showAddCategoryModal && (
+                <AddCategoryModal
+                    categories={categories}
+                    onClose={() => setShowAddCategoryModal(false)}
+                    onCreated={handleCategoryCreated}
+                />
+            )}
+
             {showAddLocationModal && curatorId != null && (
                 <AddLocationModal
                     locations={locations}
@@ -508,6 +588,7 @@ export default function EditCopyModal({
                     onCreated={handleLocationCreated}
                 />
             )}
+
             <DeleteCopyModal
                 isOpen={showDeleteCopyModal}
                 onClose={() => setShowDeleteCopyModal(false)}

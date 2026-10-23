@@ -18,13 +18,17 @@ public interface CopyService {
             Copy copy,
             PropertyService propertyService,
             CanonicService canonicService,
-            LocationService locationService);
+            LocationService locationService,
+            CategoryService categoryService
+        );
 
     public Copy editCopy(
             Copy copy,
             PropertyService propertyService,
             CanonicService canonicService,
-            LocationService locationService);
+            LocationService locationService,
+            CategoryService categoryService
+        );
 
     public void deleteCopy(Long id);
 

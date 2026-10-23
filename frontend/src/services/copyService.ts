@@ -8,6 +8,7 @@ export interface Copy {
     canonic: { id: number } | null
     location: { id: number } | null
     collections: { id: number }[]
+    category: { id: number } | null
 }
 
 export async function getAllCopy(): Promise<Copy[]> {
@@ -68,56 +69,46 @@ export async function createCopy(
     property: { [key: number]: string },
     canonicId: number,
     locationId: number,
-    name?: string | null,
-    hiddenProperties?: number[]
-) {
-    const response = await apiFetch(
-        'http://localhost:8080/copy',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                property: property,
-                canonic: canonicId !== null
-                    ? { id: canonicId }
-                    : null,
-                location: locationId !== null
-                    ? { id: locationId }
-                    : null,
-                ...(name !== undefined ? { name } : {}),
-                ...(hiddenProperties !== undefined
-                    ? { hiddenProperties }
-                    : {})
-            })
-        }
-    )
+    categoryId: number,
+    name?: string | null
+): Promise<Copy> {
+    const body = {
+        property,
+        canonic: { id: canonicId },
+        location: { id: locationId },
+        category: { id: categoryId },
+        ...(name !== undefined ? { name } : {})
+    }
+
+    const response = await apiFetch("http://localhost:8080/copy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    })
 
     if (!response.ok) {
-        throw new Error('Erro ao criar copy')
+        throw new Error("Erro ao criar cópia")
     }
 
     return response.json()
 }
+
 
 export async function updateCopy(
     id: number,
     property: { [key: number]: string },
     canonicId: number,
     locationId: number,
-    name?: string | null,
-    hiddenProperties?: number[]
+    categoryId: number,
+    name?: string | null
 ): Promise<Copy> {
     const body = {
         id,
         property,
         canonic: { id: canonicId },
         location: { id: locationId },
-        ...(name !== undefined ? { name } : {}),
-        ...(hiddenProperties !== undefined
-            ? { hiddenProperties }
-            : {})
+        category: { id: categoryId },
+        ...(name !== undefined ? { name } : {})
     }
 
     const response = await apiFetch(
@@ -137,6 +128,7 @@ export async function updateCopy(
 
     return response.json()
 }
+
 
 export async function deleteCopy(id: number) {
     const response = await apiFetch(

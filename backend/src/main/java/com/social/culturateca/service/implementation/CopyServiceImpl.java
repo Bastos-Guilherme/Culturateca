@@ -14,6 +14,7 @@ import com.social.culturateca.model.Location;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.CopyRepository;
 import com.social.culturateca.service.CanonicService;
+import com.social.culturateca.service.CategoryService;
 import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.LocationService;
 import com.social.culturateca.service.PropertyService;
@@ -78,7 +79,8 @@ public class CopyServiceImpl implements CopyService {
             Copy copy,
             PropertyService propertyService,
             CanonicService canonicService,
-            LocationService locationService) {
+            LocationService locationService,
+            CategoryService categoryService) {
         try {
             if (copy.getId() != null) {
                 throw new RuntimeException("Não deve possuir ID específico");
@@ -131,6 +133,18 @@ public class CopyServiceImpl implements CopyService {
                 copy.setLocation(parent);
             }
 
+            if (copy.getCategory() == null || copy.getCategory().getId() == null) {
+                throw new RuntimeException(
+                    "Category é obrigatória"
+                );
+            }
+
+            if (null == categoryService.findById(copy.getCategory().getId())) {
+                throw new RuntimeException(
+                    "ID de Category inexistente"
+                );
+            }
+
             if (copy.getHiddenProperties() == null) {
                 copy.setHiddenProperties(new ArrayList<>());
             }
@@ -148,7 +162,9 @@ public class CopyServiceImpl implements CopyService {
             Copy copy,
             PropertyService propertyService,
             CanonicService canonicService,
-            LocationService locationService) {
+            LocationService locationService,
+            CategoryService categoryService
+        ) {
         try {
             if (copy.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");
@@ -202,6 +218,18 @@ public class CopyServiceImpl implements CopyService {
                 }
             }
 
+            if (copy.getCategory() == null || copy.getCategory().getId() == null) {
+                throw new RuntimeException(
+                    "Category é obrigatória"
+                );
+            }
+
+            if (null == categoryService.findById(copy.getCategory().getId())) {
+                throw new RuntimeException(
+                    "ID de Category inexistente"
+                );
+            }
+
             List<Long> hiddenProperties = copy.getHiddenProperties() != null
                 ? copy.getHiddenProperties()
                 : new ArrayList<>();
@@ -223,6 +251,7 @@ public class CopyServiceImpl implements CopyService {
             existingCopy.setHiddenProperties(new ArrayList<>(hiddenProperties));
             existingCopy.setCanonic(canonic);
             existingCopy.setLocation(location);
+            existingCopy.setCategory(categoryService.findById(copy.getCategory().getId()));
 
             return copyRepository.save(existingCopy);
 

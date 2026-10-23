@@ -6,6 +6,10 @@ import { getCurrentCurator, getAllCurator, type Curator } from '../services/cura
 
 import { getCollectionsByCurator, type Collection } from '../services/collectionService'
 
+import { getCopyById } from '../services/copyService'
+
+import { getCanonicById, type Canonic } from '../services/canonicService'
+
 import '../styles/Curator.css'
 
 import NewItem from '../components/NewItem'
@@ -17,6 +21,7 @@ function CuratorPage() {
     const [collections, setCollections] = useState<Collection[]>([])
     const [followersCount, setFollowersCount] = useState(0)
     const [loading, setLoading] = useState(true)
+    const [copyNames, setCopyNames] = useState<Record<number, string>>({})
 
     const [showAddCollectionModal, setShowAddCollectionModal] = useState(false)
 
@@ -36,6 +41,51 @@ function CuratorPage() {
                 ])
 
                 setCollections(curatorCollections)
+
+                const copyIds = [
+                    ...new Set(
+                        curatorCollections.flatMap(collection =>
+                            collection.copies.map(copy => copy.id)
+                        )
+                    )
+                ]
+
+                const copyData = await Promise.all(
+                    copyIds.map(copyId => getCopyById(copyId))
+                )
+
+                const canonicIds = [
+                    ...new Set(
+                        copyData
+                            .filter(copy => copy.canonic !== null)
+                            .map(copy => copy.canonic!.id)
+                    )
+                ]
+
+                const canonicData = await Promise.all(
+                    canonicIds.map(canonicId => getCanonicById(canonicId))
+                )
+
+                const canonicMap: Record<number, Canonic> = {}
+
+                canonicData.forEach(canonic => {
+                    canonicMap[canonic.id] = canonic
+                })
+
+                const copyNameMap: Record<number, string> = {}
+
+                copyData.forEach(copy => {
+                    const canonic = copy.canonic
+                        ? canonicMap[copy.canonic.id]
+                        : null
+
+                    copyNameMap[copy.id] =
+                        copy.name?.trim() ||
+                        canonic?.name ||
+                        `Item #${copy.id}`
+                })
+
+                setCopyNames(copyNameMap)
 
                 setFollowersCount(
                     allCurators.filter(
@@ -296,8 +346,8 @@ function CuratorPage() {
                                                         <i className="bi bi-box"></i>
                                                     </div>
 
-                                                    <h4>
-                                                        Item # {copy.id}
+                                                    <h4 title={copyNames[copy.id] ?? `Item #${copy.id}`}>
+                                                        {copyNames[copy.id] ?? `Item #${copy.id}`}
                                                     </h4>
 
                                                     <p>

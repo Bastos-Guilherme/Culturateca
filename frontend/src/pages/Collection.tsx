@@ -248,29 +248,13 @@ function CollectionPage() {
                             const location = copy.location
                                 ? locations[copy.location.id]
                                 : null
-                            const hiddenProperties = new Set(
-                                (copy.hiddenProperties ?? []).map(Number)
-                            )
-                            const displayedProperties =
-                                new Map<number, string>()
-                            Object.entries(canonic?.property ?? {})
-                                .forEach(([propertyId, value]) => {
-                                    const numericId = Number(propertyId)
+                            const displayedProperties = Object.entries(
+                                copy.property ?? {}
+                            ).map(([propertyId, value]) => [
+                                Number(propertyId),
+                                value
+                            ] as [number, string])
 
-                                    if (!hiddenProperties.has(numericId)) {
-                                        displayedProperties.set(
-                                            numericId,
-                                            value
-                                        )
-                                    }
-                                })
-                            Object.entries(copy.property ?? {})
-                                .forEach(([propertyId, value]) => {
-                                    displayedProperties.set(
-                                        Number(propertyId),
-                                        value
-                                    )
-                                })
                             const displayName = copy.name?.trim() || canonic?.name || `Item #${copy.id}`
                             return (
                                 <article
@@ -310,13 +294,11 @@ function CollectionPage() {
                                             <i className="bi bi-tags" />
                                             Propriedades
                                         </h4>
-                                        {displayedProperties.size > 0 ? (
+                                        {displayedProperties.length > 0 ? (
                                             <div className="property-list">
-                                                {Array.from(
-                                                    displayedProperties.entries()
-                                                ).map(([propertyId, value]) => {
-                                                    const property =
-                                                        properties[propertyId]
+                                                {displayedProperties.map(([propertyId, value]) => {
+                                                    const property = properties[propertyId]
+
                                                     return (
                                                         <div
                                                             className="property-row"
@@ -328,9 +310,7 @@ function CollectionPage() {
                                                                     : `Propriedade #${propertyId}`}
                                                             </span>
 
-                                                            <strong>
-                                                                {value}
-                                                            </strong>
+                                                            <strong>{value}</strong>
                                                         </div>
                                                     )
                                                 })}
@@ -340,31 +320,23 @@ function CollectionPage() {
                                                 Nenhuma propriedade cadastrada.
                                             </p>
                                         )}
+
                                     </div>
                                     <div className="detail-section">
                                         <h4>
                                             <i className="bi bi-book" />
-                                            Informações da obra
+                                            Informações do item
                                         </h4>
-                                        {canonic ? (
-                                            <div className="category-info">
-                                                <span>
-                                                    Categoria
-                                                </span>
-                                                <strong>
-                                                    {canonic.category
-                                                        ? categories[
-                                                            canonic.category.id
-                                                        ]?.name ??
-                                                        `Categoria #${canonic.category.id}`
-                                                        : 'Sem categoria'}
-                                                </strong>
-                                            </div>
-                                        ) : (
-                                            <p className="detail-empty">
-                                                Esta cópia não possui uma obra associada.
-                                            </p>
-                                        )}
+
+                                        <div className="category-info">
+                                            <span>Categoria</span>
+                                            <strong>
+                                                {copy.category
+                                                    ? categories[copy.category.id]?.name ??
+                                                    `Categoria #${copy.category.id}`
+                                                    : "Sem categoria"}
+                                            </strong>
+                                        </div>
                                     </div>
                                     <div className="detail-section">
                                         <h4>

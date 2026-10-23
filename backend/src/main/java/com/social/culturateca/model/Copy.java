@@ -50,4 +50,8 @@ public class Copy {
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "hiddenproperties", nullable = false)
   private List<Long> hiddenProperties = new java.util.ArrayList<>();
+
+  @ManyToOne
+  @JoinColumn(name = "category")
+  private Category category;
 }
