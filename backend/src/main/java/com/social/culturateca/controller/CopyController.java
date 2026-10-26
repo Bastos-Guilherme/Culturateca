@@ -72,5 +72,4 @@ public class CopyController {
     public void delete(@PathVariable("id") Long id){
         copyService.deleteCopy(id);
     }
-
 }

@@ -65,6 +65,19 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
+    public List<Copy> findByCanonic(Canonic canonic) {
+        try {
+            if (null == canonic) {
+                throw new RuntimeException("Canonic não encontrado");
+            }
+            return copyRepository.findByCanonic(canonic);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public List<Copy> findAllByProperty(Long propertyId) {
         try {
             return copyRepository.findAllByProperty(propertyId);

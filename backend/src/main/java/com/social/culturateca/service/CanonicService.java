@@ -19,4 +19,6 @@ public interface CanonicService {
     public Canonic editCanonic(Canonic canonic, CategoryService categoryService, PropertyService propertyService);
 
     public void deleteCanonic(Long id);
+
+    public void updateCanonicFromAllCopy(Long canonicId, CopyService copyService);
 }

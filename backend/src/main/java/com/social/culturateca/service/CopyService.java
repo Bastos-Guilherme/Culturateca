@@ -2,6 +2,7 @@ package com.social.culturateca.service;
 
 import java.util.List;
 
+import com.social.culturateca.model.Canonic;
 import com.social.culturateca.model.Copy;
 
 public interface CopyService {
@@ -13,6 +14,8 @@ public interface CopyService {
     public List<Copy> findByCanonic(Long canonicId, CanonicService canonicService);
 
     public List<Copy> findAllByProperty(Long propertyId);
+
+    public List<Copy> findByCanonic(Canonic canonic);
 
     public Copy createCopy(
             Copy copy,

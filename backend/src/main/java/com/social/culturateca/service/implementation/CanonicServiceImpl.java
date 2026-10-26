@@ -1,6 +1,8 @@
 package com.social.culturateca.service.implementation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -9,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.social.culturateca.model.Canonic;
 import com.social.culturateca.model.Category;
+import com.social.culturateca.model.Copy;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.CanonicRepository;
 import com.social.culturateca.service.CanonicService;
 import com.social.culturateca.service.CategoryService;
+import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.PropertyService;
 
 @Service
@@ -191,5 +195,56 @@ public class CanonicServiceImpl implements CanonicService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void updateCanonicFromAllCopy(Long canonicId, CopyService copyService) {
+        if (!canonicRepository.existsById(canonicId)) {
+            throw new RuntimeException("Canonic nao existe");
+        }
+        Canonic canonic = canonicRepository.findById(canonicId).get();
+        List<Copy> copies = copyService.findByCanonic(canonic);
+        Canonic updatedCanonic = new Canonic();
+        Map<Long, Map<String, Integer>> propertiesCount = new HashMap<>();
+        for (Copy copy : copies) {
+            for (Long key : copy.getProperty().keySet()) {
+                String value = copy.getProperty().get(key);
+                if (!propertiesCount.containsKey(key)) {
+                    propertiesCount.put(key, new HashMap<>());
+                }
+                Map<String, Integer> mapOfValues = propertiesCount.get(key);
+                if (mapOfValues.containsKey(value)) {
+                    mapOfValues.put(value, (mapOfValues.get(value) + 1));
+                } else {
+                    mapOfValues.put(value, 1);
+                }
+            }
+        }
+        Map<Long, String> updatedProperties = new HashMap<>();
+        for (Map.Entry<Long, Map<String, Integer>> entryKey: propertiesCount.entrySet()) {
+            Long key = entryKey.getKey();
+            Map<String, Integer> valueCount = entryKey.getValue();
+            String valueMode = null;
+            Integer max = 0;
+            boolean unique = true;
+            for (Map.Entry<String, Integer> entryValue: valueCount.entrySet()) {
+                Integer localMax = entryValue.getValue();
+                if (localMax > max) {
+                    max = localMax;
+                    valueMode = entryValue.getKey();
+                    unique = true;
+                } else if (localMax == max) {
+                    unique = false;
+                }
+            }
+            if (unique && valueMode != null) {
+                updatedProperties.put(key, valueMode);
+            }
+        }
+        updatedCanonic.setId(canonic.getId());
+        updatedCanonic.setCategory(canonic.getCategory());
+        updatedCanonic.setName(canonic.getName());
+        updatedCanonic.setProperty(updatedProperties);
+        canonicRepository.save(updatedCanonic);
     }
 }
