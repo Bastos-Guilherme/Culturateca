@@ -33,6 +33,8 @@ public interface CopyService {
             CategoryService categoryService
         );
 
-    public void deleteCopy(Long id);
+    public void deleteCopy(Long id,
+        CanonicService canonicService
+    );
 
 }

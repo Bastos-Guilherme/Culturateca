@@ -70,6 +70,6 @@ public class CopyController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id){
-        copyService.deleteCopy(id);
+        copyService.deleteCopy(id, canonicService);
     }
 }

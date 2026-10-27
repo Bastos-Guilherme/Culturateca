@@ -13,7 +13,7 @@ import com.social.culturateca.service.CuratorService;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
-  
+
   List<String> BLACKLIST = List.of(
       "armas",
       "drogas");
@@ -112,12 +112,7 @@ public class CollectionServiceImpl implements CollectionService {
 
   @Override
   public Collection findById(Long id) {
-    try {
-      return collectionRepository.findById(id).get();
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      return null;
-    }
+    return collectionRepository.findById(id).orElse(null);
   }
 
   @Override

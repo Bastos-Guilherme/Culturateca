@@ -11,6 +11,7 @@ import AddCategoryModal from '../components/AddCategoryModal'
 import AllCategoriesModal from '../components/AllCategoriesModal'
 import AddCollectionModal from '../components/AddCollectionModal'
 import AddLocationModal from '../components/AddLocationModal'
+import { registerItem } from '../services/itemRegistrationService'
 
 import '../styles/CreateItem.css'
 
@@ -41,6 +42,7 @@ export default function CreateItem() {
     const [showAddLocationModal, setShowAddLocationModal] = useState(false)
 
     const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         async function loadData() {
@@ -196,16 +198,82 @@ export default function CreateItem() {
         setShowAddLocationModal(false)
     }
 
+    async function handleSave() {
+        if (selectedCategory === null) {
+            alert("Selecione uma categoria.");
+            return;
+        }
 
-    function handleSave() {
-        console.log({
-            category: selectedCategory,
-            name: itemName,
-            properties: itemProperties,
-            collection: selectedCollection,
-            location: selectedLocation
-        })
+        if (!itemName.trim()) {
+            alert("Informe o nome da obra.");
+            return;
+        }
+
+        if (itemProperties.length === 0) {
+            alert("Adicione pelo menos uma propriedade.");
+            return;
+        }
+
+        const incompleteProperty = itemProperties.some(
+            (item) =>
+                item.propertyId === null ||
+                !item.value.trim()
+        );
+
+        if (incompleteProperty) {
+            alert("Preencha todas as propriedades adicionadas.");
+            return;
+        }
+
+        const propertyIds = itemProperties.map(
+            (item) => item.propertyId as number
+        );
+
+        if (new Set(propertyIds).size !== propertyIds.length) {
+            alert("Não adicione a mesma propriedade mais de uma vez.");
+            return;
+        }
+
+        const property: Record<number, string> = {};
+
+        itemProperties.forEach((item) => {
+            property[item.propertyId as number] = item.value.trim();
+        });
+
+        try {
+            setSaving(true);
+
+            const savedCopy = await registerItem({
+                categoryId: selectedCategory,
+                name: itemName.trim(),
+                property,
+                locationId: selectedLocation,
+                collectionId: selectedCollection,
+                hiddenProperties: [],
+            });
+
+            console.log("Item cadastrado:", savedCopy);
+
+            alert("Item cadastrado com sucesso!");
+
+            setSelectedCategory(null);
+            setItemName("");
+            setItemProperties([]);
+            setSelectedCollection(null);
+            setSelectedLocation(null);
+        } catch (error) {
+            console.error("Erro ao cadastrar item:", error);
+
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : "Ocorreu um erro ao cadastrar o item."
+            );
+        } finally {
+            setSaving(false);
+        }
     }
+
 
     if (loading) {
         return (
@@ -522,8 +590,9 @@ export default function CreateItem() {
                             type="button"
                             className="create-item-save"
                             onClick={handleSave}
+                            disabled={saving}
                         >
-                            Concluir e salvar
+                            {saving ? "Cadastrando..." : "Cadastrar item"}
                             <i className="bi bi-arrow-right"></i>
                         </button>
                     </div>

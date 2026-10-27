@@ -46,12 +46,7 @@ public class CuratorServiceImpl implements CuratorService {
 
     @Override
     public Curator findById(Long id) {
-        try {
-            return curatorRepository.findById(id).get();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return curatorRepository.findById(id).orElse(null);
     }
 
     @Override
