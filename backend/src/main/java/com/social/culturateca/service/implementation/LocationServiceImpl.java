@@ -108,8 +108,8 @@ public class LocationServiceImpl implements LocationService {
 
             return locationRepository.save(location);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            e.printStackTrace();
+            throw e;
         }
     }
 

@@ -1,3 +1,17 @@
+
+-- =========================================================
+-- culturateca - banco de dados para testes
+-- postgresql 16+
+-- =========================================================
+
+begin;
+
+create extension if not exists pgcrypto;
+
+-- =========================================================
+-- 1. CRIACAO DAS TABELAS
+-- =========================================================
+
 create table property (
     id bigserial primary key,
     name varchar(255) not null
@@ -32,29 +46,14 @@ create table location (
     curator bigint
 );
 
-alter table curator
-    add constraint fk_curator_location
-    foreign key (location)
-    references location(id)
-    on delete set null;
-
-alter table location
-    add constraint fk_location_parent
-    foreign key (location)
-    references location(id)
-    on delete set null;
-
-alter table location
-    add constraint fk_location_curator
-    foreign key (curator)
-    references curator(id)
-    on delete set null;
-
 create table canonic (
     id bigserial primary key,
     name varchar(255) not null,
     property jsonb not null,
-    category bigint references category(id)
+    category bigint references category(id),
+
+    constraint canonic_name_category_key
+        unique (name, category)
 );
 
 create table copy (
@@ -106,9 +105,6 @@ create table pending_curator (
         check (attempts >= 0)
 );
 
-create index idx_pending_curator_expires_at
-    on pending_curator(expires_at);
-
 create table pending_login_verification (
     id varchar(36) primary key,
     email varchar(255) not null,
@@ -124,6 +120,35 @@ create table pending_login_verification (
     constraint chk_pending_login_attempts
         check (attempts >= 0)
 );
+
+-- =========================================================
+-- 2. CHAVES ESTRANGEIRAS
+-- =========================================================
+
+alter table curator
+    add constraint fk_curator_location
+    foreign key (location)
+    references location(id)
+    on delete set null;
+
+alter table location
+    add constraint fk_location_parent
+    foreign key (location)
+    references location(id)
+    on delete set null;
+
+alter table location
+    add constraint fk_location_curator
+    foreign key (curator)
+    references curator(id)
+    on delete set null;
+
+-- =========================================================
+-- 3. INDICES
+-- =========================================================
+
+create index idx_pending_curator_expires_at
+    on pending_curator(expires_at);
 
 create index idx_pending_login_expires_at
     on pending_login_verification(expires_at);
@@ -154,3 +179,216 @@ create index idx_collection_copy_copy
 
 create index idx_pending_curator_location
     on pending_curator(location);
+
+-- =========================================================
+-- 4. PROPRIEDADES
+-- =========================================================
+
+insert into property (id, name) values
+    (1, 'Titulo'),
+    (2, 'Autor'),
+    (3, 'Ano'),
+    (4, 'Editora'),
+    (5, 'Descricao');
+
+-- =========================================================
+-- 5. CATEGORIAS
+-- =========================================================
+
+insert into category (id, name) values
+    (1, 'Livro'),
+    (2, 'Revista'),
+    (3, 'Jogo'),
+    (4, 'CD'),
+    (5, 'Fita');
+
+-- =========================================================
+-- 6. CURADORES
+-- Senha de teste: teste123
+-- MFA desativado para todos.
+-- =========================================================
+
+insert into curator (
+    id, email, location, password, name, gender, phone,
+    ispublic, bio, following, profilepicture, emailmfaenabled
+) values
+    (1, 'ana@teste.com', null,
+     crypt('teste123', gen_salt('bf', 10)),
+     'Ana Souza', 'FEMALE', '11990000001',
+     true, 'Colecionadora de livros brasileiros.',
+     '[2,3]'::jsonb, null, false),
+
+    (2, 'bruno@teste.com', null,
+     crypt('teste123', gen_salt('bf', 10)),
+     'Bruno Lima', 'MALE', '11990000002',
+     true, 'Colecionador de jogos e revistas.',
+     '[1]'::jsonb, null, false),
+
+    (3, 'carla@teste.com', null,
+     crypt('teste123', gen_salt('bf', 10)),
+     'Carla Mendes', 'FEMALE', '11990000003',
+     false, 'Colecionadora de musica e livros.',
+     '[]'::jsonb, null, false),
+
+    (4, 'diego@teste.com', null,
+     crypt('teste123', gen_salt('bf', 10)),
+     'Diego Alves', 'MALE', '11990000004',
+     true, 'Colecionador de jogos antigos.',
+     '[1,5]'::jsonb, null, false),
+
+    (5, 'elisa@teste.com', null,
+     crypt('teste123', gen_salt('bf', 10)),
+     'Elisa Costa', 'FEMALE', '11990000005',
+     true, 'Colecionadora de revistas e fitas.',
+     '[2]'::jsonb, null, false);
+
+-- =========================================================
+-- 7. LOCAIS
+-- =========================================================
+
+insert into location (
+    id, name, latitude, longitude, location, curator
+) values
+    (1, 'Biblioteca pessoal', -23.55052, -46.63331, null, 1),
+    (2, 'Estante de jogos', -23.56140, -46.65590, null, 2),
+    (3, 'Colecao musical', -23.57000, -46.64000, null, 3),
+    (4, 'Sala de colecionaveis', -23.58000, -46.65000, null, 4),
+    (5, 'Prateleira especial', -23.55060, -46.63340, 1, 5);
+
+-- Define o local principal de cada curador.
+update curator set location = 1 where id = 1;
+update curator set location = 2 where id = 2;
+update curator set location = 3 where id = 3;
+update curator set location = 4 where id = 4;
+update curator set location = 5 where id = 5;
+
+-- =========================================================
+-- 8. OBRAS CANONICAS
+-- =========================================================
+
+insert into canonic (id, name, property, category) values
+    (1, 'Dom Casmurro',
+     '{"1":"Dom Casmurro","2":"Machado de Assis","3":"1899","4":"Garnier","5":"Romance brasileiro"}'::jsonb,
+     1),
+
+    (2, 'O Cortico',
+     '{"1":"O Cortico","2":"Aluisio Azevedo","3":"1890","4":"Garnier","5":"Naturalismo brasileiro"}'::jsonb,
+     1),
+
+    (3, 'Batman',
+     '{"1":"Batman","2":"DC Comics","3":"2020","4":"Panini","5":"Revista em quadrinhos"}'::jsonb,
+     2),
+
+    (4, 'The Legend of Zelda',
+     '{"1":"The Legend of Zelda","2":"Nintendo","3":"1986","4":"Nintendo","5":"Aventura"}'::jsonb,
+     3),
+
+    (5, 'Batman',
+     '{"1":"Batman","2":"Prince","3":"1989","4":"Warner Records","5":"Trilha sonora"}'::jsonb,
+     4);
+
+-- =========================================================
+-- 9. EXEMPLARES
+-- A categoria pertence diretamente a copy.
+-- =========================================================
+
+insert into copy (
+    id, name, property, canonic, location, hiddenproperties, category
+) values
+    (1, 'Dom Casmurro - primeira copia',
+     '{"1":"Dom Casmurro","2":"Machado de Assis","3":"1899","4":"Garnier"}'::jsonb,
+     1, 1, '[]'::jsonb, 1),
+
+    (2, 'O Cortico - edicao de bolso',
+     '{"1":"O Cortico","2":"Aluisio Azevedo","3":"1890","4":"Atica"}'::jsonb,
+     2, 1, '["5"]'::jsonb, 1),
+
+    (3, 'Batman - edicao especial',
+     '{"1":"Batman","2":"DC Comics","3":"2020","4":"Panini"}'::jsonb,
+     3, 2, '[]'::jsonb, 2),
+
+    (4, 'Zelda - cartucho',
+     '{"1":"The Legend of Zelda","2":"Nintendo","3":"1986","4":"Nintendo"}'::jsonb,
+     4, 2, '["5"]'::jsonb, 3),
+
+    (5, 'Batman - album musical',
+     '{"1":"Batman","2":"Prince","3":"1989","4":"Warner Records"}'::jsonb,
+     5, 3, '[]'::jsonb, 4);
+
+-- =========================================================
+-- 10. COLECOES
+-- =========================================================
+
+insert into collection (id, curator, name, ispublic) values
+    (1, 1, 'Literatura brasileira', true),
+    (2, 2, 'Quadrinhos e jogos', true),
+    (3, 3, 'Colecao musical', false),
+    (4, 4, 'Jogos classicos', true),
+    (5, 5, 'Colecao pessoal', false);
+
+-- =========================================================
+-- 11. RELACIONAMENTO ENTRE COLECOES E EXEMPLARES
+-- =========================================================
+
+insert into collection_copy (collection, copy) values
+    (1, 1),
+    (1, 2),
+    (2, 3),
+    (4, 4),
+    (3, 5);
+
+-- =========================================================
+-- 12. TABELAS PENDENTES
+-- As tabelas foram criadas, mas ficam vazias.
+-- O avaliador podera testar cadastro e login pela aplicacao.
+-- =========================================================
+
+-- Nenhum registro em pending_curator.
+-- Nenhum registro em pending_login_verification.
+
+-- =========================================================
+-- 13. SINCRONIZACAO DAS SEQUENCIAS
+-- =========================================================
+
+select setval(
+    pg_get_serial_sequence('property', 'id'),
+    (select max(id) from property)
+);
+
+select setval(
+    pg_get_serial_sequence('category', 'id'),
+    (select max(id) from category)
+);
+
+select setval(
+    pg_get_serial_sequence('curator', 'id'),
+    (select max(id) from curator)
+);
+
+select setval(
+    pg_get_serial_sequence('location', 'id'),
+    (select max(id) from location)
+);
+
+select setval(
+    pg_get_serial_sequence('canonic', 'id'),
+    (select max(id) from canonic)
+);
+
+select setval(
+    pg_get_serial_sequence('copy', 'id'),
+    (select max(id) from copy)
+);
+
+select setval(
+    pg_get_serial_sequence('collection', 'id'),
+    (select max(id) from collection)
+);
+
+select setval(
+    pg_get_serial_sequence('pending_curator', 'id'),
+    1,
+    false
+);
+
+commit;

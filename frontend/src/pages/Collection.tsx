@@ -149,6 +149,16 @@ function CollectionPage() {
             }
         }
 
+        const propertyData = await getAllProperty()
+
+        const propertyMap: Record<number, Property> = {}
+
+        propertyData.forEach((property: Property) => {
+            propertyMap[property.id] = property
+        })
+
+        setProperties(propertyMap)
+
         setEditingCopy(null)
     }
 
