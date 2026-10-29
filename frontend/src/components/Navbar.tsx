@@ -1,6 +1,6 @@
-import { useState } from 'react' 
-import { NavLink, useNavigate, Outlet } from 'react-router-dom' 
-import { useAuth } from '../context/AuthContext' 
+import { useState } from 'react'
+import { NavLink, useNavigate, Outlet } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import '../styles/Navbar.css'
 import LogoutModal from './LogoutModal'
 
@@ -12,11 +12,11 @@ function Navbar() {
   const navigate = useNavigate()
   const { logout, isAuthenticated } = useAuth()
 
-  function handleLogout() { 
-    logout() 
-    setLogoutModalOpen(false) 
-    setMenuOpen(false) 
-    navigate('/login') 
+  function handleLogout() {
+    logout()
+    setLogoutModalOpen(false)
+    setMenuOpen(false)
+    navigate('/login')
   }
 
   return (
@@ -39,21 +39,21 @@ function Navbar() {
           {menuOpen && (
             <div className="dropdown-menu">
               {!isAuthenticated && (
-                <button onClick={() => {navigate('/login'), setMenuOpen(!menuOpen)}}>
+                <button onClick={() => { navigate('/login'), setMenuOpen(!menuOpen) }}>
                   <i className="bi bi-box-arrow-in-right"></i>
                   Login
                 </button>
               )}
 
               {isAuthenticated && (
-                <button onClick={() => {navigate('/settings'), setMenuOpen(!menuOpen)}}>
+                <button onClick={() => { navigate('/settings'), setMenuOpen(!menuOpen) }}>
                   <i className="bi bi-gear"></i>
                   Configurações
                 </button>
               )}
 
               {isAuthenticated && (
-                <button onClick={() => {setLogoutModalOpen(true), setMenuOpen(!menuOpen)}}>
+                <button onClick={() => { setLogoutModalOpen(true), setMenuOpen(!menuOpen) }}>
                   <i className="bi bi-box-arrow-in-right"></i>
                   Logout
                 </button>
@@ -82,6 +82,17 @@ function Navbar() {
             <i className="bi bi-person"></i>
             <span>Perfil</span>
           </NavLink>
+
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdEkQKvTuimKQ0d8LwrfTjZHwa7kVXCuP_CseR8k8vWkWP11w/viewform?usp=publish-editor"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="feedback-link"
+            title="Enviar feedback"
+          >
+            <i className="bi bi-chat-square-text"></i>
+            <span>Feedback</span>
+          </a>
         </nav>
       </aside>
 
