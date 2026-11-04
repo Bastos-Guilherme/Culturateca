@@ -1,4 +1,3 @@
-
 -- =========================================================
 -- culturateca - banco de dados para testes
 -- postgresql 16+
@@ -37,6 +36,14 @@ create table curator (
     emailmfaenabled boolean not null default false
 );
 
+-- Cada propriedade pertence a um curador.
+alter table property
+    add column curator bigint not null references curator(id);
+
+-- Cada categoria pertence a um curador.
+alter table category
+    add column curator bigint not null references curator(id);
+
 create table location (
     id bigserial primary key,
     name varchar(255) not null,
@@ -56,6 +63,7 @@ create table canonic (
         unique (name, category)
 );
 
+-- Cada copia pertence a um curador.
 create table copy (
     id bigserial primary key,
     name varchar(255),
@@ -63,7 +71,8 @@ create table copy (
     canonic bigint references canonic(id),
     location bigint references location(id),
     hiddenproperties jsonb not null default '[]'::jsonb,
-    category bigint references category(id)
+    category bigint references category(id),
+    curator bigint not null references curator(id)
 );
 
 create table collection (
@@ -147,6 +156,15 @@ alter table location
 -- 3. INDICES
 -- =========================================================
 
+create index idx_property_curator
+    on property(curator);
+
+create index idx_category_curator
+    on category(curator);
+
+create index idx_copy_curator
+    on copy(curator);
+
 create index idx_pending_curator_expires_at
     on pending_curator(expires_at);
 
@@ -181,29 +199,7 @@ create index idx_pending_curator_location
     on pending_curator(location);
 
 -- =========================================================
--- 4. PROPRIEDADES
--- =========================================================
-
-insert into property (id, name) values
-    (1, 'Titulo'),
-    (2, 'Autor'),
-    (3, 'Ano'),
-    (4, 'Editora'),
-    (5, 'Descricao');
-
--- =========================================================
--- 5. CATEGORIAS
--- =========================================================
-
-insert into category (id, name) values
-    (1, 'Livro'),
-    (2, 'Revista'),
-    (3, 'Jogo'),
-    (4, 'CD'),
-    (5, 'Fita');
-
--- =========================================================
--- 6. CURADORES
+-- 4. CURADORES
 -- Senha de teste: teste123
 -- MFA desativado para todos.
 -- =========================================================
@@ -243,6 +239,30 @@ insert into curator (
      '[2]'::jsonb, null, false);
 
 -- =========================================================
+-- 5. PROPRIEDADES
+-- Os registros de teste pertencem ao curador 1.
+-- =========================================================
+
+insert into property (id, name, curator) values
+    (1, 'Titulo', 1),
+    (2, 'Autor', 1),
+    (3, 'Ano', 1),
+    (4, 'Editora', 1),
+    (5, 'Descricao', 1);
+
+-- =========================================================
+-- 6. CATEGORIAS
+-- Os registros de teste pertencem ao curador 1.
+-- =========================================================
+
+insert into category (id, name, curator) values
+    (1, 'Livro', 1),
+    (2, 'Revista', 1),
+    (3, 'Jogo', 1),
+    (4, 'CD', 1),
+    (5, 'Fita', 1);
+
+-- =========================================================
 -- 7. LOCAIS
 -- =========================================================
 
@@ -250,17 +270,12 @@ insert into location (
     id, name, latitude, longitude, location, curator
 ) values
     (1, 'Biblioteca pessoal', -23.55052, -46.63331, null, 1),
-    (2, 'Estante de jogos', -23.56140, -46.65590, null, 2),
-    (3, 'Colecao musical', -23.57000, -46.64000, null, 3),
-    (4, 'Sala de colecionaveis', -23.58000, -46.65000, null, 4),
-    (5, 'Prateleira especial', -23.55060, -46.63340, 1, 5);
+    (2, 'Estante de jogos', -23.56140, -46.65590, null, 1),
+    (3, 'Colecao musical', -23.57000, -46.64000, null, 1),
+    (4, 'Sala de colecionaveis', -23.58000, -46.65000, null, 1),
+    (5, 'Prateleira especial', -23.55060, -46.63340, 1, 1);
 
--- Define o local principal de cada curador.
 update curator set location = 1 where id = 1;
-update curator set location = 2 where id = 2;
-update curator set location = 3 where id = 3;
-update curator set location = 4 where id = 4;
-update curator set location = 5 where id = 5;
 
 -- =========================================================
 -- 8. OBRAS CANONICAS
@@ -289,42 +304,43 @@ insert into canonic (id, name, property, category) values
 
 -- =========================================================
 -- 9. EXEMPLARES
--- A categoria pertence diretamente a copy.
 -- =========================================================
 
 insert into copy (
-    id, name, property, canonic, location, hiddenproperties, category
+    id, name, property, canonic, location,
+    hiddenproperties, category, curator
 ) values
     (1, 'Dom Casmurro - primeira copia',
      '{"1":"Dom Casmurro","2":"Machado de Assis","3":"1899","4":"Garnier"}'::jsonb,
-     1, 1, '[]'::jsonb, 1),
+     1, 1, '[]'::jsonb, 1, 1),
 
     (2, 'O Cortico - edicao de bolso',
      '{"1":"O Cortico","2":"Aluisio Azevedo","3":"1890","4":"Atica"}'::jsonb,
-     2, 1, '["5"]'::jsonb, 1),
+     2, 1, '["5"]'::jsonb, 1, 1),
 
     (3, 'Batman - edicao especial',
      '{"1":"Batman","2":"DC Comics","3":"2020","4":"Panini"}'::jsonb,
-     3, 2, '[]'::jsonb, 2),
+     3, 2, '[]'::jsonb, 2, 1),
 
     (4, 'Zelda - cartucho',
      '{"1":"The Legend of Zelda","2":"Nintendo","3":"1986","4":"Nintendo"}'::jsonb,
-     4, 2, '["5"]'::jsonb, 3),
+     4, 2, '["5"]'::jsonb, 3, 1),
 
     (5, 'Batman - album musical',
      '{"1":"Batman","2":"Prince","3":"1989","4":"Warner Records"}'::jsonb,
-     5, 3, '[]'::jsonb, 4);
+     5, 3, '[]'::jsonb, 4, 1);
 
 -- =========================================================
 -- 10. COLECOES
+-- Os registros de teste pertencem ao curador 1.
 -- =========================================================
 
 insert into collection (id, curator, name, ispublic) values
     (1, 1, 'Literatura brasileira', true),
-    (2, 2, 'Quadrinhos e jogos', true),
-    (3, 3, 'Colecao musical', false),
-    (4, 4, 'Jogos classicos', true),
-    (5, 5, 'Colecao pessoal', false);
+    (2, 1, 'Quadrinhos e jogos', true),
+    (3, 1, 'Colecao musical', false),
+    (4, 1, 'Jogos classicos', true),
+    (5, 1, 'Colecao pessoal', false);
 
 -- =========================================================
 -- 11. RELACIONAMENTO ENTRE COLECOES E EXEMPLARES
@@ -339,8 +355,7 @@ insert into collection_copy (collection, copy) values
 
 -- =========================================================
 -- 12. TABELAS PENDENTES
--- As tabelas foram criadas, mas ficam vazias.
--- O avaliador podera testar cadastro e login pela aplicacao.
+-- Permanecem vazias para os testes pela aplicacao.
 -- =========================================================
 
 -- Nenhum registro em pending_curator.
