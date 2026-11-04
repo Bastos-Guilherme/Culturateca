@@ -116,26 +116,39 @@
 }
 
 .curator-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-
+    display: flex;
+    flex-direction: column;
     gap: 12px;
 
-    padding: 20px 45px;
-
-    background-color: #fff;
+    flex-shrink: 0;
+    align-self: center;
 }
 
 .curator-stat {
+    width: 100px;
+    height: 60px;
+
     border: 1.5px solid #333;
     border-radius: 4px;
-
-    padding: 10px 15px;
 
     background-color: #f8f7f5;
 
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.curator-stat strong {
+    font-size: 27px;
+    line-height: 1.1;
+}
+
+.curator-stat span {
+    margin-top: 6px;
+
+    font-size: 12px;
+    color: #555;
 }
 
 .curator-stat strong {
@@ -427,7 +440,8 @@
     }
 
     .curator-stats {
-        grid-template-columns: repeat(2, 1fr);
+        flex-direction: row;
+        align-self: flex-start;
     }
 
     .collections-header {

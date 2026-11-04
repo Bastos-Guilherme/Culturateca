@@ -35,7 +35,7 @@ function Login() {
                 setPassword('')
 
                 alert('Login realizado com sucesso!')
-                navigate('/')
+                navigate('/curator')
                 return
             }
 
@@ -66,7 +66,7 @@ function Login() {
         setPassword('')
 
         alert('Login realizado com sucesso!')
-        navigate('/')
+        navigate('/curator')
     }
 
     function handleCloseVerification() {

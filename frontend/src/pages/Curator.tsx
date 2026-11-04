@@ -19,7 +19,6 @@ function CuratorPage() {
     const [curator, setCurator] = useState<Curator | null>(null)
     const [curatorEmail, setCuratorEmail] = useState<string>('')
     const [collections, setCollections] = useState<Collection[]>([])
-    const [followersCount, setFollowersCount] = useState(0)
     const [loading, setLoading] = useState(true)
     const [copyNames, setCopyNames] = useState<Record<number, string>>({})
 
@@ -35,7 +34,7 @@ function CuratorPage() {
                 setCurator(currentCurator)
                 setCuratorEmail(currentCurator.email)
 
-                const [curatorCollections, allCurators] = await Promise.all([
+                const [curatorCollections] = await Promise.all([
                     getCollectionsByCurator(currentCurator.email),
                     getAllCurator()
                 ])
@@ -86,13 +85,6 @@ function CuratorPage() {
                 })
 
                 setCopyNames(copyNameMap)
-
-                setFollowersCount(
-                    allCurators.filter(
-                        otherCurator =>
-                            otherCurator.following?.includes(currentCurator.id)
-                    ).length
-                )
 
             } catch (error) {
                 console.error(error)
@@ -147,25 +139,9 @@ function CuratorPage() {
         )
     )
 
-    const followingCount = curator.following?.length ?? 0
-
     return (
         <div className="curator-page">
             <section className="curator-header">
-                <div className="curator-avatar-container">
-                    {curator.profilePicture ? (
-                        <img
-                            src={curator.profilePicture}
-                            alt={`Foto de ${curator.name}`}
-                            className="curator-avatar"
-                        />
-                    ) : (
-                        <div className="curator-avatar curator-avatar-placeholder">
-                            <i className="bi bi-person"></i>
-                        </div>
-                    )}
-                </div>
-
                 <div className="curator-info">
                     <div className="curator-name-row">
                         <div>
@@ -174,10 +150,6 @@ function CuratorPage() {
                                 @{curator.email.split('@')[0]}
                             </p>
                         </div>
-                        <button className="curator-edit-button" onClick={() => navigate('/settings')}>
-                            <i className="bi bi-gear"></i>
-                            Editar conta
-                        </button>
                     </div>
 
                     {curator.location && (
@@ -192,59 +164,17 @@ function CuratorPage() {
                             {curator.bio}
                         </p>
                     )}
-
-                    <div className="curator-tags">
-                        <span>
-                            Colecionador
-                        </span>
-                        {curator.isPublic && (
-                            <span>
-                                Perfil público
-                            </span>
-                        )}
+                </div>
+                <div className="curator-stats">
+                    <div className="curator-stat">
+                        <strong>{publicCollections.length}</strong>
+                        <span>Coleções</span>
                     </div>
-                </div>
-            </section>
 
-            <section className="curator-stats">
-                <div className="curator-stat">
-                    <strong>
-                        {String(publicCollections.length)}
-                    </strong>
-
-                    <span>
-                        Pastas públicas
-                    </span>
-                </div>
-
-                <div className="curator-stat">
-                    <strong>
-                        {uniqueCopyIds.size}
-                    </strong>
-
-                    <span>
-                        Itens tombados
-                    </span>
-                </div>
-
-                <div className="curator-stat">
-                    <strong>
-                        {followersCount}
-                    </strong>
-
-                    <span>
-                        Seguidores
-                    </span>
-                </div>
-
-                <div className="curator-stat">
-                    <strong>
-                        {followingCount}
-                    </strong>
-
-                    <span>
-                        Seguindo
-                    </span>
+                    <div className="curator-stat">
+                        <strong>{uniqueCopyIds.size}</strong>
+                        <span>Itens</span>
+                    </div>
                 </div>
             </section>
 
@@ -267,13 +197,13 @@ function CuratorPage() {
                         />
 
                         <button className="active">
-                            Todos os Acervos
+                            Todas as coleções
                         </button>
                         <button>
-                            Mais Recentes
+                            Maiores Coleções
                         </button>
                         <button>
-                            Mais Populares
+                            Menores Coleções
                         </button>
                     </div>
                 </div>
@@ -299,12 +229,6 @@ function CuratorPage() {
                                             <h3>
                                                 {collection.name}
                                             </h3>
-
-                                            <span>
-                                                {collection.isPublic
-                                                    ? 'PÚBLICO'
-                                                    : 'PRIVADO'}
-                                            </span>
                                         </div>
 
                                         <p>
@@ -342,21 +266,9 @@ function CuratorPage() {
                                                     className="collection-item"
                                                     key={copy.id}
                                                 >
-                                                    <div className="item-image">
-                                                        <i className="bi bi-box"></i>
-                                                    </div>
-
                                                     <h4 title={copyNames[copy.id] ?? `Item #${copy.id}`}>
                                                         {copyNames[copy.id] ?? `Item #${copy.id}`}
                                                     </h4>
-
-                                                    <p>
-                                                        Cópia do acervo
-                                                    </p>
-
-                                                    <small>
-                                                        Cód. COP-{String(copy.id).padStart(3, '0')}
-                                                    </small>
                                                 </div>
                                             ))}
                                     </div>

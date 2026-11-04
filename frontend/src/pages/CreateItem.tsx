@@ -305,7 +305,7 @@ export default function CreateItem() {
                     onClick={() => navigate(-1)}
                 >
                     <i className="bi bi-arrow-left"></i>
-                    Voltar para as coleções
+                    Voltar
                 </button>
             </header>
             <main className="create-item-content">

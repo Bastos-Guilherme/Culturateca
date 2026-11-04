@@ -23,7 +23,7 @@ function Navbar() {
     <div className={`layout ${sidebarOpen ? 'sidebar-open' : ''}`}>
 
       <header className="topbar">
-        <h1 className="logo" onClick={() => navigate('/')}>
+        <h1 className="logo" onClick={() => navigate('/curator')}>
           <i className="bi bi-archive"></i>
           Culturateca
         </h1>
@@ -73,14 +73,29 @@ function Navbar() {
         </button>
 
         <nav>
-          <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-house"></i>
+          <NavLink to="/curator" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <i className="bi bi-person-rolodex"></i>
             <span>Home</span>
           </NavLink>
 
-          <NavLink to="/curator" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-person"></i>
-            <span>Perfil</span>
+          <NavLink to="/categorias" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <i className="bi bi-back"></i>
+            <span>Categorias</span>
+          </NavLink>
+
+          <NavLink to="/createCollection" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <i className="bi bi-collection"></i>
+            <span>Adicionar coleção</span>
+          </NavLink>
+
+          <NavLink to="/createItem" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <i className="bi bi-plus-circle"></i>
+            <span>Criar Item</span>
+          </NavLink>
+
+          <NavLink to="/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <i className="bi bi-gear"></i>
+            <span>Configurações</span>
           </NavLink>
 
           <a

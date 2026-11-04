@@ -159,7 +159,8 @@
   flex-shrink: 0;
   border: none;
   background: none;
-  font-size: 28px;
+  
+  font-size: 32px;
   cursor: pointer;
   margin: 15px 0 10px;
   padding-left: 18px;
@@ -170,7 +171,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 60px;
+  width: 65px;
   height: 100vh;
 
   background-color: #ffffff;
@@ -202,8 +203,8 @@
   align-items: center;
   flex-shrink: 0;
 
-  width: 42px;
-  height: 42px;
+  width: 45px;
+  height: 45px;
   margin: 4px 9px;
   gap: 7px;
 
@@ -241,7 +242,6 @@
   box-shadow: 2px 2px 0 #222;
 }
 
-/* Mantém o botão de feedback no final da sidebar */
 .sidebar .feedback-link {
   margin-top: auto;
   margin-bottom: 15px;
