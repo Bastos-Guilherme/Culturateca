@@ -12,9 +12,9 @@ public interface CategoryService {
 
     public List<Category> findByName(String name);
 
-    public Category createCategory(Category category);
+    public Category createCategory(Category category, CuratorService curatorService);
 
-    public Category editCategory(Category category);
+    public Category editCategory(Category category, CuratorService curatorService);
     
     public void deleteCategory(Long id);
     

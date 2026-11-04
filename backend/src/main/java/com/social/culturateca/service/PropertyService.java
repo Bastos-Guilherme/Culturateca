@@ -13,9 +13,9 @@ public interface PropertyService {
 
     public List<Property> findByName(String name);
 
-    public Property createProperty(Property property);
+    public Property createProperty(Property property, CuratorService curatorService);
 
-    public Property editProperty(Property property);
+    public Property editProperty(Property property, CuratorService curatorService);
     
     public void deleteProperty(Long id);
 }

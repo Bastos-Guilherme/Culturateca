@@ -111,7 +111,8 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
                 propertyService,
                 canonicService,
                 locationService,
-                categoryService);
+                categoryService,
+                curatorService);
 
         if (savedCopy == null || savedCopy.getId() == null) {
             throw new IllegalStateException(

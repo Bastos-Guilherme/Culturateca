@@ -1,8 +1,10 @@
+
 import { apiFetch } from "./api"
 
 export interface Category {
     id: number
     name: string
+    curator: { id: number } | null
 }
 
 export async function getAllCategory(): Promise<Category[]> {
@@ -26,7 +28,7 @@ export async function getCategoryById(id: number): Promise<Category> {
 }
 
 export async function getCategoryByName(name: string): Promise<Category[]> {
-    const response = await apiFetch(`http://localhost:8080/category/name=${name}`)
+    const response = await apiFetch(`http://localhost:8080/category/name=${encodeURIComponent(name)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar categories')
@@ -35,14 +37,18 @@ export async function getCategoryByName(name: string): Promise<Category[]> {
     return response.json()
 }
 
-export async function createCategory(name: string) {
-    const response = await apiFetch('http://localhost:8080/category',{
+export async function createCategory(
+    name: string,
+    curatorId: number
+): Promise<Category> {
+    const response = await apiFetch('http://localhost:8080/category', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            name: name
+            name,
+            curator: { id: curatorId }
         })
     })
 
@@ -53,15 +59,20 @@ export async function createCategory(name: string) {
     return response.json()
 }
 
-export async function updateCategory(id: number,name: string) {
-    const response = await apiFetch('http://localhost:8080/category',{
+export async function updateCategory(
+    id: number,
+    name: string,
+    curatorId: number
+): Promise<Category> {
+    const response = await apiFetch('http://localhost:8080/category', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            id: id,
-            name: name
+            id,
+            name,
+            curator: { id: curatorId }
         })
     })
 
@@ -73,7 +84,7 @@ export async function updateCategory(id: number,name: string) {
 }
 
 export async function deleteCategory(id: number) {
-    const response = await apiFetch(`http://localhost:8080/category/${id}`,{
+    const response = await apiFetch(`http://localhost:8080/category/${id}`, {
         method: 'DELETE'
     })
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.social.culturateca.model.Canonic;
 import com.social.culturateca.model.Category;
 import com.social.culturateca.model.Copy;
+import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Location;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.CopyRepository;
@@ -19,6 +20,7 @@ import com.social.culturateca.service.CategoryService;
 import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.LocationService;
 import com.social.culturateca.service.PropertyService;
+import com.social.culturateca.service.CuratorService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -91,7 +93,8 @@ public class CopyServiceImpl implements CopyService {
             PropertyService propertyService,
             CanonicService canonicService,
             LocationService locationService,
-            CategoryService categoryService) {
+            CategoryService categoryService,
+            CuratorService curatorService) {
         if (copy.getId() != null) {
             throw new RuntimeException("Não deve possuir ID específico");
         }
@@ -152,6 +155,16 @@ public class CopyServiceImpl implements CopyService {
             copy.setHiddenProperties(new ArrayList<>());
         }
 
+        if (copy.getCurator() == null || copy.getCurator().getId() == null) {
+            throw new RuntimeException("Curator é obrigatório");
+        }
+        Curator curator = curatorService.findById(copy.getCurator().getId());
+        if (curator == null) {
+            throw new RuntimeException("Curator não encontrado");
+        }
+
+        copy.setCurator(curator);
+
         Copy savedCopy = copyRepository.save(copy);
 
         canonicService.updateCanonicFromAllCopy(
@@ -168,7 +181,8 @@ public class CopyServiceImpl implements CopyService {
             PropertyService propertyService,
             CanonicService canonicService,
             LocationService locationService,
-            CategoryService categoryService) {
+            CategoryService categoryService,
+            CuratorService curatorService) {
 
         if (copy.getId() == null) {
             throw new RuntimeException("ID não pode ser nulo");
@@ -176,6 +190,23 @@ public class CopyServiceImpl implements CopyService {
 
         Copy existingCopy = copyRepository.findById(copy.getId())
                 .orElseThrow(() -> new RuntimeException("Copy não encontrada"));
+
+        if (existingCopy.getCurator() == null) {
+            throw new RuntimeException("Copy não possui Curator associado");
+        }
+
+        if (copy.getCurator() != null && copy.getCurator().getId() != null) {
+
+            Curator curator = curatorService.findById(copy.getCurator().getId());
+
+            if (curator == null) {
+                throw new RuntimeException("Curator não encontrado");
+            }
+
+            if (!existingCopy.getCurator().getId().equals(curator.getId())) {
+                throw new RuntimeException("Não é permitido alterar o Curator da Copy");
+            }
+        }
 
         Long oldCanonicId = existingCopy.getCanonic().getId();
 

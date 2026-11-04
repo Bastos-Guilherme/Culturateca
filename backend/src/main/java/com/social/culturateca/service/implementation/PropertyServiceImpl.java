@@ -5,18 +5,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.PropertyRepository;
 import com.social.culturateca.service.PropertyService;
+import com.social.culturateca.service.CuratorService;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
-    
+
     @Autowired
     PropertyRepository propertyRepository;
 
     @Override
-    public List<Property> findAllProperties(){
+    public List<Property> findAllProperties() {
         try {
             return propertyRepository.findAll();
         } catch (Exception e) {
@@ -26,7 +28,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public List<Property> findAllPropertiesById(List<Long> ids){
+    public List<Property> findAllPropertiesById(List<Long> ids) {
         try {
             return propertyRepository.findAllById(ids);
         } catch (Exception e) {
@@ -36,7 +38,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public Property findById(Long id){
+    public Property findById(Long id) {
         try {
             return propertyRepository.findById(id).get();
         } catch (Exception e) {
@@ -46,7 +48,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public List<Property> findByName(String name){
+    public List<Property> findByName(String name) {
         try {
             return propertyRepository.findByNameContainingIgnoreCase(name);
         } catch (Exception e) {
@@ -56,7 +58,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public Property createProperty(Property property){
+    public Property createProperty(Property property, CuratorService curatorService) {
         try {
             if (property.getId() != null) {
                 throw new RuntimeException("ID não deve ser específicado");
@@ -66,6 +68,18 @@ public class PropertyServiceImpl implements PropertyService {
                 throw new RuntimeException();
             }
 
+            if (property.getCurator() == null || property.getCurator().getId() == null) {
+                throw new RuntimeException("Curator é obrigatório");
+            }
+
+            Curator curator = curatorService.findById(property.getCurator().getId());
+
+            if (curator == null) {
+                throw new RuntimeException("Curator não encontrado");
+            }
+
+            property.setCurator(curator);
+
             return propertyRepository.save(property);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -74,13 +88,13 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public Property editProperty(Property property){
+    public Property editProperty(Property property, CuratorService curatorService) {
         try {
             if (property.getId() == null) {
                 throw new RuntimeException("ID não pode ser nulo");
             }
 
-            if(propertyRepository.findById(property.getId()).isEmpty()){
+            if (propertyRepository.findById(property.getId()).isEmpty()) {
                 throw new RuntimeException("Property não encontrada");
             }
 
@@ -88,6 +102,18 @@ public class PropertyServiceImpl implements PropertyService {
                 throw new RuntimeException("Property ja cadastrada");
             }
 
+            if (property.getCurator() == null || property.getCurator().getId() == null) {
+                throw new RuntimeException("Curator é obrigatório");
+            }
+
+            Curator curator = curatorService.findById(property.getCurator().getId());
+
+            if (curator == null) {
+                throw new RuntimeException("Curator não encontrado");
+            }
+
+            property.setCurator(curator);
+
             return propertyRepository.save(property);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -96,7 +122,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public void deleteProperty(Long id){
+    public void deleteProperty(Long id) {
         try {
             propertyRepository.deleteById(id);
         } catch (Exception e) {

@@ -43,7 +43,7 @@ public class Copy {
   @JoinColumn(name = "location")
   private Location location;
 
-  @JsonIgnore 
+  @JsonIgnore
   @ManyToMany(mappedBy = "copies")
   private List<Collection> collections;
 
@@ -54,4 +54,8 @@ public class Copy {
   @ManyToOne
   @JoinColumn(name = "category")
   private Category category;
+
+  @ManyToOne
+  @JoinColumn(name = "curator")
+  private Curator curator;
 }

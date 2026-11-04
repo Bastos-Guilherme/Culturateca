@@ -22,7 +22,8 @@ public interface CopyService {
             PropertyService propertyService,
             CanonicService canonicService,
             LocationService locationService,
-            CategoryService categoryService
+            CategoryService categoryService,
+            CuratorService curatorService
         );
 
     public Copy editCopy(
@@ -30,7 +31,8 @@ public interface CopyService {
             PropertyService propertyService,
             CanonicService canonicService,
             LocationService locationService,
-            CategoryService categoryService
+            CategoryService categoryService,
+            CuratorService curatorService
         );
 
     public void deleteCopy(Long id,

@@ -1,11 +1,13 @@
+
 import { apiFetch } from "./api";
 
 export interface Property {
-    id: number
-    name: string
+  id: number
+  name: string
+  curator: { id: number } | null
 }
 
-export async function getAllProperty() {
+export async function getAllProperty(): Promise<Property[]> {
   const response = await apiFetch("http://localhost:8080/property");
 
   if (!response.ok) {
@@ -15,7 +17,7 @@ export async function getAllProperty() {
   return response.json();
 }
 
-export async function getPropertyById(id: number) {
+export async function getPropertyById(id: number): Promise<Property> {
   const response = await apiFetch(`http://localhost:8080/property/id=${id}`);
 
   if (!response.ok) {
@@ -25,8 +27,10 @@ export async function getPropertyById(id: number) {
   return response.json();
 }
 
-export async function getPropertyByName(name: string) {
-  const response = await apiFetch(`http://localhost:8080/property/name=${name}`);
+export async function getPropertyByName(name: string): Promise<Property[]> {
+  const response = await apiFetch(
+    `http://localhost:8080/property/name=${encodeURIComponent(name)}`
+  );
 
   if (!response.ok) {
     throw new Error("Erro ao buscar property");
@@ -35,7 +39,10 @@ export async function getPropertyByName(name: string) {
   return response.json();
 }
 
-export async function createProperty(name: string) {
+export async function createProperty(
+  name: string,
+  curatorId: number
+): Promise<Property> {
 
   const response = await apiFetch('http://localhost:8080/property', {
     method: 'POST',
@@ -43,26 +50,32 @@ export async function createProperty(name: string) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: name,
+      name,
+      curator: { id: curatorId }
     }),
-  })
+  });
 
   if (!response.ok) {
-    throw new Error('Erro ao cadastrar property')
+    throw new Error('Erro ao cadastrar property');
   }
 
-  return response.json()
+  return response.json();
 }
 
-export async function updateProperty(id: number, name: string) {
+export async function updateProperty(
+  id: number,
+  name: string,
+  curatorId: number
+): Promise<Property> {
   const response = await apiFetch(`http://localhost:8080/property`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      id: id,
-      name: name,
+      id,
+      name,
+      curator: { id: curatorId }
     }),
   });
 

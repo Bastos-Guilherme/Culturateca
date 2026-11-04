@@ -9,6 +9,7 @@ export interface Copy {
     location: { id: number } | null
     collections: { id: number }[]
     category: { id: number } | null
+    curator: { id: number } | null
 }
 
 export async function getAllCopy(): Promise<Copy[]> {
@@ -70,6 +71,7 @@ export async function createCopy(
     canonicId: number,
     locationId: number,
     categoryId: number,
+    curatorId: number,
     name?: string | null
 ): Promise<Copy> {
     const body = {
@@ -77,6 +79,7 @@ export async function createCopy(
         canonic: { id: canonicId },
         location: { id: locationId },
         category: { id: categoryId },
+        curator: { id: curatorId },
         ...(name !== undefined ? { name } : {})
     }
 
@@ -93,13 +96,13 @@ export async function createCopy(
     return response.json()
 }
 
-
 export async function updateCopy(
     id: number,
     property: { [key: number]: string },
     canonicId: number,
     locationId: number,
     categoryId: number,
+    curatorId: number,
     name?: string | null
 ): Promise<Copy> {
     const body = {
@@ -108,6 +111,7 @@ export async function updateCopy(
         canonic: { id: canonicId },
         location: { id: locationId },
         category: { id: categoryId },
+        curator: { id: curatorId },
         ...(name !== undefined ? { name } : {})
     }
 
@@ -128,7 +132,6 @@ export async function updateCopy(
 
     return response.json()
 }
-
 
 export async function deleteCopy(id: number) {
     const response = await apiFetch(

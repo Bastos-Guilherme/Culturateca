@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.social.culturateca.model.Property;
+import com.social.culturateca.service.CuratorService;
 import com.social.culturateca.service.PropertyService;
 
 @RestController
@@ -20,6 +21,9 @@ import com.social.culturateca.service.PropertyService;
 public class PropertyCollection {
     @Autowired
     PropertyService propertyService;
+
+    @Autowired
+    CuratorService curatorService;
 
     @GetMapping
     public List<Property> getAllProperty(){
@@ -38,12 +42,12 @@ public class PropertyCollection {
 
     @PostMapping
     public Property create(@RequestBody Property property){
-        return propertyService.createProperty(property);
+        return propertyService.createProperty(property, curatorService);
     }
 
     @PutMapping
     public Property edit(@RequestBody Property property){
-        return propertyService.editProperty(property);
+        return propertyService.editProperty(property, curatorService);
     }
 
     @DeleteMapping("/{id}")
