@@ -198,7 +198,8 @@
 }
 
 .sidebar a,
-.sidebar .feedback-link {
+.sidebar .feedback-link,
+.sidebar .sidebar-action {
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -230,13 +231,15 @@
 }
 
 .sidebar.open a,
-.sidebar.open .feedback-link {
+.sidebar.open .feedback-link,
+.sidebar.open .sidebar-action {
   width: calc(100% - 18px);
 }
 
 .sidebar a:hover,
 .sidebar a.active,
-.sidebar .feedback-link:hover {
+.sidebar .feedback-link:hover,
+.sidebar .sidebar-action:hover {
   background-color: #b0affd;
   border-color: #222;
   box-shadow: 2px 2px 0 #222;

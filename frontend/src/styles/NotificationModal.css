@@ -1,0 +1,141 @@
+.notification-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 2000;
+
+    animation: notification-fade 0.2s ease;
+}
+
+.notification-modal {
+    position: relative;
+
+    width: 100%;
+    max-width: 420px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 35px 30px 25px;
+    gap: 15px;
+
+    background-color: #ffffff;
+    border: 2px solid #222;
+    border-radius: 10px;
+
+    box-shadow: 5px 5px 0 #222;
+
+    text-align: center;
+
+    animation: notification-appear 0.25s ease;
+}
+
+.notification-icon {
+    font-size: 55px;
+}
+
+.notification-success .notification-icon {
+    color: #64a878;
+}
+
+.notification-error .notification-icon {
+    color: #d45b5b;
+}
+
+.notification-warning .notification-icon {
+    color: #d6a83e;
+}
+
+.notification-info .notification-icon {
+    color: #7774d9;
+}
+
+.notification-modal h2 {
+    font-size: 25px;
+    color: #222;
+}
+
+.notification-modal p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+    overflow-wrap: anywhere;
+}
+
+.notification-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.notification-close:hover {
+    background-color: #eee;
+}
+
+.notification-confirm {
+    min-width: 120px;
+    padding: 10px 20px;
+    margin-top: 5px;
+
+    background-color: #fcf99c;
+    border: 2px solid #222;
+    border-radius: 5px;
+    box-shadow: 2px 2px 0 #222;
+
+    color: #222;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.notification-confirm:hover {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+@keyframes notification-fade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes notification-appear {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

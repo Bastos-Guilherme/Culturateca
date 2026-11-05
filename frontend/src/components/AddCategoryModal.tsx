@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 
 import { createCategory, type Category } from '../services/categoryService'
@@ -6,12 +7,14 @@ import '../styles/AddCategoryModal.css'
 
 interface AddCategoryModalProps {
     categories: Category[]
+    curatorId: number
     onClose: () => void
     onCreated: (category: Category) => void
 }
 
 function AddCategoryModal({
     categories,
+    curatorId,
     onClose,
     onCreated
 }: AddCategoryModalProps) {
@@ -20,10 +23,17 @@ function AddCategoryModal({
     const [error, setError] = useState('')
 
     async function handleCreate() {
+        const normalizedName = name.trim()
+
+        if (!normalizedName) {
+            setError('Informe o nome da categoria.')
+            return
+        }
+        
         const alreadyExists = categories.some(
             category =>
-                category.name.toLowerCase() ===
-                name.toLowerCase()
+                category.name.trim().toLowerCase() ===
+                normalizedName.toLowerCase()
         )
         if (alreadyExists) {
             setError('Essa categoria já existe.')
@@ -32,13 +42,16 @@ function AddCategoryModal({
         try {
             setSaving(true)
             setError('')
-            const createdCategory = await createCategory(name)
+
+            const createdCategory = await createCategory(
+                normalizedName,
+                curatorId
+            )
+
             onCreated(createdCategory)
         } catch (error) {
             console.error(error)
-            setError(
-                'Não foi possível cadastrar a categoria.'
-            )
+            setError('Não foi possível cadastrar a categoria.')
         } finally {
             setSaving(false)
         }
@@ -59,9 +72,7 @@ function AddCategoryModal({
                         <span className="section-label">
                             NOVA CATEGORIA
                         </span>
-                        <h2>
-                            Adicionar categoria
-                        </h2>
+                        <h2>Adicionar categoria</h2>
                     </div>
                     <button
                         type="button"
@@ -76,9 +87,7 @@ function AddCategoryModal({
                         Categorias representam as definições do tipo de seu item.
                     </p>
                     <div className="add-category-existing">
-                        <label>
-                            Categorias disponíveis
-                        </label>
+                        <label>Categorias disponíveis</label>
                         <div className="add-category-list">
                             {categories.length === 0 ? (
                                 <span>
@@ -101,16 +110,14 @@ function AddCategoryModal({
                         <span>ou crie uma nova</span>
                     </div>
                     <div className="add-category-field">
-                        <label>
-                            Nome da categoria
-                        </label>
+                        <label>Nome da categoria</label>
                         <input
                             type="text"
                             value={name}
                             onChange={event =>
                                 setName(event.target.value)
                             }
-                            placeholder="Ex.: Autor, Ano, Editora..."
+                            placeholder="Ex.: Livro, Revista, Jogo..."
                             autoFocus
                         />
                     </div>
@@ -137,8 +144,7 @@ function AddCategoryModal({
                     >
                         {saving
                             ? 'Cadastrando...'
-                            : 'Cadastrar categoria'
-                        }
+                            : 'Cadastrar categoria'}
                     </button>
                 </div>
             </div>

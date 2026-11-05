@@ -12,6 +12,7 @@ import AllCategoriesModal from '../components/AllCategoriesModal'
 import AddCollectionModal from '../components/AddCollectionModal'
 import AddLocationModal from '../components/AddLocationModal'
 import { registerItem } from '../services/itemRegistrationService'
+import { useNotification } from '../context/NotificationContext'
 
 import '../styles/CreateItem.css'
 
@@ -22,6 +23,7 @@ interface ItemProperty {
 
 export default function CreateItem() {
     const navigate = useNavigate()
+    const { showNotification } = useNotification()
 
     const [categories, setCategories] = useState<Category[]>([])
     const [properties, setProperties] = useState<Property[]>([])
@@ -42,7 +44,7 @@ export default function CreateItem() {
     const [showAddLocationModal, setShowAddLocationModal] = useState(false)
 
     const [loading, setLoading] = useState(true)
-    const [saving, setSaving] = useState(false);
+    const [saving, setSaving] = useState(false)
 
     useEffect(() => {
         async function loadData() {
@@ -76,6 +78,10 @@ export default function CreateItem() {
                 console.error(
                     'Erro ao carregar dados do cadastro:',
                     error
+                )
+                showNotification(
+                    'Não foi possível carregar as informações do cadastro.',
+                    'error'
                 )
             } finally {
                 setLoading(false)
@@ -131,7 +137,9 @@ export default function CreateItem() {
 
     const firstCategories = categories.slice(0, 3)
 
-    const selectedCategoryData = categories.find(category => category.id === selectedCategory)
+    const selectedCategoryData = categories.find(
+        category => category.id === selectedCategory
+    )
 
     const visibleCategories =
         selectedCategoryData &&
@@ -200,48 +208,54 @@ export default function CreateItem() {
 
     async function handleSave() {
         if (selectedCategory === null) {
-            alert("Selecione uma categoria.");
-            return;
+            showNotification('Selecione uma categoria.', 'warning')
+            return
         }
 
         if (!itemName.trim()) {
-            alert("Informe o nome da obra.");
-            return;
+            showNotification('Informe o nome da obra.', 'warning')
+            return
         }
 
         if (itemProperties.length === 0) {
-            alert("Adicione pelo menos uma propriedade.");
-            return;
+            showNotification('Adicione pelo menos uma propriedade.', 'warning')
+            return
         }
 
         const incompleteProperty = itemProperties.some(
-            (item) =>
+            item =>
                 item.propertyId === null ||
                 !item.value.trim()
-        );
+        )
 
         if (incompleteProperty) {
-            alert("Preencha todas as propriedades adicionadas.");
-            return;
+            showNotification(
+                'Preencha todas as propriedades adicionadas.',
+                'warning'
+            )
+            return
         }
 
         const propertyIds = itemProperties.map(
-            (item) => item.propertyId as number
-        );
+            item => item.propertyId as number
+        )
 
         if (new Set(propertyIds).size !== propertyIds.length) {
-            alert("Não adicione a mesma propriedade mais de uma vez.");
-            return;
+            showNotification(
+                'Não adicione a mesma propriedade mais de uma vez.',
+                'warning'
+            )
+            return
         }
 
-        const property: Record<number, string> = {};
+        const property: Record<number, string> = {}
 
-        itemProperties.forEach((item) => {
-            property[item.propertyId as number] = item.value.trim();
-        });
+        itemProperties.forEach(item => {
+            property[item.propertyId as number] = item.value.trim()
+        })
 
         try {
-            setSaving(true);
+            setSaving(true)
 
             const savedCopy = await registerItem({
                 categoryId: selectedCategory,
@@ -250,30 +264,33 @@ export default function CreateItem() {
                 locationId: selectedLocation,
                 collectionId: selectedCollection,
                 hiddenProperties: [],
-            });
+            })
 
-            console.log("Item cadastrado:", savedCopy);
+            console.log('Item cadastrado:', savedCopy)
 
-            alert("Item cadastrado com sucesso!");
+            showNotification(
+                'Item cadastrado com sucesso!',
+                'success'
+            )
 
-            setSelectedCategory(null);
-            setItemName("");
-            setItemProperties([]);
-            setSelectedCollection(null);
-            setSelectedLocation(null);
+            setSelectedCategory(null)
+            setItemName('')
+            setItemProperties([])
+            setSelectedCollection(null)
+            setSelectedLocation(null)
         } catch (error) {
-            console.error("Erro ao cadastrar item:", error);
+            console.error('Erro ao cadastrar item:', error)
 
-            alert(
+            showNotification(
                 error instanceof Error
                     ? error.message
-                    : "Ocorreu um erro ao cadastrar o item."
-            );
+                    : 'Ocorreu um erro ao cadastrar o item.',
+                'error'
+            )
         } finally {
-            setSaving(false);
+            setSaving(false)
         }
     }
-
 
     if (loading) {
         return (
@@ -598,21 +615,19 @@ export default function CreateItem() {
                     </div>
                 </section>
             </main>
-            {showAddPropertyModal && (
+            {showAddPropertyModal && curatorId !== null && (
                 <AddPropertyModal
                     properties={properties}
-                    onClose={() =>
-                        setShowAddPropertyModal(false)
-                    }
+                    curatorId={curatorId}
+                    onClose={() => setShowAddPropertyModal(false)}
                     onCreated={handlePropertyCreated}
                 />
             )}
-            {showAddCategoryModal && (
+            {showAddCategoryModal && curatorId !== null && (
                 <AddCategoryModal
                     categories={categories}
-                    onClose={() =>
-                        setShowAddCategoryModal(false)
-                    }
+                    curatorId={curatorId}
+                    onClose={() => setShowAddCategoryModal(false)}
                     onCreated={handleCategoryCreated}
                 />
             )}

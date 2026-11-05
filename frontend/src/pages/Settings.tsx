@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getCurrentCurator, updateCurator, updateEmailMfaEnabled, deleteCurator, type Curator, type UpdateCuratorData } from '../services/curatorService'
-import { getLocationById, type Location } from '../services/locationService'
+import { getLocationsByCurator, type Location } from '../services/locationService'
 import { useAuth } from '../context/AuthContext'
+import { useNotification } from '../context/NotificationContext'
 
 import '../styles/Settings.css'
 import DeleteCuratorModal from '../components/DeleteCuratorModal'
@@ -12,9 +13,10 @@ export default function Settings() {
 
     const navigate = useNavigate()
     const { logout } = useAuth()
+    const { showNotification } = useNotification()
 
     const [curator, setCurator] = useState<Curator | null>(null)
-    const [location, setLocation] = useState<Location | null>(null)
+    const [locations, setLocations] = useState<Location[]>([])
 
     const [loading, setLoading] = useState(true)
     const [editing, setEditing] = useState(false)
@@ -72,14 +74,8 @@ export default function Settings() {
             setFormData(dataForm)
             setOriginalData(dataForm)
 
-            if (data.location?.id) {
-                try {
-                    const locationData = await getLocationById(data.location.id)
-                    setLocation(locationData)
-                } catch {
-                    setLocation(null)
-                }
-            }
+            const locationData = await getLocationsByCurator(data.id)
+            setLocations(locationData)
 
         } catch (error) {
             console.error('Erro ao carregar conta:', error)
@@ -168,23 +164,34 @@ export default function Settings() {
 
             const emailChanged = formData.email !== curator.email
 
-            await updateCurator(
-                curator.id,
-                changes
-            )
+            await updateCurator(curator.id, changes)
 
             if (emailChanged) {
+                showNotification(
+                    'E-mail atualizado! Faça login novamente.',
+                    'success'
+                )
+
                 logout()
                 navigate('/login')
                 return
             }
 
-            loadCurator()
+            await loadCurator()
             setEditing(false)
+
+            showNotification(
+                'Configurações atualizadas com sucesso!',
+                'success'
+            )
 
         } catch (error) {
             console.error('Erro ao atualizar conta:', error)
-            alert('Não foi possível atualizar a conta.')
+
+            showNotification(
+                'Não foi possível atualizar a conta.',
+                'error'
+            )
         } finally {
             setSaving(false)
         }
@@ -205,11 +212,22 @@ export default function Settings() {
 
             await deleteCurator(curator.id)
 
+            showNotification(
+                'Conta excluída com sucesso.',
+                'success'
+            )
+
             logout()
             navigate('/login')
+
         } catch (error) {
             console.error('Erro ao excluir conta:', error)
-            alert('Não foi possível excluir a conta.')
+
+            showNotification(
+                'Não foi possível excluir a conta.',
+                'error'
+            )
+
             setDeleting(false)
         }
     }
@@ -230,6 +248,14 @@ export default function Settings() {
 
         try {
             await updateEmailMfaEnabled(enabled)
+
+            showNotification(
+                enabled
+                    ? 'Autenticação em duas etapas ativada com sucesso!'
+                    : 'Autenticação em duas etapas desativada.',
+                'success'
+            )
+
         } catch (error) {
             setCurator(current =>
                 current
@@ -237,12 +263,16 @@ export default function Settings() {
                     : current
             )
 
-            console.error('Erro ao alterar autenticação em duas etapas:', error)
+            console.error(
+                'Erro ao alterar autenticação em duas etapas:',
+                error
+            )
 
-            alert(
+            showNotification(
                 error instanceof Error
                     ? error.message
-                    : 'Não foi possível alterar a autenticação em duas etapas.'
+                    : 'Não foi possível alterar a autenticação em duas etapas.',
+                'error'
             )
         } finally {
             setSavingEmailMfa(false)
@@ -482,38 +512,11 @@ export default function Settings() {
 
                         <div className="settings-field settings-field-full">
                             <label>
-                                Foto de perfil
-                            </label>
-
-                            {editing ? (
-                                <input
-                                    type="text"
-                                    value={formData.profilePicture}
-                                    onChange={event =>
-                                        handleChange(
-                                            'profilePicture',
-                                            event.target.value
-                                        )
-                                    }
-                                    placeholder="URL da imagem"
-                                />
-                            ) : (
-                                <div className="settings-value">
-                                    {curator.profilePicture
-                                        ? curator.profilePicture
-                                        : 'Não informado'}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="settings-field settings-field-full">
-                            <label>
                                 Localização
                             </label>
 
                             {editing ? (
-                                <input
-                                    type="number"
+                                <select
                                     value={formData.locationId ?? ''}
                                     onChange={event =>
                                         handleChange(
@@ -523,15 +526,25 @@ export default function Settings() {
                                                 : Number(event.target.value)
                                         )
                                     }
-                                    placeholder="ID da localização"
-                                />
+                                >
+                                    <option value="">
+                                        Nenhuma localização
+                                    </option>
+
+                                    {locations.map(location => (
+                                        <option
+                                            key={location.id}
+                                            value={location.id}
+                                        >
+                                            {location.name}
+                                        </option>
+                                    ))}
+                                </select>
                             ) : (
                                 <div className="settings-value">
-                                    {location
-                                        ? location.name
-                                        : curator.location
-                                            ? `Localização #${curator.location.id}`
-                                            : 'Não informado'}
+                                    {locations.find(
+                                        location => location.id === curator.location?.id
+                                    )?.name || 'Não informado'}
                                 </div>
                             )}
                         </div>

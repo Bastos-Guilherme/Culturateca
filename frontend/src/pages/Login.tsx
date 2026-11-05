@@ -6,6 +6,7 @@ import { authenticate, type LoginMfaResponse } from '../services/loginService'
 import { useAuth } from '../context/AuthContext'
 import VerifyLoginModal from '../components/VerifyLoginModal'
 import PasswordRecoveryModal from '../components/PasswordRecoveryModal'
+import { useNotification } from '../context/NotificationContext'
 
 import '../styles/Login.css'
 
@@ -17,8 +18,11 @@ function Login() {
     const [submitting, setSubmitting] = useState(false)
     const [showPasswordRecovery, setShowPasswordRecovery] = useState(false)
 
+    const { showNotification } = useNotification()
+
     const { login } = useAuth()
     const navigate = useNavigate()
+
 
     async function submitLogin(event: SyntheticEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -34,7 +38,11 @@ function Login() {
                 setEmail('')
                 setPassword('')
 
-                alert('Login realizado com sucesso!')
+                showNotification(
+                    'Login realizado com sucesso!',
+                    'success'
+                )
+
                 navigate('/curator')
                 return
             }
@@ -48,15 +56,18 @@ function Login() {
         } catch (error) {
             console.error(error)
 
-            alert(
+            showNotification(
                 error instanceof Error
                     ? error.message
-                    : 'Erro ao realizar o login.'
+                    : 'Erro ao realizar o login.',
+                'error',
+                0
             )
         } finally {
             setSubmitting(false)
         }
     }
+
 
     function handleVerified(token: string) {
         login(token)
@@ -65,7 +76,7 @@ function Login() {
         setEmail('')
         setPassword('')
 
-        alert('Login realizado com sucesso!')
+        showNotification('Login realizado com sucesso!', 'success')
         navigate('/curator')
     }
 
@@ -159,7 +170,10 @@ function Login() {
                     onSuccess={() => {
                         setShowPasswordRecovery(false)
                         setPassword('')
-                        alert('Senha redefinida com sucesso! Faça login com sua nova senha.')
+                        showNotification(
+                            'Senha redefinida com sucesso! Faça login com sua nova senha.',
+                            'success'
+                        )
                     }}
                 />
             )}

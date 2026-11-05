@@ -197,18 +197,6 @@ function CollectionPage() {
                     <h1>
                         {collection.name}
                     </h1>
-                    <p className="collection-visibility">
-                        <i
-                            className={
-                                collection.isPublic
-                                    ? 'bi bi-globe2'
-                                    : 'bi bi-lock'
-                            }
-                        />
-                        {collection.isPublic
-                            ? 'Coleção pública'
-                            : 'Coleção privada'}
-                    </p>
                 </div>
                 <button
                     type="button"
@@ -272,9 +260,6 @@ function CollectionPage() {
                                     key={copy.id}
                                 >
                                     <div className="detail-item-header">
-                                        <div className="detail-item-image">
-                                            <i className="bi bi-box" />
-                                        </div>
                                         <div className="detail-item-heading">
                                             <h3 title={displayName}>
                                                 {displayName}

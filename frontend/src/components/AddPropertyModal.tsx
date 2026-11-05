@@ -6,12 +6,14 @@ import '../styles/AddPropertyModal.css'
 
 interface AddPropertyModalProps {
     properties: Property[]
+    curatorId: number
     onClose: () => void
     onCreated: (property: Property) => void
 }
 
 function AddPropertyModal({
     properties,
+    curatorId,
     onClose,
     onCreated
 }: AddPropertyModalProps) {
@@ -20,25 +22,37 @@ function AddPropertyModal({
     const [error, setError] = useState('')
 
     async function handleCreate() {
+        const normalizedName = name.trim()
+
+        if (!normalizedName) {
+            setError('Informe o nome da propriedade.')
+            return
+        }
+
         const alreadyExists = properties.some(
             property =>
-                property.name.toLowerCase() ===
-                name.toLowerCase()
+                property.name.trim().toLowerCase() ===
+                normalizedName.toLowerCase()
         )
+
         if (alreadyExists) {
             setError('Essa propriedade já existe.')
             return
         }
+
         try {
             setSaving(true)
             setError('')
-            const createdProperty = await createProperty(name)
+
+            const createdProperty = await createProperty(
+                normalizedName,
+                curatorId
+            )
+
             onCreated(createdProperty)
         } catch (error) {
             console.error(error)
-            setError(
-                'Não foi possível cadastrar a propriedade.'
-            )
+            setError('Não foi possível cadastrar a propriedade.')
         } finally {
             setSaving(false)
         }

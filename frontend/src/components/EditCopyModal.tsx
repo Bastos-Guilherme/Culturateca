@@ -238,6 +238,11 @@ export default function EditCopyModal({
             copyProperties[row.propertyId as number] = row.value.trim()
         }
 
+        if (curatorId == null) {
+            setError("Não foi possível identificar o curador.")
+            return
+        }
+
         try {
             setSaving(true)
 
@@ -247,6 +252,7 @@ export default function EditCopyModal({
                 copy.canonic.id,
                 Number(selectedLocation),
                 Number(selectedCategory),
+                curatorId,
                 name.trim() || null
             )
 
@@ -564,17 +570,19 @@ export default function EditCopyModal({
                 </footer>
             </section>
 
-            {showAddPropertyModal && (
+            {showAddPropertyModal && curatorId !== null && (
                 <AddPropertyModal
                     properties={properties}
+                    curatorId={curatorId}
                     onClose={() => setShowAddPropertyModal(false)}
                     onCreated={handlePropertyCreated}
                 />
             )}
 
-            {showAddCategoryModal && (
+            {showAddCategoryModal && curatorId !== null && (
                 <AddCategoryModal
                     categories={categories}
+                    curatorId={curatorId}
                     onClose={() => setShowAddCategoryModal(false)}
                     onCreated={handleCategoryCreated}
                 />

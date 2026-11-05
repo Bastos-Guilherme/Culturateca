@@ -1,16 +1,40 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useNavigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import '../styles/Navbar.css'
 import LogoutModal from './LogoutModal'
+import { getCollectionsByCurator, type Collection } from '../services/collectionService'
+import { getCurrentCurator } from '../services/curatorService'
+import AddCollectionModal from './AddCollectionModal'
 
 function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [logoutModalOpen, setLogoutModalOpen] = useState(false)
+  const [collections, setCollections] = useState<Collection[]>([])
+  const [showAddCollectionModal, setShowAddCollectionModal] = useState(false)
+  const [curatorEmail, setCuratorEmail] = useState('')
 
   const navigate = useNavigate()
   const { logout, isAuthenticated } = useAuth()
+
+  useEffect(() => {
+    async function loadData() {
+      if (!isAuthenticated) return
+
+      try {
+        const curator = await getCurrentCurator()
+        setCuratorEmail(curator.email)
+
+        const collections = await getCollectionsByCurator(curator.email)
+        setCollections(collections)
+      } catch (error) {
+        console.error('Erro ao carregar coleções:', error)
+      }
+    }
+
+    loadData()
+  }, [isAuthenticated])
 
   function handleLogout() {
     logout()
@@ -23,7 +47,7 @@ function Navbar() {
     <div className={`layout ${sidebarOpen ? 'sidebar-open' : ''}`}>
 
       <header className="topbar">
-        <h1 className="logo" onClick={() => navigate('/curator')}>
+        <h1 className="logo" onClick={() => navigate('/')}>
           <i className="bi bi-archive"></i>
           Culturateca
         </h1>
@@ -73,30 +97,37 @@ function Navbar() {
         </button>
 
         <nav>
-          <NavLink to="/curator" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-person-rolodex"></i>
-            <span>Home</span>
-          </NavLink>
+          {isAuthenticated && (
+            <>
+              <NavLink to="/curator" className={({ isActive }) => (isActive ? 'active' : '')}>
+                <i className="bi bi-person-rolodex"></i>
+                <span>Home</span>
+              </NavLink>
 
-          <NavLink to="/categorias" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-back"></i>
-            <span>Categorias</span>
-          </NavLink>
+              <NavLink to="/categorias" className={({ isActive }) => (isActive ? 'active' : '')}>
+                <i className="bi bi-back"></i>
+                <span>Categorias</span>
+              </NavLink>
 
-          <NavLink to="/createCollection" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-collection"></i>
-            <span>Adicionar coleção</span>
-          </NavLink>
+              <button
+                className="sidebar-action"
+                onClick={() => setShowAddCollectionModal(true)}
+              >
+                <i className="bi bi-collection"></i>
+                <span>Adicionar coleção</span>
+              </button>
 
-          <NavLink to="/createItem" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-plus-circle"></i>
-            <span>Criar Item</span>
-          </NavLink>
+              <NavLink to="/createItem" className={({ isActive }) => (isActive ? 'active' : '')}>
+                <i className="bi bi-plus-circle"></i>
+                <span>Criar Item</span>
+              </NavLink>
 
-          <NavLink to="/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
-            <i className="bi bi-gear"></i>
-            <span>Configurações</span>
-          </NavLink>
+              <NavLink to="/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
+                <i className="bi bi-gear"></i>
+                <span>Configurações</span>
+              </NavLink>
+            </>
+          )}
 
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSdEkQKvTuimKQ0d8LwrfTjZHwa7kVXCuP_CseR8k8vWkWP11w/viewform?usp=publish-editor"
@@ -120,6 +151,17 @@ function Navbar() {
         onClose={() => setLogoutModalOpen(false)}
         onLogout={handleLogout}
       />
+      {showAddCollectionModal && (
+        <AddCollectionModal
+          collections={collections}
+          curatorEmail={curatorEmail}
+          onClose={() => setShowAddCollectionModal(false)}
+          onCreated={(collection) => {
+            setCollections(prev => [...prev, collection])
+            setShowAddCollectionModal(false)
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -2,6 +2,7 @@ import '../styles/CreateCurator.css'
 
 import { useState, type SyntheticEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useNotification } from '../context/NotificationContext'
 
 import { requestRegistrationCode, type RegisterCuratorData } from '../services/curatorService'
 
@@ -23,6 +24,7 @@ function CreateCurator() {
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState('')
 
+    const { showNotification } = useNotification()
     const navigate = useNavigate()
 
     async function submit(event: SyntheticEvent<HTMLFormElement>) {
@@ -63,7 +65,7 @@ function CreateCurator() {
 
     function handleVerified() {
         setShowVerifyRegistrationModal(false)
-        alert('Cadastro realizado com sucesso!')
+        showNotification('Cadastro realizado com sucesso!', 'success')
         navigate('/login')
     }
 

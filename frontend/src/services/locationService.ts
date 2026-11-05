@@ -52,7 +52,6 @@ export async function getLocationsByCurator(curatorId: number) {
     return response.json();
 }
 
-
 export async function createLocation(
     name: string,
     latitude: number,
