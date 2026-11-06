@@ -18,6 +18,6 @@ public interface CategoryService {
 
     public Category editCategory(Category category, CuratorService curatorService);
     
-    public void deleteCategory(Long id);
+    public void deleteCategory(Long id, CopyService copyService);
     
 }

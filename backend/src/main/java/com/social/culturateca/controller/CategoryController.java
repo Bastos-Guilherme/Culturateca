@@ -15,25 +15,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.social.culturateca.model.Category;
 import com.social.culturateca.service.CategoryService;
+import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.CuratorService;
 
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
-    
+
     @Autowired
     CategoryService categoryService;
 
     @Autowired
     CuratorService curatorService;
 
+    @Autowired 
+    CopyService copyService;
+
     @GetMapping
-    public List<Category> getAllCategory(){
+    public List<Category> getAllCategory() {
         return categoryService.findAllCategories();
     }
 
     @GetMapping("/id={id}")
-    public Category getById(@PathVariable("id") long id){
+    public Category getById(@PathVariable("id") long id) {
         return categoryService.findById(id);
     }
 
@@ -48,17 +52,17 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category create(@RequestBody Category category){
+    public Category create(@RequestBody Category category) {
         return categoryService.createCategory(category, curatorService);
     }
 
     @PutMapping
-    public Category edit(@RequestBody Category category){
+    public Category edit(@RequestBody Category category) {
         return categoryService.editCategory(category, curatorService);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id){
-        categoryService.deleteCategory(id);
+    public void deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id, copyService);
     }
 }

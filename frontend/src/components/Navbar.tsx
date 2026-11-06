@@ -104,7 +104,7 @@ function Navbar() {
                 <span>Home</span>
               </NavLink>
 
-              <NavLink to="/categorias" className={({ isActive }) => (isActive ? 'active' : '')}>
+              <NavLink to="/categories" className={({ isActive }) => (isActive ? 'active' : '')}>
                 <i className="bi bi-back"></i>
                 <span>Categorias</span>
               </NavLink>

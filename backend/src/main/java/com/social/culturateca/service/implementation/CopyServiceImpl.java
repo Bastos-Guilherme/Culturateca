@@ -92,6 +92,11 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
+    public boolean existsByCategory(Long categoryId) {
+        return copyRepository.existsByCategory_Id(categoryId);
+    }
+
+    @Override
     @Transactional
     public Copy createCopy(
             Copy copy,

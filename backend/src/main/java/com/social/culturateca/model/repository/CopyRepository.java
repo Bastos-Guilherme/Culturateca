@@ -18,6 +18,8 @@ public interface CopyRepository extends JpaRepository<Copy, Long> {
 
     List<Copy> findAllByCurator_Id(Long curatorId);
 
+    boolean existsByCategory_Id(Long categoryId);
+
     @Query(value = """
         select *
         from copy

@@ -19,6 +19,8 @@ public interface CopyService {
 
     public List<Copy> findAllByCurator(Long curatorId);
 
+    public boolean existsByCategory(Long categoryId);
+
     public Copy createCopy(
             Copy copy,
             PropertyService propertyService,

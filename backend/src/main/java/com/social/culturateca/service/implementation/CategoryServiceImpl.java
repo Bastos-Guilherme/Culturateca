@@ -3,12 +3,15 @@ package com.social.culturateca.service.implementation;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.social.culturateca.model.Category;
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.repository.CategoryRepository;
 import com.social.culturateca.service.CategoryService;
+import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.CuratorService;
 
 @Service
@@ -70,7 +73,8 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new RuntimeException("Curator não encontrado");
             }
 
-            if (!categoryRepository.findByNameContainingIgnoreCaseAndCurator_Id(category.getName(), curator.getId()).isEmpty()) {
+            if (!categoryRepository.findByNameContainingIgnoreCaseAndCurator_Id(category.getName(), curator.getId())
+                    .isEmpty()) {
                 throw new RuntimeException("Category já existe para este curator");
             }
 
@@ -104,7 +108,8 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new RuntimeException("Curator não encontrado");
             }
 
-            if (!categoryRepository.findByNameContainingIgnoreCaseAndCurator_IdAndIdNot(category.getName(), curator.getId(), category.getId()).isEmpty()) {
+            if (!categoryRepository.findByNameContainingIgnoreCaseAndCurator_IdAndIdNot(category.getName(),
+                    curator.getId(), category.getId()).isEmpty()) {
                 throw new RuntimeException("Category já existe para este curator");
             }
 
@@ -118,11 +123,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Long id) {
-        try {
-            categoryRepository.deleteById(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public void deleteCategory(Long id, CopyService copyService) {
+        if (copyService.existsByCategory(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Não é possível excluir uma categoria vinculada a cópias.");
         }
+
+        categoryRepository.deleteById(id);
     }
 }

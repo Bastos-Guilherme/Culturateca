@@ -11,6 +11,7 @@ import CollectionPage from './pages/Collection'
 import Settings from './pages/Settings'
 import CreateItem from './pages/CreateItem'
 import InitialPage from './pages/InitialPage'
+import Categories from './pages/Categories'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/collection/:id" element={<CollectionPage />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/createItem" element={<CreateItem />} />
+          <Route path="/categories" element={<Categories />} />
           <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         </Route>
       </Routes>
