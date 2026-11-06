@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
+
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.social.culturateca.controller.DTO.UpdateEmailMfaDTO;
 
 import com.social.culturateca.model.Curator;
@@ -27,6 +31,9 @@ public class CuratorController {
 
     @Autowired
     LocationService locationService;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @GetMapping
     public List<Curator> getAllCurator() {
@@ -65,8 +72,17 @@ public class CuratorController {
     }
 
     @PutMapping
-    public Curator edit(@RequestBody Curator curator) {
-        return curatorService.editCurator(curator, locationService);
+    public Curator editCurator(@RequestBody JsonNode body) {
+        try {
+            Curator curator = objectMapper.treeToValue(body, Curator.class);
+
+            return curatorService.editCurator(
+                    curator,
+                    body.has("location"),
+                    locationService);
+        } catch (JacksonException e) {
+            throw new RuntimeException("Erro ao processar dados do Curator", e);
+        }
     }
 
     @DeleteMapping("/{id}")

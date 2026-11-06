@@ -10,7 +10,9 @@ public interface CategoryService {
 
     public Category findById(Long id);
 
-    public List<Category> findByName(String name);
+    public List<Category> findByName(String name, Long curatorId);
+
+    public List<Category> findAllByCurator(Long curatorId);
 
     public Category createCategory(Category category, CuratorService curatorService);
 

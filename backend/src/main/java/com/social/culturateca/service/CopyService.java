@@ -17,6 +17,8 @@ public interface CopyService {
 
     public List<Copy> findByCanonic(Canonic canonic);
 
+    public List<Copy> findAllByCurator(Long curatorId);
+
     public Copy createCopy(
             Copy copy,
             PropertyService propertyService,

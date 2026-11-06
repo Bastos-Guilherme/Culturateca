@@ -18,7 +18,7 @@ export async function getAllProperty(): Promise<Property[]> {
 }
 
 export async function getPropertyById(id: number): Promise<Property> {
-  const response = await apiFetch(`http://localhost:8080/property/id=${id}`);
+  const response = await apiFetch(`http://localhost:8080/property/id=${encodeURIComponent(id)}`);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar property");
@@ -27,16 +27,28 @@ export async function getPropertyById(id: number): Promise<Property> {
   return response.json();
 }
 
-export async function getPropertyByName(name: string): Promise<Property[]> {
+export async function getPropertyByName(name: string, curatorId: number): Promise<Property[]> {
   const response = await apiFetch(
-    `http://localhost:8080/property/name=${encodeURIComponent(name)}`
-  );
+    `http://localhost:8080/property/name?name=${encodeURIComponent(name)}&curatorId=${encodeURIComponent(curatorId)}`
+  )
 
   if (!response.ok) {
-    throw new Error("Erro ao buscar property");
+    throw new Error("Erro ao buscar property")
   }
 
-  return response.json();
+  return response.json()
+}
+
+export async function getPropertiesByCurator(curatorId: number): Promise<Property[]> {
+  const response = await apiFetch(
+    `http://localhost:8080/property/curator=${encodeURIComponent(curatorId)}`
+  )
+
+  if (!response.ok) {
+    throw new Error('Erro ao buscar properties pelo curator')
+  }
+
+  return response.json()
 }
 
 export async function createProperty(
@@ -87,7 +99,7 @@ export async function updateProperty(
 }
 
 export async function deleteProperty(id: number) {
-  const response = await apiFetch(`http://localhost:8080/property/${id}`, {
+  const response = await apiFetch(`http://localhost:8080/property/${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
 

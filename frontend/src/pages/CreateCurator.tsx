@@ -15,7 +15,6 @@ function CreateCurator() {
     const [gender, setGender] = useState<string | null>(null)
     const [phone, setPhone] = useState<string | null>(null)
     const [bio, setBio] = useState<string | null>(null)
-    const [profilePicture, setProfilePicture] = useState<string | null>(null)
     const [isPublic, setIsPublic] = useState(true)
 
     const [showVerifyRegistrationModal, setShowVerifyRegistrationModal] = useState(false)
@@ -26,6 +25,8 @@ function CreateCurator() {
 
     const { showNotification } = useNotification()
     const navigate = useNavigate()
+
+    const profilePicture = null
 
     async function submit(event: SyntheticEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -188,30 +189,6 @@ function CreateCurator() {
                             }
                             disabled={submitting}
                         />
-                    </div>
-                    <div className="mb-3">
-                        <label
-                            htmlFor="profilePicture"
-                            className="form-label"
-                        >
-                            Foto de perfil
-                        </label>
-                        <input
-                            type="url"
-                            className="form-control"
-                            id="profilePicture"
-                            value={profilePicture ?? ''}
-                            onChange={event =>
-                                setProfilePicture(
-                                    event.target.value || null
-                                )
-                            }
-                            placeholder="https://exemplo.com/imagem.jpg"
-                            disabled={submitting}
-                        />
-                        <div className="form-text">
-                            Informe o caminho da imagem.
-                        </div>
                     </div>
                     <div className="public-profile">
                         <span>Perfil público?</span>

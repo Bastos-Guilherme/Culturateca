@@ -87,6 +87,11 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
+    public List<Copy> findAllByCurator(Long curatorId) {
+        return copyRepository.findAllByCurator_Id(curatorId);
+    }
+
+    @Override
     @Transactional
     public Copy createCopy(
             Copy copy,

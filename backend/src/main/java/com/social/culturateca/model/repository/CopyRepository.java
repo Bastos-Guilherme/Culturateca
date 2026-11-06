@@ -16,6 +16,8 @@ public interface CopyRepository extends JpaRepository<Copy, Long> {
 
     List<Copy> findByCanonic(Canonic canonic);
 
+    List<Copy> findAllByCurator_Id(Long curatorId);
+
     @Query(value = """
         select *
         from copy

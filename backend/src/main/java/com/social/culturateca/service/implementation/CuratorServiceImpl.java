@@ -116,7 +116,7 @@ public class CuratorServiceImpl implements CuratorService {
     }
 
     @Override
-    public Curator editCurator(Curator curator, LocationService locationService) {
+    public Curator editCurator(Curator curator, boolean locationWasSent, LocationService locationService) {
         try {
 
             if (curator.getId() == null) {
@@ -136,22 +136,26 @@ public class CuratorServiceImpl implements CuratorService {
                 existingCurator.setEmail(curator.getEmail());
             }
 
-            if (curator.getLocation() != null) {
+            if (locationWasSent) {
+                if (curator.getLocation() == null) {
+                    existingCurator.setLocation(null);
 
-                if (curator.getLocation().getId() == null) {
-                    throw new RuntimeException("Location deve possuir ID");
+                } else {
+
+                    if (curator.getLocation().getId() == null) {
+                        throw new RuntimeException("Location deve possuir ID");
+                    }
+
+                    Long locationId = curator.getLocation().getId();
+
+                    Location parent = locationService.findById(locationId);
+
+                    if (parent == null) {
+                        throw new RuntimeException("Location não encontrada");
+                    }
+
+                    existingCurator.setLocation(parent);
                 }
-
-                Long locationId = curator.getLocation().getId();
-
-                Location parent = locationService.findById(locationId);
-                if (null == parent) {
-                    throw new RuntimeException("Location não encontrada");
-                }
-
-                existingCurator.setLocation(parent);
-            } else {
-                existingCurator.setLocation(null);
             }
 
             if (curator.getPassword() != null) {

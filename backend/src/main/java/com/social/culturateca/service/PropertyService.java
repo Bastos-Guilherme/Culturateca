@@ -11,7 +11,9 @@ public interface PropertyService {
 
     public Property findById(Long id);
 
-    public List<Property> findByName(String name);
+    public List<Property> findByName(String name, Long curatorId);
+
+    public List<Property> findAllByCurator(Long curatorId);
 
     public Property createProperty(Property property, CuratorService curatorService);
 

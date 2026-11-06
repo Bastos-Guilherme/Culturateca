@@ -48,13 +48,19 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public List<Property> findByName(String name) {
+    public List<Property> findByName(String name, Long curatorId) {
         try {
-            return propertyRepository.findByNameContainingIgnoreCase(name);
+            return propertyRepository.findByNameContainingIgnoreCaseAndCurator_Id(
+                    name, curatorId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public List<Property> findAllByCurator(Long curatorId) {
+        return propertyRepository.findAllByCurator_Id(curatorId);
     }
 
     @Override
@@ -64,8 +70,10 @@ public class PropertyServiceImpl implements PropertyService {
                 throw new RuntimeException("ID não deve ser específicado");
             }
 
-            if (!propertyRepository.findByNameContainingIgnoreCase(property.getName()).isEmpty()) {
-                throw new RuntimeException();
+            if (!propertyRepository
+                    .findByNameContainingIgnoreCaseAndCurator_Id(property.getName(), property.getCurator().getId())
+                    .isEmpty()) {
+                throw new RuntimeException("Property já existe para este curator");
             }
 
             if (property.getCurator() == null || property.getCurator().getId() == null) {
@@ -98,8 +106,9 @@ public class PropertyServiceImpl implements PropertyService {
                 throw new RuntimeException("Property não encontrada");
             }
 
-            if (!propertyRepository.findByNameContainingIgnoreCase(property.getName()).isEmpty()) {
-                throw new RuntimeException("Property ja cadastrada");
+            if (!propertyRepository.findByNameContainingIgnoreCaseAndCurator_IdAndIdNot(property.getName(),
+                    property.getCurator().getId(), property.getId()).isEmpty()) {
+                throw new RuntimeException("Property já existe para este curator");
             }
 
             if (property.getCurator() == null || property.getCurator().getId() == null) {

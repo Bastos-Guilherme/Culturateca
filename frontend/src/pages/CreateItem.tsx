@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { getAllCategory, type Category } from '../services/categoryService'
-import { getAllProperty, type Property } from '../services/propertyService'
+import { getCategoriesByCurator, type Category } from '../services/categoryService'
+import { getPropertiesByCurator, type Property } from '../services/propertyService'
 import { getCollectionsByCurator, type Collection } from '../services/collectionService'
 import { getLocationsByCurator, type Location } from '../services/locationService'
 import { getCurrentCurator } from '../services/curatorService'
@@ -49,29 +49,25 @@ export default function CreateItem() {
     useEffect(() => {
         async function loadData() {
             try {
-                const [
-                    categoryData,
-                    propertyData,
-                    curatorData
-                ] = await Promise.all([
-                    getAllCategory(),
-                    getAllProperty(),
-                    getCurrentCurator()
-                ])
+                const curatorData = await getCurrentCurator()
 
-                setCategories(categoryData)
-                setProperties(propertyData)
                 setCuratorEmail(curatorData.email)
                 setCuratorId(curatorData.id)
 
                 const [
+                    categoryData,
+                    propertyData,
                     collectionData,
                     locationData
                 ] = await Promise.all([
+                    getCategoriesByCurator(curatorData.id),
+                    getPropertiesByCurator(curatorData.id),
                     getCollectionsByCurator(curatorData.email),
                     getLocationsByCurator(curatorData.id)
                 ])
 
+                setCategories(categoryData)
+                setProperties(propertyData)
                 setCollections(collectionData)
                 setLocations(locationData)
             } catch (error) {

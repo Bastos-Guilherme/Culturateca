@@ -9,6 +9,14 @@ import com.social.culturateca.model.Property;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
-  
-  List<Property> findByNameContainingIgnoreCase(String name);
+
+  List<Property> findByNameContainingIgnoreCaseAndCurator_Id(String name, Long curatorId);
+
+  List<Property> findByNameContainingIgnoreCaseAndCurator_IdAndIdNot(
+      String name,
+      Long curatorId,
+      Long id
+  );
+
+  List<Property> findAllByCurator_Id(Long curatorId);
 }

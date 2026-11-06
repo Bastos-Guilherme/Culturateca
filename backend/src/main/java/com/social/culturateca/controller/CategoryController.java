@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.social.culturateca.model.Category;
@@ -36,9 +37,14 @@ public class CategoryController {
         return categoryService.findById(id);
     }
 
-    @GetMapping("/name={name}")
-    public List<Category> getByName(@PathVariable("name") String name){
-        return categoryService.findByName(name);
+    @GetMapping("/name")
+    public List<Category> getByName(@RequestParam String name, @RequestParam Long curatorId) {
+        return categoryService.findByName(name, curatorId);
+    }
+
+    @GetMapping("/curator={curatorId}")
+    public List<Category> getAllByCurator(@PathVariable("curatorId") Long curatorId) {
+        return categoryService.findAllByCurator(curatorId);
     }
 
     @PostMapping

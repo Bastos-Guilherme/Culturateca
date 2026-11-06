@@ -1,8 +1,6 @@
 
 import { apiFetch } from "./api";
 
-const API_URL = "http://localhost:8080/item-registration";
-
 export interface ItemRegistrationRequest {
     categoryId: number;
     name: string;
@@ -15,7 +13,7 @@ export interface ItemRegistrationRequest {
 export async function registerItem(
     request: ItemRegistrationRequest
 ) {
-    const response = await apiFetch(API_URL, {
+    const response = await apiFetch("http://localhost:8080/item-registration", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

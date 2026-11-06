@@ -18,7 +18,7 @@ export async function getAllCategory(): Promise<Category[]> {
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
-    const response = await apiFetch(`http://localhost:8080/category/id=${id}`)
+    const response = await apiFetch(`http://localhost:8080/category/id=${encodeURIComponent(id)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar category')
@@ -27,11 +27,25 @@ export async function getCategoryById(id: number): Promise<Category> {
     return response.json()
 }
 
-export async function getCategoryByName(name: string): Promise<Category[]> {
-    const response = await apiFetch(`http://localhost:8080/category/name=${encodeURIComponent(name)}`)
+export async function getCategoryByName(name: string, curatorId: number): Promise<Category[]> {
+    const response = await apiFetch(
+        `http://localhost:8080/category/name?name=${encodeURIComponent(name)}&curatorId=${encodeURIComponent(curatorId)}`
+    )
 
     if (!response.ok) {
-        throw new Error('Erro ao buscar categories')
+        throw new Error("Erro ao buscar category")
+    }
+
+    return response.json()
+}
+
+export async function getCategoriesByCurator(curatorId: number): Promise<Category[]> {
+    const response = await apiFetch(
+        `http://localhost:8080/category/curator=${encodeURIComponent(curatorId)}`
+    )
+
+    if (!response.ok) {
+        throw new Error('Erro ao buscar categories pelo curator')
     }
 
     return response.json()
@@ -84,7 +98,7 @@ export async function updateCategory(
 }
 
 export async function deleteCategory(id: number) {
-    const response = await apiFetch(`http://localhost:8080/category/${id}`, {
+    const response = await apiFetch(`http://localhost:8080/category/${encodeURIComponent(id)}`, {
         method: 'DELETE'
     })
 

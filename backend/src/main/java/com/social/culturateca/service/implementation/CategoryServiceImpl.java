@@ -28,9 +28,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> findByName(String name) {
+    public List<Category> findByName(String name, Long curatorId) {
         try {
-            return categoryRepository.findByNameContainingIgnoreCase(name);
+            return categoryRepository.findByNameContainingIgnoreCaseAndCurator_Id(
+                    name, curatorId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -48,14 +49,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> findAllByCurator(Long curatorId) {
+        return categoryRepository.findAllByCurator_Id(curatorId);
+    }
+
+    @Override
     public Category createCategory(Category category, CuratorService curatorService) {
         try {
             if (category.getId() != null) {
                 throw new RuntimeException("ID não deve ser especificado");
-            }
-
-            if (!categoryRepository.findByNameContainingIgnoreCase(category.getName()).isEmpty()) {
-                throw new RuntimeException("Category já existe");
             }
 
             if (category.getCurator() == null || category.getCurator().getId() == null) {
@@ -66,6 +68,10 @@ public class CategoryServiceImpl implements CategoryService {
 
             if (curator == null) {
                 throw new RuntimeException("Curator não encontrado");
+            }
+
+            if (!categoryRepository.findByNameContainingIgnoreCaseAndCurator_Id(category.getName(), curator.getId()).isEmpty()) {
+                throw new RuntimeException("Category já existe para este curator");
             }
 
             category.setCurator(curator);
@@ -88,10 +94,6 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new RuntimeException("Category não encontrada");
             }
 
-            if (!categoryRepository.findByNameContainingIgnoreCase(category.getName()).isEmpty()) {
-                throw new RuntimeException();
-            }
-
             if (category.getCurator() == null || category.getCurator().getId() == null) {
                 throw new RuntimeException("Curator é obrigatório");
             }
@@ -100,6 +102,10 @@ public class CategoryServiceImpl implements CategoryService {
 
             if (curator == null) {
                 throw new RuntimeException("Curator não encontrado");
+            }
+
+            if (!categoryRepository.findByNameContainingIgnoreCaseAndCurator_IdAndIdNot(category.getName(), curator.getId(), category.getId()).isEmpty()) {
+                throw new RuntimeException("Category já existe para este curator");
             }
 
             category.setCurator(curator);

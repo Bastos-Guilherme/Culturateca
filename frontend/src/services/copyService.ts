@@ -28,7 +28,7 @@ export async function getCopyById(
     id: number
 ): Promise<Copy> {
     const response = await apiFetch(
-        `http://localhost:8080/copy/id=${id}`
+        `http://localhost:8080/copy/id=${encodeURIComponent(id)}`
     )
 
     if (!response.ok) {
@@ -42,7 +42,7 @@ export async function getCopiesByProperty(
     propertyId: number
 ): Promise<Copy[]> {
     const response = await apiFetch(
-        `http://localhost:8080/copy/property=${propertyId}`
+        `http://localhost:8080/copy/property=${encodeURIComponent(propertyId)}`
     )
 
     if (!response.ok) {
@@ -56,11 +56,23 @@ export async function getCopiesByCanonic(
     canonicId: number
 ): Promise<Copy[]> {
     const response = await apiFetch(
-        `http://localhost:8080/copy/canonic=${canonicId}`
+        `http://localhost:8080/copy/canonic=${encodeURIComponent(canonicId)}`
     )
 
     if (!response.ok) {
         throw new Error('Erro ao buscar copies pelo canonic')
+    }
+
+    return response.json()
+}
+
+export async function getCopiesByCurator(curatorId: number): Promise<Copy[]> {
+    const response = await apiFetch(
+        `http://localhost:8080/copy/curator=${encodeURIComponent(curatorId)}`
+    )
+
+    if (!response.ok) {
+        throw new Error('Erro ao buscar copies pelo curator')
     }
 
     return response.json()
@@ -135,7 +147,7 @@ export async function updateCopy(
 
 export async function deleteCopy(id: number) {
     const response = await apiFetch(
-        `http://localhost:8080/copy/${id}`,
+        `http://localhost:8080/copy/${encodeURIComponent(id)}`,
         {
             method: 'DELETE'
         }

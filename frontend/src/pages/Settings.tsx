@@ -433,30 +433,6 @@ export default function Settings() {
                         </div>
 
                         <div className="settings-field settings-field-full">
-                            <label>Perfil público?</label>
-
-                            {editing ? (
-                                <label className="switch">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.isPublic}
-                                        onChange={event =>
-                                            handleChange(
-                                                'isPublic',
-                                                event.target.checked
-                                            )
-                                        }
-                                    />
-                                    <span className="slider"></span>
-                                </label>
-                            ) : (
-                                <div className="settings-value">
-                                    {curator.isPublic ? 'Sim' : 'Não'}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="settings-field settings-field-full">
                             <label>
                                 Autenticação em duas etapas por e-mail
                             </label>

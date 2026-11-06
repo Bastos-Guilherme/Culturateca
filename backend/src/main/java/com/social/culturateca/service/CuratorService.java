@@ -5,7 +5,7 @@ import java.util.List;
 import com.social.culturateca.model.Curator;
 
 public interface CuratorService {
-    
+
     public List<Curator> findAllCurators();
 
     public void updateEmailMfaEnabled(String email, boolean enabled);
@@ -18,8 +18,8 @@ public interface CuratorService {
 
     public Curator createVerifiedCurator(Curator curator, LocationService locationService);
 
-    public Curator editCurator(Curator curator, LocationService locationService);
-    
+    Curator editCurator(Curator curator, boolean locationWasSent, LocationService locationService);
+
     public void deleteCurator(Long id);
 
 }
