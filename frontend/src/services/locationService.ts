@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import API_URL, { apiFetch } from "./api";
 
 export interface Location { 
     id: number 
@@ -14,7 +14,7 @@ export interface Location {
 }
 
 export async function getAllLocation() {
-    const response = await apiFetch("http://localhost:8080/location");
+    const response = await apiFetch(`${API_URL}/location`);
 
     if (!response.ok) {
         throw new Error("Erro ao buscar locations");
@@ -24,7 +24,7 @@ export async function getAllLocation() {
 }
 
 export async function getLocationById(id: number) {
-    const response = await apiFetch(`http://localhost:8080/location/id=${id}`);
+    const response = await apiFetch(`${API_URL}/location/id=${encodeURIComponent(id)}`);
 
     if (!response.ok) {
         throw new Error("Erro ao buscar location");
@@ -34,7 +34,7 @@ export async function getLocationById(id: number) {
 }
 
 export async function getLocationByName(name: string) {
-    const response = await apiFetch(`http://localhost:8080/location/name=${name}`);
+    const response = await apiFetch(`${API_URL}/location/name=${encodeURIComponent(name)}`);
 
     if (!response.ok) {
         throw new Error("Erro ao buscar locations");
@@ -44,7 +44,7 @@ export async function getLocationByName(name: string) {
 }
 
 export async function getLocationsByCurator(curatorId: number) {
-    const response = await apiFetch(`http://localhost:8080/location/curator=${curatorId}`);
+    const response = await apiFetch(`${API_URL}/location/curator=${encodeURIComponent(curatorId)}`);
 
     if (!response.ok) {
         throw new Error("Erro ao buscar location");
@@ -59,7 +59,7 @@ export async function createLocation(
     location?: number,
     curatorId?: number
 ): Promise<Location> {
-    const response = await apiFetch("http://localhost:8080/location", {
+    const response = await apiFetch("${API_URL}/location", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export async function updateLocation(
     location?: number,
     curatorId?: number
 ) {
-    const response = await apiFetch("http://localhost:8080/location", {
+    const response = await apiFetch(`${API_URL}/location`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -112,7 +112,7 @@ export async function updateLocation(
 }
 
 export async function deleteLocation(id: number) {
-    const response = await apiFetch(`http://localhost:8080/location/${id}`, {
+    const response = await apiFetch(`${API_URL}/location/${encodeURIComponent(id)}`, {
         method: "DELETE",
     });
 

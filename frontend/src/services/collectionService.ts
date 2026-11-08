@@ -1,4 +1,5 @@
 import { apiFetch } from "./api"
+import API_URL from "./api"
 
 export interface Collection {
     id: number
@@ -13,7 +14,7 @@ export interface Collection {
 }
 
 export async function getAllCollection(): Promise<Collection[]> {
-    const response = await apiFetch('http://localhost:8080/collection')
+    const response = await apiFetch('${API_URL}/collection')
 
     if (!response.ok) {
         throw new Error('Erro ao buscar collections')
@@ -23,7 +24,7 @@ export async function getAllCollection(): Promise<Collection[]> {
 }
 
 export async function getCollectionsByCurator(curator: string): Promise<Collection[]> {
-    const response = await apiFetch(`http://localhost:8080/collection/curator=${curator}`)
+    const response = await apiFetch(`${API_URL}/collection/curator=${encodeURIComponent(curator)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar collections do curator')
@@ -33,7 +34,7 @@ export async function getCollectionsByCurator(curator: string): Promise<Collecti
 }
 
 export async function getCollectionById(id: number): Promise<Collection> {
-    const response = await apiFetch(`http://localhost:8080/collection/id=${id}`)
+    const response = await apiFetch(`${API_URL}/collection/id=${encodeURIComponent(id)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar collection')
@@ -43,7 +44,7 @@ export async function getCollectionById(id: number): Promise<Collection> {
 }
 
 export async function getCollectionByName(name: string): Promise<Collection[]> {
-    const response = await apiFetch(`http://localhost:8080/collection/name=${name}`)
+    const response = await apiFetch(`${API_URL}/collection/name=${encodeURIComponent(name)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar collections')
@@ -58,7 +59,7 @@ export async function createCollection(
     isPublic: boolean,
     copyIds: number[]
 ) {
-    const response = await apiFetch('http://localhost:8080/collection',{
+    const response = await apiFetch(`${API_URL}/collection`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -87,7 +88,7 @@ export async function updateCollection(
     isPublic: boolean,
     copyIds: number[]
 ) {
-    const response = await apiFetch('http://localhost:8080/collection',{
+    const response = await apiFetch(`${API_URL}/collection`,{
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -111,7 +112,7 @@ export async function updateCollection(
 }
 
 export async function deleteCollection(id: number) {
-    const response = await apiFetch(`http://localhost:8080/collection/${id}`,{
+    const response = await apiFetch(`${API_URL}/collection/${encodeURIComponent(id)}`,{
         method: 'DELETE'
     })
 

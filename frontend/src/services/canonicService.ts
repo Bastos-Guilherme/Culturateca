@@ -1,4 +1,5 @@
 import { apiFetch } from "./api"
+import API_URL from "./api"
 
 export interface Canonic {
     id: number
@@ -12,7 +13,7 @@ export interface Canonic {
 }
 
 export async function getAllCanonic(): Promise<Canonic[]> {
-    const response = await apiFetch('http://localhost:8080/canonic')
+    const response = await apiFetch(`${API_URL}/canonic`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar canonics')
@@ -22,7 +23,7 @@ export async function getAllCanonic(): Promise<Canonic[]> {
 }
 
 export async function getCanonicById(id: number): Promise<Canonic> {
-    const response = await apiFetch(`http://localhost:8080/canonic/id=${id}`)
+    const response = await apiFetch(`${API_URL}/canonic/id=${encodeURIComponent(id)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar canonic')
@@ -32,7 +33,7 @@ export async function getCanonicById(id: number): Promise<Canonic> {
 }
 
 export async function getCanonicsByCategory(categoryId: number): Promise<Canonic[]> {
-    const response = await apiFetch(`http://localhost:8080/canonic/category=${categoryId}`)
+    const response = await apiFetch(`${API_URL}/canonic/category=${encodeURIComponent(categoryId)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar canonics pela category')
@@ -42,7 +43,7 @@ export async function getCanonicsByCategory(categoryId: number): Promise<Canonic
 }
 
 export async function getCanonicsByProperty(propertyId: number): Promise<Canonic[]> {
-    const response = await apiFetch(`http://localhost:8080/canonic/property=${propertyId}`)
+    const response = await apiFetch(`${API_URL}/canonic/property=${encodeURIComponent(propertyId)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar canonics pela property')
@@ -57,7 +58,7 @@ export async function createCanonic(
     categoryId: number | null
 ) {
     const response = await apiFetch(
-        'http://localhost:8080/canonic',
+        `${API_URL}/canonic`,
         {
             method: 'POST',
             headers: {
@@ -87,7 +88,7 @@ export async function updateCanonic(
     categoryId: number | null
 ) {
     const response = await apiFetch(
-        'http://localhost:8080/canonic',
+        `${API_URL}/canonic`,
         {
             method: 'PUT',
             headers: {
@@ -112,7 +113,7 @@ export async function updateCanonic(
 }
 
 export async function deleteCanonic(id: number) {
-    const response = await apiFetch(`http://localhost:8080/canonic/${id}`,{
+    const response = await apiFetch(`${API_URL}/canonic/${encodeURIComponent(id)}`,{
         method: 'DELETE'
     })
 

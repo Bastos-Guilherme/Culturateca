@@ -1,3 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL
+
+export default API_URL
+
 function getTokenExpiration(token: string): number | null {
     try {
         const payload = JSON.parse(atob(token.split('.')[1]))

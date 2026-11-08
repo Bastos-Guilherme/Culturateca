@@ -1,4 +1,5 @@
 import { apiFetch } from "./api"
+import API_URL from "./api"
 
 export interface Copy {
     id: number
@@ -14,7 +15,7 @@ export interface Copy {
 
 export async function getAllCopy(): Promise<Copy[]> {
     const response = await apiFetch(
-        'http://localhost:8080/copy'
+        `${API_URL}/copy`
     )
 
     if (!response.ok) {
@@ -28,7 +29,7 @@ export async function getCopyById(
     id: number
 ): Promise<Copy> {
     const response = await apiFetch(
-        `http://localhost:8080/copy/id=${encodeURIComponent(id)}`
+        `${API_URL}/copy/id=${encodeURIComponent(id)}`
     )
 
     if (!response.ok) {
@@ -42,7 +43,7 @@ export async function getCopiesByProperty(
     propertyId: number
 ): Promise<Copy[]> {
     const response = await apiFetch(
-        `http://localhost:8080/copy/property=${encodeURIComponent(propertyId)}`
+        `${API_URL}/copy/property=${encodeURIComponent(propertyId)}`
     )
 
     if (!response.ok) {
@@ -56,7 +57,7 @@ export async function getCopiesByCanonic(
     canonicId: number
 ): Promise<Copy[]> {
     const response = await apiFetch(
-        `http://localhost:8080/copy/canonic=${encodeURIComponent(canonicId)}`
+        `${API_URL}/copy/canonic=${encodeURIComponent(canonicId)}`
     )
 
     if (!response.ok) {
@@ -68,7 +69,7 @@ export async function getCopiesByCanonic(
 
 export async function getCopiesByCurator(curatorId: number): Promise<Copy[]> {
     const response = await apiFetch(
-        `http://localhost:8080/copy/curator=${encodeURIComponent(curatorId)}`
+        `${API_URL}/copy/curator=${encodeURIComponent(curatorId)}`
     )
 
     if (!response.ok) {
@@ -95,7 +96,7 @@ export async function createCopy(
         ...(name !== undefined ? { name } : {})
     }
 
-    const response = await apiFetch("http://localhost:8080/copy", {
+    const response = await apiFetch(`${API_URL}/copy`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -128,7 +129,7 @@ export async function updateCopy(
     }
 
     const response = await apiFetch(
-        "http://localhost:8080/copy",
+        `${API_URL}/copy`,
         {
             method: "PUT",
             headers: {
@@ -147,7 +148,7 @@ export async function updateCopy(
 
 export async function deleteCopy(id: number) {
     const response = await apiFetch(
-        `http://localhost:8080/copy/${encodeURIComponent(id)}`,
+        `${API_URL}/copy/${encodeURIComponent(id)}`,
         {
             method: 'DELETE'
         }

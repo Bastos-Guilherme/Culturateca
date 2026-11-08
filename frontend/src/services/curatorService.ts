@@ -1,4 +1,4 @@
-import { apiFetch } from "./api"
+import API_URL, { apiFetch } from "./api"
 
 export interface Curator {
     id: number
@@ -61,7 +61,7 @@ async function getApiMessage( response: Response, fallback: string ): Promise<st
 }
 
 export async function getAllCurator(): Promise<Curator[]> {
-    const response = await apiFetch('http://localhost:8080/curator')
+    const response = await apiFetch(`${API_URL}/curator`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar curators')
@@ -71,7 +71,7 @@ export async function getAllCurator(): Promise<Curator[]> {
 }
 
 export async function getCurrentCurator(): Promise<Curator> {
-    const response = await apiFetch('http://localhost:8080/curator/me')
+    const response = await apiFetch(`${API_URL}/curator/me`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar usuário')
@@ -81,7 +81,7 @@ export async function getCurrentCurator(): Promise<Curator> {
 }
 
 export async function updateEmailMfaEnabled(enabled: boolean): Promise<void> {
-    const response = await apiFetch('http://localhost:8080/curator/me/email-mfa', {
+    const response = await apiFetch(`${API_URL}/curator/me/email-mfa`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ export async function updateEmailMfaEnabled(enabled: boolean): Promise<void> {
 
 export async function getCuratorById(id: number): Promise<Curator> {
     const response = await apiFetch(
-        `http://localhost:8080/curator/id=${id}`
+        `${API_URL}/curator/id=${id}`
     )
 
     if (!response.ok) {
@@ -113,7 +113,7 @@ export async function getCuratorById(id: number): Promise<Curator> {
 
 export async function getCuratorByEmail(email: string): Promise<Curator> {
     const response = await apiFetch(
-        `http://localhost:8080/curator/email=${email}`
+        `${API_URL}/curator/email=${encodeURIComponent(email)}`
     )
 
     if (!response.ok) {
@@ -125,7 +125,7 @@ export async function getCuratorByEmail(email: string): Promise<Curator> {
 
 export async function getCuratorByName(name: string): Promise<Curator[]> {
     const response = await apiFetch(
-        `http://localhost:8080/curator/name=${name}`
+        `${API_URL}/curator/name=${encodeURIComponent(name)}`
     )
 
     if (!response.ok) {
@@ -136,7 +136,7 @@ export async function getCuratorByName(name: string): Promise<Curator[]> {
 }
 
 export async function requestRegistrationCode(data: RegisterCuratorData): Promise<ApiMessage> {
-    const response = await fetch('http://localhost:8080/curator/register/request-code', {
+    const response = await fetch(`${API_URL}/curator/register/request-code`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -167,7 +167,7 @@ export async function requestRegistrationCode(data: RegisterCuratorData): Promis
 }
 
 export async function verifyRegistrationCode(email: string, code: string): Promise<ApiMessage> {
-    const response = await fetch('http://localhost:8080/curator/register/verify-code', {
+    const response = await fetch(`${API_URL}/curator/register/verify-code`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -191,7 +191,7 @@ export async function verifyRegistrationCode(email: string, code: string): Promi
 }
 
 export async function updateCurator(id: number, data: UpdateCuratorData) {
-    const response = await apiFetch('http://localhost:8080/curator', {
+    const response = await apiFetch(`${API_URL}/curator`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -211,7 +211,7 @@ export async function updateCurator(id: number, data: UpdateCuratorData) {
 
 export async function deleteCurator(id: number) {
     const response = await apiFetch(
-        `http://localhost:8080/curator/${id}`,
+        `${API_URL}/curator/${encodeURIComponent(id)}`,
         {
             method: 'DELETE'
         }

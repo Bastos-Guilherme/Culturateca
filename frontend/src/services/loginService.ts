@@ -1,3 +1,5 @@
+import API_URL from './api'
+
 export interface LoginMfaResponse {
   mfaRequired: true
   challengeId: string
@@ -7,7 +9,7 @@ export interface LoginMfaResponse {
 export type LoginResponse = string | LoginMfaResponse
 
 export async function authenticate(email: string, password: string): Promise<LoginResponse> {
-  const response = await fetch('http://localhost:8080/login', {
+  const response = await fetch(`${API_URL}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -39,7 +41,7 @@ export async function authenticate(email: string, password: string): Promise<Log
 }
 
 export async function verifyLoginCode(challengeId: string, code: string): Promise<string> {
-  const response = await fetch('http://localhost:8080/login/verify-code', {
+  const response = await fetch(`${API_URL}/login/verify-code`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

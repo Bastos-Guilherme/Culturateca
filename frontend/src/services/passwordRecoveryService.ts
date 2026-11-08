@@ -1,3 +1,5 @@
+import API_URL from './api'
+
 interface ApiMessage {
     message: string
 }
@@ -21,7 +23,7 @@ async function readResponse<T>(response: Response): Promise<T> {
 export async function requestPasswordRecoveryCode(
     email: string
 ): Promise<RequestCodeResponse> {
-    const response = await fetch(`http://localhost:8080/password-recovery/request-code`, {
+    const response = await fetch(`${API_URL}/password-recovery/request-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -34,7 +36,7 @@ export async function verifyPasswordRecoveryCode(
     challengeId: string,
     code: string
 ): Promise<ApiMessage> {
-    const response = await fetch(`http://localhost:8080/password-recovery/verify-code`, {
+    const response = await fetch(`${API_URL}/password-recovery/verify-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ challengeId, code })
@@ -48,7 +50,7 @@ export async function resetPassword(
     code: string,
     newPassword: string
 ): Promise<ApiMessage> {
-    const response = await fetch(`http://localhost:8080/password-recovery/reset-password`, {
+    const response = await fetch(`${API_URL}/password-recovery/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ challengeId, code, newPassword })

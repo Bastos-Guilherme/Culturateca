@@ -1,5 +1,4 @@
-
-import { apiFetch } from "./api";
+import API_URL, { apiFetch } from "./api";
 
 export interface Property {
   id: number
@@ -8,7 +7,7 @@ export interface Property {
 }
 
 export async function getAllProperty(): Promise<Property[]> {
-  const response = await apiFetch("http://localhost:8080/property");
+  const response = await apiFetch(`${API_URL}/property`);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar properties");
@@ -18,7 +17,7 @@ export async function getAllProperty(): Promise<Property[]> {
 }
 
 export async function getPropertyById(id: number): Promise<Property> {
-  const response = await apiFetch(`http://localhost:8080/property/id=${encodeURIComponent(id)}`);
+  const response = await apiFetch(`${API_URL}/property/id=${encodeURIComponent(id)}`);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar property");
@@ -29,7 +28,7 @@ export async function getPropertyById(id: number): Promise<Property> {
 
 export async function getPropertyByName(name: string, curatorId: number): Promise<Property[]> {
   const response = await apiFetch(
-    `http://localhost:8080/property/name?name=${encodeURIComponent(name)}&curatorId=${encodeURIComponent(curatorId)}`
+    `${API_URL}/property/name?name=${encodeURIComponent(name)}&curatorId=${encodeURIComponent(curatorId)}`
   )
 
   if (!response.ok) {
@@ -41,7 +40,7 @@ export async function getPropertyByName(name: string, curatorId: number): Promis
 
 export async function getPropertiesByCurator(curatorId: number): Promise<Property[]> {
   const response = await apiFetch(
-    `http://localhost:8080/property/curator=${encodeURIComponent(curatorId)}`
+    `${API_URL}/property/curator=${encodeURIComponent(curatorId)}`
   )
 
   if (!response.ok) {
@@ -56,7 +55,7 @@ export async function createProperty(
   curatorId: number
 ): Promise<Property> {
 
-  const response = await apiFetch('http://localhost:8080/property', {
+  const response = await apiFetch(`${API_URL}/property`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -79,7 +78,7 @@ export async function updateProperty(
   name: string,
   curatorId: number
 ): Promise<Property> {
-  const response = await apiFetch(`http://localhost:8080/property`, {
+  const response = await apiFetch(`${API_URL}/property`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -99,7 +98,7 @@ export async function updateProperty(
 }
 
 export async function deleteProperty(id: number) {
-  const response = await apiFetch(`http://localhost:8080/property/${encodeURIComponent(id)}`, {
+  const response = await apiFetch(`${API_URL}/property/${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
 

@@ -1,5 +1,5 @@
-
 import { apiFetch } from "./api"
+import API_URL from "./api"
 
 export interface Category {
     id: number
@@ -8,7 +8,7 @@ export interface Category {
 }
 
 export async function getAllCategory(): Promise<Category[]> {
-    const response = await apiFetch('http://localhost:8080/category')
+    const response = await apiFetch(`${API_URL}/category`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar categories')
@@ -18,7 +18,7 @@ export async function getAllCategory(): Promise<Category[]> {
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
-    const response = await apiFetch(`http://localhost:8080/category/id=${encodeURIComponent(id)}`)
+    const response = await apiFetch(`${API_URL}/category/id=${encodeURIComponent(id)}`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar category')
@@ -29,7 +29,7 @@ export async function getCategoryById(id: number): Promise<Category> {
 
 export async function getCategoryByName(name: string, curatorId: number): Promise<Category[]> {
     const response = await apiFetch(
-        `http://localhost:8080/category/name?name=${encodeURIComponent(name)}&curatorId=${encodeURIComponent(curatorId)}`
+        `${API_URL}/category/name?name=${encodeURIComponent(name)}&curatorId=${encodeURIComponent(curatorId)}`
     )
 
     if (!response.ok) {
@@ -41,7 +41,7 @@ export async function getCategoryByName(name: string, curatorId: number): Promis
 
 export async function getCategoriesByCurator(curatorId: number): Promise<Category[]> {
     const response = await apiFetch(
-        `http://localhost:8080/category/curator=${encodeURIComponent(curatorId)}`
+        `${API_URL}/category/curator=${encodeURIComponent(curatorId)}`
     )
 
     if (!response.ok) {
@@ -55,7 +55,7 @@ export async function createCategory(
     name: string,
     curatorId: number
 ): Promise<Category> {
-    const response = await apiFetch('http://localhost:8080/category', {
+    const response = await apiFetch('${API_URL}/category', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ export async function updateCategory(
     name: string,
     curatorId: number
 ): Promise<Category> {
-    const response = await apiFetch('http://localhost:8080/category', {
+    const response = await apiFetch(`${API_URL}/category`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ export async function updateCategory(
 }
 
 export async function deleteCategory(id: number) {
-    const response = await apiFetch(`http://localhost:8080/category/${encodeURIComponent(id)}`, {
+    const response = await apiFetch(`${API_URL}/category/${encodeURIComponent(id)}`, {
         method: 'DELETE'
     })
 
