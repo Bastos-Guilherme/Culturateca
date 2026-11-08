@@ -14,7 +14,7 @@ export interface Collection {
 }
 
 export async function getAllCollection(): Promise<Collection[]> {
-    const response = await apiFetch('${API_URL}/collection')
+    const response = await apiFetch(`${API_URL}/collection`)
 
     if (!response.ok) {
         throw new Error('Erro ao buscar collections')

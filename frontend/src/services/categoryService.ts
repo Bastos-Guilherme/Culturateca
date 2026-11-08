@@ -55,7 +55,7 @@ export async function createCategory(
     name: string,
     curatorId: number
 ): Promise<Category> {
-    const response = await apiFetch('${API_URL}/category', {
+    const response = await apiFetch(`${API_URL}/category`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

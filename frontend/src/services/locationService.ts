@@ -59,7 +59,7 @@ export async function createLocation(
     location?: number,
     curatorId?: number
 ): Promise<Location> {
-    const response = await apiFetch("${API_URL}/location", {
+    const response = await apiFetch(`${API_URL}/location`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
