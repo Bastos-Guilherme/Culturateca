@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react'
-
 import { useNavigate } from 'react-router-dom'
-
 import { getCurrentCurator, getAllCurator, type Curator } from '../services/curatorService'
-
 import { getCollectionsByCurator, type Collection } from '../services/collectionService'
-
 import { getCopyById } from '../services/copyService'
-
+import { getAllCategory, type Category } from '../services/categoryService'
 import { getCanonicById, type Canonic } from '../services/canonicService'
 
 import '../styles/Curator.css'
@@ -21,8 +17,12 @@ function CuratorPage() {
     const [collections, setCollections] = useState<Collection[]>([])
     const [loading, setLoading] = useState(true)
     const [copyNames, setCopyNames] = useState<Record<number, string>>({})
+    const [categories, setCategories] = useState<Record<number, Category>>({})
 
     const [showAddCollectionModal, setShowAddCollectionModal] = useState(false)
+
+    const [searchTerm, setSearchTerm] = useState('')
+    const [collectionSort, setCollectionSort] = useState<'all' | 'largest' | 'smallest'>('all')
 
     const navigate = useNavigate()
 
@@ -61,15 +61,26 @@ function CuratorPage() {
                     )
                 ]
 
-                const canonicData = await Promise.all(
-                    canonicIds.map(canonicId => getCanonicById(canonicId))
-                )
+                const [canonicData, categoryData] = await Promise.all([
+                    Promise.all(
+                        canonicIds.map(id => getCanonicById(id))
+                    ),
+                    getAllCategory()
+                ])
 
                 const canonicMap: Record<number, Canonic> = {}
 
                 canonicData.forEach(canonic => {
                     canonicMap[canonic.id] = canonic
                 })
+
+                const categoryMap: Record<number, Category> = {}
+
+                categoryData.forEach(category => {
+                    categoryMap[category.id] = category
+                })
+
+                setCategories(categoryMap)
 
                 const copyNameMap: Record<number, string> = {}
 
@@ -108,6 +119,63 @@ function CuratorPage() {
         setShowAddCollectionModal(false)
     }
 
+    const uniqueCopyIds = new Set(
+        collections.flatMap(
+            collection =>
+                collection.copies.map(copy => copy.id)
+        )
+    )
+
+    function normalizeSearch(value: string) {
+        return value
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim()
+    }
+
+    const filteredCollections = collections.filter(collection => {
+        const search = normalizeSearch(searchTerm)
+
+        if (!search) return true
+
+        const copySearchValues = collection.copies.flatMap(copy => {
+            const categoryName = copy.category
+                ? categories[copy.category.id]?.name
+                : null
+
+            return [
+                copyNames[copy.id],
+                categoryName,
+                `Item #${copy.id}`
+            ]
+        })
+
+        const itemCount = collection.copies.length
+
+        const searchableValues = [
+            collection.name,
+            String(itemCount),
+            `${itemCount} item`,
+            `${itemCount} itens`,
+            ...copySearchValues
+        ]
+
+        return searchableValues.some(value =>
+            normalizeSearch(String(value ?? '')).includes(search)
+        )
+    }).sort((a, b) => {
+        if (collectionSort === 'largest') {
+            return b.copies.length - a.copies.length
+        }
+
+        if (collectionSort === 'smallest') {
+            return a.copies.length - b.copies.length
+        }
+
+        return 0
+    })
+
     if (loading) {
         return (
             <div className="curator-page">
@@ -127,17 +195,6 @@ function CuratorPage() {
             </div>
         )
     }
-
-    const publicCollections = collections.filter(
-        collection => collection.isPublic
-    )
-
-    const uniqueCopyIds = new Set(
-        collections.flatMap(
-            collection =>
-                collection.copies.map(copy => copy.id)
-        )
-    )
 
     return (
         <div className="curator-page">
@@ -167,7 +224,7 @@ function CuratorPage() {
                 </div>
                 <div className="curator-stats">
                     <div className="curator-stat">
-                        <strong>{publicCollections.length}</strong>
+                        <strong>{collections.length}</strong>
                         <span>Coleções</span>
                     </div>
 
@@ -195,19 +252,48 @@ function CuratorPage() {
                             className="collection-new-item collections-header-new-item"
                             onClick={() => setShowAddCollectionModal(true)}
                         />
-
-                        <button className="active">
+                        <button
+                            type="button"
+                            className={collectionSort === 'all' ? 'active' : ''}
+                            onClick={() => setCollectionSort('all')}
+                        >
                             Todas as coleções
                         </button>
-                        <button>
-                            Maiores Coleções
+                        <button
+                            type="button"
+                            className={collectionSort === 'largest' ? 'active' : ''}
+                            onClick={() => setCollectionSort('largest')}
+                        >
+                            Maiores coleções
                         </button>
-                        <button>
-                            Menores Coleções
+                        <button
+                            type="button"
+                            className={collectionSort === 'smallest' ? 'active' : ''}
+                            onClick={() => setCollectionSort('smallest')}
+                        >
+                            Menores coleções
                         </button>
                     </div>
                 </div>
-
+                <div className="collections-search">
+                    <i className="bi bi-search"></i>
+                    <input
+                        type="text"
+                        placeholder="Pesquisar coleções, itens ou categorias..."
+                        value={searchTerm}
+                        onChange={event => setSearchTerm(event.target.value)}
+                    />
+                    {searchTerm && (
+                        <button
+                            type="button"
+                            className="collections-search-clear"
+                            onClick={() => setSearchTerm('')}
+                            title="Limpar pesquisa"
+                        >
+                            <i className="bi bi-x-lg"></i>
+                        </button>
+                    )}
+                </div>
                 {collections.length === 0 ? (
                     <div className="empty-collections">
                         <i className="bi bi-archive"></i>
@@ -215,14 +301,17 @@ function CuratorPage() {
                             Este curador ainda não possui coleções.
                         </p>
                     </div>
-
+                ) : filteredCollections.length === 0 ? (
+                    <div className="empty-collections">
+                        <i className="bi bi-search"></i>
+                        <p>
+                            Nenhuma coleção encontrada para "{searchTerm}".
+                        </p>
+                    </div>
                 ) : (
                     <div className="collections-list">
-                        {collections.map(collection => (
-                            <div
-                                className="collection-card"
-                                key={collection.id}
-                            >
+                        {filteredCollections.map(collection => (
+                            <div className="collection-card" key={collection.id}>
                                 <div className="collection-card-header">
                                     <div>
                                         <div className="collection-title">
@@ -230,14 +319,12 @@ function CuratorPage() {
                                                 {collection.name}
                                             </h3>
                                         </div>
-
                                         <p>
                                             {collection.copies.length === 0
                                                 ? 'Esta coleção ainda não possui itens.'
                                                 : `${collection.copies.length} item${collection.copies.length !== 1 ? 's' : ''} nesta coleção.`}
                                         </p>
                                     </div>
-
                                     <div className="collection-card-actions">
                                         <NewItem
                                             icon="bi-plus"
@@ -246,7 +333,6 @@ function CuratorPage() {
                                             route={`/createItem`}
                                             className="collection-new-item"
                                         />
-
                                         <button
                                             className="collection-button"
                                             onClick={() => navigate(`/collection/${collection.id}`)}
@@ -269,6 +355,12 @@ function CuratorPage() {
                                                     <h4 title={copyNames[copy.id] ?? `Item #${copy.id}`}>
                                                         {copyNames[copy.id] ?? `Item #${copy.id}`}
                                                     </h4>
+
+                                                    <span className="collection-item-category">
+                                                        {copy.category
+                                                            ? categories[copy.category.id]?.name ?? 'Sem categoria'
+                                                            : 'Sem categoria'}
+                                                    </span>
                                                 </div>
                                             ))}
                                     </div>

@@ -68,7 +68,6 @@
   background-color: #f0f0f0;
 }
 
-/* Dropdown conectado à topbar */
 .dropdown-menu {
   position: absolute;
 
@@ -159,7 +158,7 @@
   flex-shrink: 0;
   border: none;
   background: none;
-  
+
   font-size: 32px;
   cursor: pointer;
   margin: 15px 0 10px;
@@ -170,9 +169,10 @@
 .sidebar {
   position: fixed;
   top: 0;
+  bottom: 0;
   left: 0;
+
   width: 65px;
-  height: 100vh;
 
   background-color: #ffffff;
   border-right: 3px solid #020202;
@@ -230,6 +230,15 @@
   cursor: pointer;
 }
 
+.sidebar .feedback-link {
+    margin-top: auto;
+    margin-bottom: 4px;
+}
+
+.sidebar nav > a:last-child {
+    margin-bottom: 15px;
+}
+
 .sidebar.open a,
 .sidebar.open .feedback-link,
 .sidebar.open .sidebar-action {
@@ -243,11 +252,6 @@
   background-color: #b0affd;
   border-color: #222;
   box-shadow: 2px 2px 0 #222;
-}
-
-.sidebar .feedback-link {
-  margin-top: auto;
-  margin-bottom: 15px;
 }
 
 .sidebar i {

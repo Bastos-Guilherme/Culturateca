@@ -18,7 +18,6 @@ function AddCollectionModal({
     onCreated
 }: AddCollectionModalProps) {
     const [name, setName] = useState('')
-    const [isPublic, setIsPublic] = useState(false)
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
 
@@ -47,7 +46,6 @@ function AddCollectionModal({
             const createdCollection = await createCollection(
                 curatorEmail,
                 normalizedName,
-                isPublic,
                 []
             )
             onCreated(createdCollection)
@@ -123,27 +121,6 @@ function AddCollectionModal({
                                 }
                             }}
                         />
-                    </div>
-                    <div className="add-collection-visibility">
-                        <div className="add-collection-visibility-text">
-                            <span> Coleção pública </span>
-                            <p>
-                                {isPublic
-                                    ? 'Outras pessoas poderão visualizar sua coleção.'
-                                    : 'Somente você poderá visualizar sua coleção.'}
-                            </p>
-                        </div>
-                        <label className="switch">
-                            <input
-                                type="checkbox"
-                                checked={isPublic}
-                                onChange={event =>
-                                    setIsPublic(event.target.checked)
-                                }
-                                disabled={saving}
-                            />
-                            <span className="slider"></span>
-                        </label>
                     </div>
                     {error && (
                         <p className="add-collection-error" role="alert">

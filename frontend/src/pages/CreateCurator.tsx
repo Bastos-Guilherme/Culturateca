@@ -15,7 +15,6 @@ function CreateCurator() {
     const [gender, setGender] = useState<string | null>(null)
     const [phone, setPhone] = useState<string | null>(null)
     const [bio, setBio] = useState<string | null>(null)
-    const [isPublic, setIsPublic] = useState(true)
 
     const [showVerifyRegistrationModal, setShowVerifyRegistrationModal] = useState(false)
     const [registrationData, setRegistrationData] = useState<RegisterCuratorData | null>(null)
@@ -38,7 +37,7 @@ function CreateCurator() {
             gender,
             phone,
             bio,
-            isPublic,
+            isPublic: true,
             profilePicture,
             location: null
         }
@@ -189,22 +188,6 @@ function CreateCurator() {
                             }
                             disabled={submitting}
                         />
-                    </div>
-                    <div className="public-profile">
-                        <span>Perfil público?</span>
-
-                        <label className="switch">
-                            <input
-                                type="checkbox"
-                                id="isPublic"
-                                checked={isPublic}
-                                onChange={event =>
-                                    setIsPublic(event.target.checked)
-                                }
-                                disabled={submitting}
-                            />
-                            <span className="slider"></span>
-                        </label>
                     </div>
                     {error && (
                         <p role="alert" className="create-curator-error">

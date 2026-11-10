@@ -121,14 +121,8 @@ function Navbar() {
                 <i className="bi bi-plus-circle"></i>
                 <span>Criar Item</span>
               </NavLink>
-
-              <NavLink to="/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
-                <i className="bi bi-gear"></i>
-                <span>Configurações</span>
-              </NavLink>
             </>
           )}
-
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSdEkQKvTuimKQ0d8LwrfTjZHwa7kVXCuP_CseR8k8vWkWP11w/viewform?usp=publish-editor"
             target="_blank"
@@ -139,6 +133,15 @@ function Navbar() {
             <i className="bi bi-chat-square-text"></i>
             <span>Feedback</span>
           </a>
+          {isAuthenticated && (
+            <NavLink
+              to="/settings"
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+              <i className="bi bi-gear"></i>
+              <span>Configurações</span>
+            </NavLink>
+          )}
         </nav>
       </aside>
 

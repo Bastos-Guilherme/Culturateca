@@ -317,6 +317,54 @@
     color: #555;
 }
 
+.collection-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 25px;
+    padding: 11px 14px;
+    background-color: #fff;
+    border: 1.5px solid #333;
+    border-radius: 5px;
+    box-shadow: 3px 3px 0 #222;
+}
+
+.collection-search > i {
+    font-size: 16px;
+    color: #666;
+}
+
+.collection-search input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    color: #222;
+}
+
+.collection-search input::placeholder {
+    color: #999;
+}
+
+.collection-search button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: none;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+}
+
+.collection-search button:hover {
+    color: #222;
+}
+
 @media (max-width: 900px) {
     .collection-header {
         padding: 25px;

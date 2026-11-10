@@ -1,5 +1,5 @@
-import { apiFetch } from "./api"
-import API_URL from "./api"
+import API_URL, { apiFetch } from "./api"
+import type { Copy } from './copyService'
 
 export interface Collection {
     id: number
@@ -8,9 +8,7 @@ export interface Collection {
     }
     name: string
     isPublic: boolean
-    copies: {
-        id: number
-    }[]
+    copies: Copy[]
 }
 
 export async function getAllCollection(): Promise<Collection[]> {
@@ -56,7 +54,6 @@ export async function getCollectionByName(name: string): Promise<Collection[]> {
 export async function createCollection(
     curatorEmail: string,
     name: string,
-    isPublic: boolean,
     copyIds: number[]
 ) {
     const response = await apiFetch(`${API_URL}/collection`,{
@@ -69,7 +66,6 @@ export async function createCollection(
                 email: curatorEmail
             },
             name: name,
-            isPublic: isPublic,
             copies: copyIds.map(id => ({ id }))
         })
     })

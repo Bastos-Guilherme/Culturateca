@@ -178,6 +178,7 @@
 
 .collections-title {
     flex-shrink: 0;
+    text-align: left;
 }
 
 .section-label {
@@ -409,6 +410,87 @@
     width: 330px;
 }
 
+.collection-item-category {
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    padding: 3px 8px;
+    margin-bottom: 5px;
+
+    background-color: #eeeaf8;
+    color: #65558a;
+
+    border-radius: 5px;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.collections-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    height: 46px;
+    box-sizing: border-box;
+
+    padding: 0 15px;
+    margin-bottom: 22px;
+
+    background-color: #fff;
+
+    border: 1.5px solid #222;
+    box-shadow: 3px 3px 0 #222;
+    border-radius: 5px;
+}
+
+.collections-search>i {
+    font-size: 16px;
+    color: #666;
+}
+
+.collections-search input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-size: 13px;
+    color: #222;
+}
+
+.collections-search input::placeholder {
+    color: #999;
+}
+
+.collections-search-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    background: transparent;
+
+    color: #666;
+    cursor: pointer;
+}
+
+.collections-search-clear:hover {
+    color: #222;
+}
+
 @media (max-width: 900px) {
 
     .curator-header {
@@ -458,5 +540,13 @@
 
     .collection-items {
         grid-template-columns: 1fr;
+    }
+
+    .collection-filters {
+        width: 100%;
+    }
+
+    .collection-filters button {
+        flex: 1;
     }
 }

@@ -23,6 +23,7 @@ function CollectionPage() {
     const [properties, setProperties] = useState<Record<number, Property>>({})
     const [categories, setCategories] = useState<Record<number, Category>>({})
     const [editingCopy, setEditingCopy] = useState<Copy | null>(null)
+    const [searchTerm, setSearchTerm] = useState('')
 
     const [loading, setLoading] = useState(true)
 
@@ -167,6 +168,39 @@ function CollectionPage() {
         setEditingCopy(null)
     }
 
+    const filteredCopies = copies.filter(copy => {
+        const canonic = copy.canonic
+            ? canonics[copy.canonic.id]
+            : null
+
+        const category = copy.category
+            ? categories[copy.category.id]
+            : null
+
+        const search = searchTerm.trim().toLowerCase()
+
+        if (!search) return true
+
+        const propertyValues = Object.entries(
+            copy.property ?? {}
+        ).flatMap(([propertyId, value]) => [
+            properties[Number(propertyId)]?.name,
+            value
+        ])
+
+        const searchableValues = [
+            copy.name,
+            canonic?.name,
+            category?.name,
+            ...propertyValues
+        ]
+
+        return searchableValues.some(value =>
+            String(value ?? '').toLowerCase().includes(search)
+        )
+    })
+
+
     if (loading) {
         return (
             <div className="collection-page">
@@ -219,6 +253,28 @@ function CollectionPage() {
                 </div>
             </section>
             <section className="collection-content">
+                <section className="collection-content">
+                    <div className="collection-search">
+                        <i className="bi bi-search" />
+
+                        <input
+                            type="text"
+                            placeholder="Pesquisar itens da coleção..."
+                            value={searchTerm}
+                            onChange={event => setSearchTerm(event.target.value)}
+                        />
+
+                        {searchTerm && (
+                            <button
+                                type="button"
+                                onClick={() => setSearchTerm('')}
+                                aria-label="Limpar pesquisa"
+                            >
+                                <i className="bi bi-x-lg" />
+                            </button>
+                        )}
+                    </div>
+                </section>
                 <div className="collection-content-header">
                     <div>
                         <span className="section-label">
@@ -236,9 +292,16 @@ function CollectionPage() {
                             Esta coleção ainda não possui itens.
                         </p>
                     </div>
+                ) : filteredCopies.length === 0 ? (
+                    <div className="empty-collection">
+                        <i className="bi bi-search" />
+                        <p>
+                            Nenhum item encontrado para "{searchTerm}".
+                        </p>
+                    </div>
                 ) : (
                     <div className="collection-grid">
-                        {copies.map(copy => {
+                        {filteredCopies.map(copy => {
                             const canonic = copy.canonic
                                 ? canonics[copy.canonic.id]
                                 : null
@@ -246,6 +309,7 @@ function CollectionPage() {
                             const location = copy.location
                                 ? locations[copy.location.id]
                                 : null
+
                             const displayedProperties = Object.entries(
                                 copy.property ?? {}
                             ).map(([propertyId, value]) => [
@@ -254,6 +318,7 @@ function CollectionPage() {
                             ] as [number, string])
 
                             const displayName = copy.name?.trim() || canonic?.name || `Item #${copy.id}`
+
                             return (
                                 <article
                                     className="collection-detail-item"
@@ -265,6 +330,7 @@ function CollectionPage() {
                                                 {displayName}
                                             </h3>
                                         </div>
+
                                         <button
                                             type="button"
                                             className="detail-item-edit"
@@ -284,11 +350,13 @@ function CollectionPage() {
                                             <i className="bi bi-pencil" />
                                         </button>
                                     </div>
+
                                     <div className="detail-section">
                                         <h4>
                                             <i className="bi bi-tags" />
                                             Propriedades
                                         </h4>
+
                                         {displayedProperties.length > 0 ? (
                                             <div className="property-list">
                                                 {displayedProperties.map(([propertyId, value]) => {
@@ -315,8 +383,8 @@ function CollectionPage() {
                                                 Nenhuma propriedade cadastrada.
                                             </p>
                                         )}
-
                                     </div>
+
                                     <div className="detail-section">
                                         <h4>
                                             <i className="bi bi-book" />
@@ -333,11 +401,13 @@ function CollectionPage() {
                                             </strong>
                                         </div>
                                     </div>
+
                                     <div className="detail-section">
                                         <h4>
                                             <i className="bi bi-geo-alt" />
                                             Localização
                                         </h4>
+
                                         {location ? (
                                             <div className="location-info">
                                                 <strong>
@@ -346,7 +416,6 @@ function CollectionPage() {
                                                 <span>
                                                     Latitude: {location.latitude}
                                                 </span>
-
                                                 <span>
                                                     Longitude: {location.longitude}
                                                 </span>
