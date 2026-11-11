@@ -7,10 +7,10 @@ import { getCopyById, updateCopy, deleteCopy } from "../services/copyService"
 import type { Canonic } from "../services/canonicService"
 
 import type { Property } from "../services/propertyService"
-import { getAllProperty } from "../services/propertyService"
+import { getPropertiesByCurator } from "../services/propertyService"
 
 import type { Category } from "../services/categoryService"
-import { getAllCategory } from "../services/categoryService"
+import { getCategoriesByCurator } from "../services/categoryService"
 
 import type { Location } from "../services/locationService"
 import { getLocationsByCurator } from "../services/locationService"
@@ -73,21 +73,23 @@ export default function EditCopyModal({
                 setLoading(true)
                 setError("")
 
-                const [allProperties, allCategories, curator] =
-                    await Promise.all([
-                        getAllProperty(),
-                        getAllCategory(),
-                        getCurrentCurator()
-                    ])
+                const curator = await getCurrentCurator()
 
-                const curatorLocations = await getLocationsByCurator(
-                    curator.id
-                )
+                const [
+                    curatorProperties,
+                    curatorCategories,
+                    curatorLocations
+                ] = await Promise.all([
+                    getPropertiesByCurator(curator.id),
+                    getCategoriesByCurator(curator.id),
+                    getLocationsByCurator(curator.id)
+                ])
 
-                setProperties(allProperties)
-                setCategories(allCategories)
-                setCuratorId(curator.id)
+                setProperties(curatorProperties)
+                setCategories(curatorCategories)
                 setLocations(curatorLocations)
+
+                setCuratorId(curator.id)
 
                 setName(copy.name ?? "")
 
