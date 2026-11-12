@@ -137,21 +137,20 @@ public class CopyServiceImpl implements CopyService {
             throw new RuntimeException("ID de Canonic inexistente");
         }
 
-        if (copy.getLocation() != null) {
-            if (copy.getLocation().getId() == null) {
-                throw new RuntimeException("Location deve possuir ID");
-            }
-
-            Long locationId = copy.getLocation().getId();
-
-            Location parent = locationService.findById(locationId);
-
-            if (parent == null) {
-                throw new RuntimeException("Location não encontrada");
-            }
-
-            copy.setLocation(parent);
+        if (copy.getLocation() == null
+                || copy.getLocation().getId() == null) {
+            throw new RuntimeException("Location é obrigatória");
         }
+
+        Long locationId = copy.getLocation().getId();
+
+        Location parent = locationService.findById(locationId);
+
+        if (parent == null) {
+            throw new RuntimeException("Location não encontrada");
+        }
+
+        copy.setLocation(parent);
 
         if (copy.getCategory() == null || copy.getCategory().getId() == null) {
             throw new RuntimeException("Category é obrigatória");

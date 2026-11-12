@@ -25,9 +25,9 @@ public class Location {
   @Column(nullable = false)
   private String name;
 
-  private double latitude;
+  private Double latitude;
 
-  private double longitude;
+  private Double longitude;
 
   @ManyToOne
   @JoinColumn(name = "location")

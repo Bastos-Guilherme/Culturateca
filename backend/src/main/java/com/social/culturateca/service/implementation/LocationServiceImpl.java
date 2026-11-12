@@ -68,12 +68,18 @@ public class LocationServiceImpl implements LocationService {
                 throw new RuntimeException("nome da Location ja existe");
             }
 
-            if (location.getLatitude() < -90 || location.getLatitude() > 90) {
-                throw new RuntimeException("Latitude inválida");
-            }
+            if (location.getLatitude() != null && location.getLongitude() != null) {
 
-            if (location.getLongitude() < -180 || location.getLongitude() > 180) {
-                throw new RuntimeException("Longitude inválida");
+                if (location.getLatitude() < -90 || location.getLatitude() > 90) {
+                    throw new RuntimeException("Latitude inválida");
+                }
+
+                if (location.getLongitude() < -180 || location.getLongitude() > 180) {
+                    throw new RuntimeException("Longitude inválida");
+                }
+
+            } else if (location.getLatitude() != null || location.getLongitude() != null) {
+                throw new RuntimeException("Latitude e longitude devem ser informadas juntas");
             }
 
             if (location.getLocation() != null) {
@@ -134,12 +140,27 @@ public class LocationServiceImpl implements LocationService {
                 existingLocation.setName(location.getName());
             }
 
-            if (location.getLatitude() < -90 || location.getLatitude() > 90) {
-                throw new RuntimeException("Latitude inválida");
+            Double latitude = location.getLatitude() != null
+                    ? location.getLatitude()
+                    : existingLocation.getLatitude();
+
+            Double longitude = location.getLongitude() != null
+                    ? location.getLongitude()
+                    : existingLocation.getLongitude();
+
+            if ((latitude == null) != (longitude == null)) {
+                throw new RuntimeException("Latitude e longitude devem ser informadas juntas");
             }
 
-            if (location.getLongitude() < -180 || location.getLongitude() > 180) {
-                throw new RuntimeException("Longitude inválida");
+            if (latitude != null && longitude != null) {
+
+                if (latitude < -90 || latitude > 90) {
+                    throw new RuntimeException("Latitude inválida");
+                }
+
+                if (longitude < -180 || longitude > 180) {
+                    throw new RuntimeException("Longitude inválida");
+                }
             }
 
             existingLocation.setLatitude(location.getLatitude());

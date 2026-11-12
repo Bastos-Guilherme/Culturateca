@@ -213,6 +213,16 @@ export default function CreateItem() {
             return
         }
 
+        if (selectedCollection === null) {
+            showNotification('Selecione uma coleção.', 'warning')
+            return
+        }
+
+        if (selectedLocation === null) {
+            showNotification('Selecione um local físico de guarda.', 'warning')
+            return
+        }
+
         if (itemProperties.length === 0) {
             showNotification('Adicione pelo menos uma propriedade.', 'warning')
             return

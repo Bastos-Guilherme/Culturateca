@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 
 import { createLocation, type Location } from '../services/locationService'
@@ -21,45 +20,53 @@ function AddLocationModal({
     const [name, setName] = useState('')
     const [latitude, setLatitude] = useState('')
     const [longitude, setLongitude] = useState('')
+    const [showCoordinates, setShowCoordinates] = useState(false)
     const [parentLocation, setParentLocation] = useState<number | null>(null)
 
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
 
+
     async function handleCreate() {
         const normalizedName = name.trim()
-        const parsedLatitude = Number(latitude)
-        const parsedLongitude = Number(longitude)
 
         if (!normalizedName) {
             setError('Informe o nome da localização.')
             return
         }
 
-        if (
-            latitude.trim() === '' ||
-            longitude.trim() === '' ||
-            !Number.isFinite(parsedLatitude) ||
-            !Number.isFinite(parsedLongitude)
-        ) {
-            setError('Informe uma latitude e longitude válidas.')
+        const hasLatitude = latitude.trim() !== ''
+        const hasLongitude = longitude.trim() !== ''
+
+        if (hasLatitude !== hasLongitude) {
+            setError('Informe ambas as coordenadas ou deixe as duas vazias.')
             return
         }
 
-        if (
-            parsedLatitude < -90 ||
-            parsedLatitude > 90
-        ) {
-            setError('A latitude deve estar entre -90 e 90.')
-            return
-        }
+        let parsedLatitude: number | null = null
+        let parsedLongitude: number | null = null
 
-        if (
-            parsedLongitude < -180 ||
-            parsedLongitude > 180
-        ) {
-            setError('A longitude deve estar entre -180 e 180.')
-            return
+        if (hasLatitude && hasLongitude) {
+            parsedLatitude = Number(latitude)
+            parsedLongitude = Number(longitude)
+
+            if (
+                !Number.isFinite(parsedLatitude) ||
+                !Number.isFinite(parsedLongitude)
+            ) {
+                setError('Informe coordenadas válidas.')
+                return
+            }
+
+            if (parsedLatitude < -90 || parsedLatitude > 90) {
+                setError('A latitude deve estar entre -90 e 90.')
+                return
+            }
+
+            if (parsedLongitude < -180 || parsedLongitude > 180) {
+                setError('A longitude deve estar entre -180 e 180.')
+                return
+            }
         }
 
         const alreadyExists = locations.some(
@@ -69,9 +76,7 @@ function AddLocationModal({
         )
 
         if (alreadyExists) {
-            setError(
-                'Você já possui uma localização com esse nome.'
-            )
+            setError('Você já possui uma localização com esse nome.')
             return
         }
 
@@ -88,13 +93,12 @@ function AddLocationModal({
             onCreated(createdLocation)
         } catch (error) {
             console.error(error)
-            setError(
-                'Não foi possível cadastrar a localização.'
-            )
+            setError('Não foi possível cadastrar a localização.')
         } finally {
             setSaving(false)
         }
     }
+
 
     return (
         <div
@@ -123,6 +127,7 @@ function AddLocationModal({
                             Adicionar localização
                         </h2>
                     </div>
+
                     <button
                         type="button"
                         className="add-location-close"
@@ -133,70 +138,97 @@ function AddLocationModal({
                         <i className="bi bi-x-lg"></i>
                     </button>
                 </div>
+
                 <div className="add-location-body">
                     <p className="add-location-description">
                         Cadastre um local físico para organizar
                         onde seus itens ficam guardados.
                     </p>
+
                     <div className="add-location-field">
                         <label htmlFor="location-name">
                             Nome da localização
                         </label>
+
                         <input
                             id="location-name"
                             type="text"
                             value={name}
-                            onChange={event =>
-                                setName(event.target.value)
-                            }
+                            onChange={event => setName(event.target.value)}
                             placeholder="Ex.: Estante da sala"
                             maxLength={100}
                             autoFocus
                             disabled={saving}
                         />
                     </div>
-                    <div className="add-location-coordinates">
-                        <div className="add-location-field">
-                            <label htmlFor="location-latitude">
-                                Latitude
-                            </label>
-                            <input
-                                id="location-latitude"
-                                type="number"
-                                step="any"
-                                min="-90"
-                                max="90"
-                                value={latitude}
-                                onChange={event =>
-                                    setLatitude(event.target.value)
-                                }
-                                placeholder="Ex.: -23.5505"
-                                disabled={saving}
-                            />
-                        </div>
-                        <div className="add-location-field">
-                            <label htmlFor="location-longitude">
-                                Longitude
-                            </label>
-                            <input
-                                id="location-longitude"
-                                type="number"
-                                step="any"
-                                min="-180"
-                                max="180"
-                                value={longitude}
-                                onChange={event =>
-                                    setLongitude(event.target.value)
-                                }
-                                placeholder="Ex.: -46.6333"
-                                disabled={saving}
-                            />
-                        </div>
+
+                    <div className="add-location-coordinate-toggle">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowCoordinates(previous => {
+                                    if (previous) {
+                                        setLatitude('')
+                                        setLongitude('')
+                                    }
+
+                                    return !previous
+                                })
+                            }}
+                            disabled={saving}
+                        >
+                            <i className={`bi ${showCoordinates ? 'bi-dash-circle' : 'bi-plus-circle'}`} />
+                            {showCoordinates
+                                ? 'Remover latitude e longitude'
+                                : 'Adicionar latitude e longitude'}
+                        </button>
+
+                        {showCoordinates && (
+                            <div className="add-location-coordinates">
+                                <div className="add-location-field">
+                                    <label htmlFor="location-latitude">
+                                        Latitude
+                                    </label>
+
+                                    <input
+                                        id="location-latitude"
+                                        type="number"
+                                        step="any"
+                                        min="-90"
+                                        max="90"
+                                        value={latitude}
+                                        onChange={event => setLatitude(event.target.value)}
+                                        placeholder="Ex.: -23.5505"
+                                        disabled={saving}
+                                    />
+                                </div>
+
+                                <div className="add-location-field">
+                                    <label htmlFor="location-longitude">
+                                        Longitude
+                                    </label>
+
+                                    <input
+                                        id="location-longitude"
+                                        type="number"
+                                        step="any"
+                                        min="-180"
+                                        max="180"
+                                        value={longitude}
+                                        onChange={event => setLongitude(event.target.value)}
+                                        placeholder="Ex.: -46.6333"
+                                        disabled={saving}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
+
                     <div className="add-location-field">
                         <label htmlFor="parent-location">
                             Localização filha (opcional)
                         </label>
+
                         <select
                             id="parent-location"
                             value={parentLocation ?? ''}
@@ -222,17 +254,20 @@ function AddLocationModal({
                                 </option>
                             ))}
                         </select>
+
                         <small>
                             Use este campo para representar, por
                             exemplo, uma caixa dentro de uma estante.
                         </small>
                     </div>
+
                     {error && (
                         <p className="add-location-error" role="alert">
                             {error}
                         </p>
                     )}
                 </div>
+
                 <div className="add-location-actions">
                     <button
                         type="button"
@@ -242,6 +277,7 @@ function AddLocationModal({
                     >
                         Cancelar
                     </button>
+
                     <button
                         type="button"
                         className="add-location-save"

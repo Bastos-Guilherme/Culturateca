@@ -104,13 +104,10 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
                                                 ? new ArrayList<>()
                                                 : new ArrayList<>(request.getHiddenProperties()));
                 copy.setCurator(curator);
-                
-                if (request.getLocationId() != null) {
-                        Location location = new Location();
-                        location.setId(request.getLocationId());
-                        copy.setLocation(location);
-                }
-                
+
+                Location location = new Location();
+                location.setId(request.getLocationId());
+                copy.setLocation(location);
 
                 Copy savedCopy = copyService.createCopy(
                                 copy,
@@ -125,12 +122,11 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
                                         "Não foi possível cadastrar a cópia.");
                 }
 
-                if (request.getCollectionId() != null) {
-                        addCopyToCollection(
-                                        request.getCollectionId(),
-                                        savedCopy,
-                                        curatorEmail);
-                }
+                addCopyToCollection(
+                        request.getCollectionId(),
+                        savedCopy,
+                        curatorEmail
+                );
 
                 return savedCopy;
         }
@@ -164,16 +160,16 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
                                         "As propriedades devem ter identificadores e valores válidos.");
                 }
 
-                if (request.getLocationId() != null
-                                && request.getLocationId() <= 0) {
+                if (request.getLocationId() == null
+                                || request.getLocationId() <= 0) {
                         throw new IllegalArgumentException(
-                                        "A localização informada é inválida.");
+                                        "Selecione um local físico de guarda válido.");
                 }
 
-                if (request.getCollectionId() != null
-                                && request.getCollectionId() <= 0) {
+                if (request.getCollectionId() == null
+                                || request.getCollectionId() <= 0) {
                         throw new IllegalArgumentException(
-                                        "A coleção informada é inválida.");
+                                        "Selecione uma coleção válida.");
                 }
         }
 

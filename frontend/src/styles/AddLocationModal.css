@@ -207,6 +207,43 @@
     cursor: not-allowed;
 }
 
+
+.add-location-coordinate-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.add-location-coordinate-toggle > button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    padding-top: 10px;
+    border: none;
+    background: transparent;
+    color: var(--primary-color, #000000);
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-location-coordinate-toggle > button:hover {
+    opacity: 0.75;
+}
+
+.add-location-coordinate-toggle > button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.add-location-coordinates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
 @media (max-width: 480px) {
     .add-location-coordinates {
         grid-template-columns: 1fr;

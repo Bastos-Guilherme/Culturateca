@@ -1,16 +1,16 @@
 import API_URL, { apiFetch } from "./api";
 
-export interface Location { 
-    id: number 
-    name: string 
-    latitude: number 
-    longitude: number
+export interface Location {
+    id: number;
+    name: string;
+    latitude: number | null;
+    longitude: number | null;
     location: {
-        id: number
-    } | null
+        id: number;
+    } | null;
     curator: {
-        id: number
-    }
+        id: number;
+    };
 }
 
 export async function getAllLocation() {
@@ -54,8 +54,8 @@ export async function getLocationsByCurator(curatorId: number) {
 
 export async function createLocation(
     name: string,
-    latitude: number,
-    longitude: number,
+    latitude: number | null,
+    longitude: number | null,
     location?: number,
     curatorId?: number
 ): Promise<Location> {
@@ -65,9 +65,9 @@ export async function createLocation(
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            name: name,
-            latitude: latitude,
-            longitude: longitude,
+            name,
+            latitude,
+            longitude,
             location: location != null ? { id: location } : null,
             curator: curatorId != null ? { id: curatorId } : null
         }),
@@ -80,26 +80,25 @@ export async function createLocation(
     return response.json();
 }
 
-
 export async function updateLocation(
     id: number,
     name: string,
-    latitude: number,
-    longitude: number,
+    latitude: number | null,
+    longitude: number | null,
     location?: number,
     curatorId?: number
-) {
+): Promise<Location> {
     const response = await apiFetch(`${API_URL}/location`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            id: id,
-            name: name,
-            latitude: latitude,
-            longitude: longitude,
-            location: location ? { id: location } : null,
+            id,
+            name,
+            latitude,
+            longitude,
+            location: location != null ? { id: location } : null,
             curator: curatorId != null ? { id: curatorId } : null
         }),
     });
