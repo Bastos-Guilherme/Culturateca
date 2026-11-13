@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.social.culturateca.model.Location;
 import com.social.culturateca.service.CuratorService;
 import com.social.culturateca.service.LocationService;
+import com.social.culturateca.service.CopyService;
 
 @RestController
 @RequestMapping("/location")
@@ -25,6 +26,9 @@ public class LocationController {
 
     @Autowired
     CuratorService curatorService;
+
+    @Autowired
+    CopyService copyService;
 
     @GetMapping
     public List<Location> getAllLocation(){
@@ -58,6 +62,6 @@ public class LocationController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id){
-        locationService.deleteLocation(id);
+        locationService.deleteLocation(id, copyService);
     }
 }

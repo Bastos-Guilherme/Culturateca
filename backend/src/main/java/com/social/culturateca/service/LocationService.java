@@ -18,6 +18,6 @@ public interface LocationService {
 
     public Location editLocation(Location location, CuratorService curatorService);
     
-    public void deleteLocation(Long id);
+    public void deleteLocation(Long id, CopyService copyService);
 
 }

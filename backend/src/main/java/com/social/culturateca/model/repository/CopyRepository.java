@@ -20,6 +20,8 @@ public interface CopyRepository extends JpaRepository<Copy, Long> {
 
     boolean existsByCategory_Id(Long categoryId);
 
+    boolean existsByLocation_Id(Long locationId);
+
     @Query(value = """
         select *
         from copy

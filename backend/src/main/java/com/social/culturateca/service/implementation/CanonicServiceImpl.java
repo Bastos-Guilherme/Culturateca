@@ -73,7 +73,8 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public Canonic createCanonic(Canonic canonic,
+    public Canonic createCanonic(
+            Canonic canonic,
             CategoryService categoryService,
             PropertyService propertyService) {
         try {
@@ -81,38 +82,34 @@ public class CanonicServiceImpl implements CanonicService {
                 throw new RuntimeException("Não deve possuir ID específico");
             }
 
-            if (canonic.getName() == null || canonic.getName().isEmpty()) {
-                throw new RuntimeException(
-                        "Nome é obrigatório");
+            if (canonic.getName() == null || canonic.getName().isBlank()) {
+                throw new RuntimeException("Nome é obrigatório");
             }
 
-            if (canonic.getProperty() == null || canonic.getProperty().isEmpty()) {
-                throw new RuntimeException(
-                        "Property é obrigatória");
-            }
+            if (canonic.getProperty() != null && !canonic.getProperty().isEmpty()) {
 
-            Set<Long> propertyIds = canonic.getProperty().keySet();
+                Set<Long> propertyIds = canonic.getProperty().keySet();
 
-            List<Property> properties = propertyService.findAllPropertiesById(propertyIds.stream().toList());
+                List<Property> properties = propertyService.findAllPropertiesById(
+                        propertyIds.stream().toList());
 
-            Set<Long> existingIds = properties.stream()
-                    .map(Property::getId)
-                    .collect(Collectors.toSet());
+                Set<Long> existingIds = properties.stream()
+                        .map(Property::getId)
+                        .collect(Collectors.toSet());
 
-            for (Long propertyId : propertyIds) {
-
-                if (!existingIds.contains(propertyId)) {
-                    throw new RuntimeException(
-                            "Property com ID " + propertyId + " não existe");
+                for (Long propertyId : propertyIds) {
+                    if (!existingIds.contains(propertyId)) {
+                        throw new RuntimeException(
+                                "Property com ID " + propertyId + " não existe");
+                    }
                 }
             }
 
             if (canonic.getCategory() == null || canonic.getCategory().getId() == null) {
-                throw new RuntimeException(
-                        "Category é obrigatória");
+                throw new RuntimeException("Category é obrigatória");
             }
 
-            if (null == categoryService.findById(canonic.getCategory().getId())) {
+            if (categoryService.findById(canonic.getCategory().getId()) == null) {
                 throw new RuntimeException("ID de Category inexistente");
             }
 
@@ -125,7 +122,8 @@ public class CanonicServiceImpl implements CanonicService {
     }
 
     @Override
-    public Canonic editCanonic(Canonic canonic,
+    public Canonic editCanonic(
+            Canonic canonic,
             CategoryService categoryService,
             PropertyService propertyService) {
         try {
@@ -133,47 +131,43 @@ public class CanonicServiceImpl implements CanonicService {
                 throw new RuntimeException("ID não pode ser nulo");
             }
 
-            if (canonic.getName() == null || canonic.getName().isEmpty()) {
-                throw new RuntimeException(
-                        "Nome é obrigatório");
+            if (canonic.getName() == null || canonic.getName().isBlank()) {
+                throw new RuntimeException("Nome é obrigatório");
             }
 
             if (canonicRepository.findById(canonic.getId()).isEmpty()) {
                 throw new RuntimeException("Canonic não encontrada");
             }
 
-            if (canonic.getProperty() == null || canonic.getProperty().isEmpty()) {
-                throw new RuntimeException(
-                        "Property é obrigatória");
-            }
+            if (canonic.getProperty() != null && !canonic.getProperty().isEmpty()) {
 
-            Set<Long> propertyIds = canonic.getProperty().keySet();
+                Set<Long> propertyIds = canonic.getProperty().keySet();
 
-            List<Property> properties = propertyService.findAllPropertiesById(propertyIds.stream().toList());
+                List<Property> properties = propertyService.findAllPropertiesById(
+                        propertyIds.stream().toList());
 
-            Set<Long> existingIds = properties.stream()
-                    .map(Property::getId)
-                    .collect(Collectors.toSet());
+                Set<Long> existingIds = properties.stream()
+                        .map(Property::getId)
+                        .collect(Collectors.toSet());
 
-            for (Long propertyId : propertyIds) {
-
-                if (!existingIds.contains(propertyId)) {
-                    throw new RuntimeException(
-                            "Property com ID " + propertyId + " não existe");
+                for (Long propertyId : propertyIds) {
+                    if (!existingIds.contains(propertyId)) {
+                        throw new RuntimeException(
+                                "Property com ID " + propertyId + " não existe");
+                    }
                 }
             }
 
             if (canonic.getCategory() == null || canonic.getCategory().getId() == null) {
-                throw new RuntimeException(
-                        "Category é obrigatória");
+                throw new RuntimeException("Category é obrigatória");
             }
 
-            if (null == categoryService.findById(canonic.getCategory().getId())) {
-                throw new RuntimeException(
-                        "ID de Category inexistente");
+            if (categoryService.findById(canonic.getCategory().getId()) == null) {
+                throw new RuntimeException("ID de Category inexistente");
             }
 
             return canonicRepository.save(canonic);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -203,6 +197,9 @@ public class CanonicServiceImpl implements CanonicService {
         Canonic updatedCanonic = new Canonic();
         Map<Long, Map<String, Integer>> propertiesCount = new HashMap<>();
         for (Copy copy : copies) {
+            if (copy.getProperty() == null || copy.getProperty().isEmpty()) {
+                continue;
+            }
             for (Long key : copy.getProperty().keySet()) {
                 String value = copy.getProperty().get(key);
                 if (!propertiesCount.containsKey(key)) {
@@ -210,7 +207,7 @@ public class CanonicServiceImpl implements CanonicService {
                 }
                 Map<String, Integer> mapOfValues = propertiesCount.get(key);
                 if (mapOfValues.containsKey(value)) {
-                    mapOfValues.put(value, (mapOfValues.get(value) + 1));
+                    mapOfValues.put(value, mapOfValues.get(value) + 1);
                 } else {
                     mapOfValues.put(value, 1);
                 }

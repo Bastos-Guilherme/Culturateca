@@ -97,6 +97,11 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
+    public boolean existsByLocation(Long locationId) {
+        return copyRepository.existsByLocation_Id(locationId);
+    }
+
+    @Override
     @Transactional
     public Copy createCopy(
             Copy copy,
@@ -109,23 +114,21 @@ public class CopyServiceImpl implements CopyService {
             throw new RuntimeException("Não deve possuir ID específico");
         }
 
-        if (copy.getProperty() == null || copy.getProperty().isEmpty()) {
-            throw new RuntimeException("Property é obrigatória");
-        }
+        if (copy.getProperty() != null && !copy.getProperty().isEmpty()) {
+            Set<Long> propertyIds = copy.getProperty().keySet();
 
-        Set<Long> propertyIds = copy.getProperty().keySet();
+            List<Property> properties = propertyService.findAllPropertiesById(
+                    propertyIds.stream().toList());
 
-        List<Property> properties = propertyService.findAllPropertiesById(
-                propertyIds.stream().toList());
+            Set<Long> existingIds = properties.stream()
+                    .map(Property::getId)
+                    .collect(Collectors.toSet());
 
-        Set<Long> existingIds = properties.stream()
-                .map(Property::getId)
-                .collect(Collectors.toSet());
-
-        for (Long propertyId : propertyIds) {
-            if (!existingIds.contains(propertyId)) {
-                throw new RuntimeException(
-                        "Property com ID " + propertyId + " não existe");
+            for (Long propertyId : propertyIds) {
+                if (!existingIds.contains(propertyId)) {
+                    throw new RuntimeException(
+                            "Property com ID " + propertyId + " não existe");
+                }
             }
         }
 
@@ -239,11 +242,9 @@ public class CopyServiceImpl implements CopyService {
             throw new RuntimeException("Location não encontrada");
         }
 
-        Map<Long, String> properties = copy.getProperty() != null
-                ? copy.getProperty()
-                : new HashMap<>();
+        Map<Long, String> properties = copy.getProperty();
 
-        if (!properties.isEmpty()) {
+        if (properties != null && !properties.isEmpty()) {
             Set<Long> propertyIds = properties.keySet();
 
             List<Property> existingProperties = propertyService
@@ -288,7 +289,9 @@ public class CopyServiceImpl implements CopyService {
                 ? copy.getName().trim()
                 : null);
 
-        existingCopy.setProperty(new HashMap<>(properties));
+        existingCopy.setProperty(properties != null
+                ? new HashMap<>(properties)
+                : null);
         existingCopy.setHiddenProperties(new ArrayList<>(hiddenProperties));
         existingCopy.setCanonic(canonic);
         existingCopy.setLocation(location);

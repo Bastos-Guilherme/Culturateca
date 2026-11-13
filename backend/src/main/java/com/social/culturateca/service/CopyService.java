@@ -21,6 +21,8 @@ public interface CopyService {
 
     public boolean existsByCategory(Long categoryId);
 
+    boolean existsByLocation(Long locationId);
+
     public Copy createCopy(
             Copy copy,
             PropertyService propertyService,

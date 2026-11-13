@@ -109,12 +109,17 @@ function Navbar() {
                 <span>Categorias</span>
               </NavLink>
 
+              <NavLink to="/locations" className={({ isActive }) => (isActive ? 'active' : '')}>
+                <i className="bi bi-geo-alt"></i>
+                <span>Localizações</span>
+              </NavLink>
+
               <button
                 className="sidebar-action"
                 onClick={() => setShowAddCollectionModal(true)}
               >
                 <i className="bi bi-collection"></i>
-                <span>Adicionar coleção</span>
+                <span>Criar Coleção</span>
               </button>
 
               <NavLink to="/createItem" className={({ isActive }) => (isActive ? 'active' : '')}>

@@ -123,10 +123,9 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
                 }
 
                 addCopyToCollection(
-                        request.getCollectionId(),
-                        savedCopy,
-                        curatorEmail
-                );
+                                request.getCollectionId(),
+                                savedCopy,
+                                curatorEmail);
 
                 return savedCopy;
         }
@@ -147,15 +146,11 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
                                         "O nome da obra é obrigatório.");
                 }
 
-                if (request.getProperty() == null
-                                || request.getProperty().isEmpty()) {
-                        throw new IllegalArgumentException(
-                                        "Informe pelo menos uma propriedade.");
-                }
+                if (request.getProperty() != null
+                                && request.getProperty().entrySet().stream().anyMatch(entry -> entry.getKey() == null
+                                                || entry.getValue() == null
+                                                || entry.getValue().isBlank())) {
 
-                if (request.getProperty().entrySet().stream().anyMatch(entry -> entry.getKey() == null
-                                || entry.getValue() == null
-                                || entry.getValue().isBlank())) {
                         throw new IllegalArgumentException(
                                         "As propriedades devem ter identificadores e valores válidos.");
                 }
@@ -203,7 +198,10 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
         private Canonic createCanonic(ItemRegistrationRequest request) {
                 Canonic canonic = new Canonic();
                 canonic.setName(request.getName().strip());
-                canonic.setProperty(request.getProperty());
+                canonic.setProperty(
+                                request.getProperty() != null
+                                                ? request.getProperty()
+                                                : new java.util.HashMap<>());
                 canonic.setCategory(
                                 createCategoryReference(request.getCategoryId()));
 

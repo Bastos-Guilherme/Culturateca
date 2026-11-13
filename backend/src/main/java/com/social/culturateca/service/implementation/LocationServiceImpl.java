@@ -3,13 +3,16 @@ package com.social.culturateca.service.implementation;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Location;
 import com.social.culturateca.model.repository.LocationRepository;
 import com.social.culturateca.service.CuratorService;
 import com.social.culturateca.service.LocationService;
+import com.social.culturateca.service.CopyService;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -205,12 +208,12 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void deleteLocation(Long id) {
-        try {
-            locationRepository.deleteById(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public void deleteLocation(Long id, CopyService copyService) {
+        if (copyService.existsByLocation(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Não é possível excluir uma localização que está sendo utilizada por um item.");
         }
+        locationRepository.deleteById(id);
     }
-
 }

@@ -223,11 +223,6 @@ export default function CreateItem() {
             return
         }
 
-        if (itemProperties.length === 0) {
-            showNotification('Adicione pelo menos uma propriedade.', 'warning')
-            return
-        }
-
         const incompleteProperty = itemProperties.some(
             item =>
                 item.propertyId === null ||

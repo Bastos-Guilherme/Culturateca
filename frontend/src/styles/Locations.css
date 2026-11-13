@@ -1,0 +1,686 @@
+.locations-page {
+    min-height: 100%;
+    padding-bottom: 60px;
+    background-color: #f8f7f5;
+    color: #222;
+}
+
+.locations-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    text-align: left;
+    padding: 30px 45px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.locations-header h1 {
+    margin: 4px 0 5px;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.locations-header p {
+    max-width: 600px;
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.locations-back-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 15px;
+    background-color: #f5f3f0;
+    border: 1.5px solid #222;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.locations-back-button:hover {
+    background-color: #d7d0ff;
+}
+
+.locations-content {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 35px 45px;
+}
+
+/* OVERVIEW */
+
+.locations-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 35px;
+}
+
+.locations-overview-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 17px;
+    background-color: #fff;
+    border: 1.5px solid #222;
+    border-radius: 7px;
+    box-shadow: 3px 3px 0 #222;
+}
+
+.locations-overview-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    background-color: #e7e3ff;
+    border: 1px solid #222;
+    border-radius: 6px;
+    font-size: 19px;
+}
+
+.locations-overview-icon.coordinates {
+    background-color: #e0eee6;
+}
+
+.locations-overview-icon.hierarchy {
+    background-color: #fff3b9;
+}
+
+.locations-overview-card > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.locations-overview-card span {
+    color: #777;
+    font-size: 10px;
+}
+
+.locations-overview-card strong {
+    font-size: 22px;
+}
+
+/* TOOLBAR */
+
+.locations-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.locations-toolbar h2 {
+    margin: 5px 0 0;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.locations-add-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    background-color: #fff47a;
+    border: 1.5px solid #222;
+    border-radius: 5px;
+    box-shadow: 3px 3px 0 #222;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.locations-add-button:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 #222;
+}
+
+/* SEARCH */
+
+.locations-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 13px;
+    margin-bottom: 22px;
+    background-color: #fff;
+    border: 1.5px solid #333;
+    border-radius: 6px;
+}
+
+.locations-search > i {
+    color: #596c6d;
+}
+
+.locations-search input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.locations-search button {
+    padding: 5px;
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+}
+
+/* FORM */
+
+.locations-form {
+    padding: 22px;
+    margin-bottom: 28px;
+    background-color: #fff;
+    border: 2px solid #222;
+    border-radius: 9px;
+    box-shadow: 4px 4px 0 #222;
+}
+
+.locations-form-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.locations-form-heading h3 {
+    margin: 5px 0 0;
+    font-size: 20px;
+}
+
+.locations-form-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.locations-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.locations-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.locations-form-field.full-width,
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.locations-form-field label {
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.locations-form-field input,
+.locations-form-field select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 11px 12px;
+    background-color: #fff;
+    border: 1.5px solid #333;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+}
+
+.locations-form-field input:focus,
+.locations-form-field select:focus {
+    border-color: #596c6d;
+    box-shadow: 0 0 0 2px rgba(89, 108, 109, 0.12);
+}
+
+.locations-form-field small {
+    color: #777;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.locations-coordinate-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    margin-top: 5px;
+    background-color: #f5f3ff;
+    border: 1px solid #d8d1f3;
+    border-radius: 6px;
+    text-align: left;
+}
+
+.locations-coordinate-heading > i {
+    font-size: 21px;
+    color: #596c6d;
+}
+
+.locations-coordinate-heading > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.locations-coordinate-heading strong {
+    font-size: 12px;
+}
+
+.locations-coordinate-heading span {
+    font-size: 10px;
+    color: #777;
+}
+
+.locations-form-hint {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 14px 0 0;
+    color: #777;
+    font-size: 10px;
+}
+
+.locations-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 18px;
+    margin-top: 18px;
+    border-top: 1px solid #ddd;
+}
+
+.locations-cancel-button,
+.locations-save-button {
+    padding: 9px 14px;
+    border: 1.5px solid #333;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.locations-cancel-button {
+    background-color: #fff;
+}
+
+.locations-save-button {
+    background-color: #fff47a;
+    box-shadow: 2px 2px 0 #222;
+}
+
+.locations-save-button:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 #222;
+}
+
+/* LIST */
+
+.locations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.locations-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 16px;
+    background-color: #fff;
+    border: 1.5px solid #222;
+    border-radius: 8px;
+    box-shadow: 3px 3px 0 #222;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.locations-card:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 #222;
+}
+
+.locations-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    background-color: #e0eee6;
+    border: 1.5px solid #222;
+    border-radius: 7px;
+    font-size: 20px;
+}
+
+.locations-card-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.locations-card-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.locations-card-title strong {
+    overflow-wrap: anywhere;
+    font-size: 13px;
+}
+
+.locations-main-badge {
+    padding: 3px 7px;
+    background-color: #fff3b9;
+    border: 1px solid #d7c66b;
+    border-radius: 3px;
+    color: #695a17;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.locations-card-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 17px;
+}
+
+.locations-card-details span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #777;
+    font-size: 10px;
+}
+
+.locations-card-details i {
+    color: #596c6d;
+}
+
+.locations-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.locations-edit-button,
+.locations-delete-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background-color: #fff;
+    border: 1.5px solid #333;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.locations-edit-button:hover {
+    background-color: #e7e3ff;
+}
+
+.locations-delete-button:hover {
+    background-color: #f4dddd;
+}
+
+/* EMPTY STATE */
+
+.locations-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 55px 20px;
+    background-color: #fff;
+    border: 1.5px dashed #aaa;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.locations-empty > i {
+    margin-bottom: 12px;
+    color: #596c6d;
+    font-size: 35px;
+}
+
+.locations-empty h3 {
+    margin: 0 0 7px;
+    font-size: 17px;
+}
+
+.locations-empty p {
+    max-width: 400px;
+    margin: 0;
+    color: #777;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.locations-empty button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 18px;
+    padding: 9px 13px;
+    background-color: #fff47a;
+    border: 1.5px solid #222;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* FOOTER */
+
+.locations-footer {
+    margin-top: 18px;
+    text-align: right;
+    color: #777;
+    font-size: 10px;
+}
+
+.locations-loading {
+    padding: 50px;
+    text-align: center;
+    color: #555;
+}
+
+/* DELETE MODAL */
+
+.locations-delete-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.locations-delete-modal {
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    background: #fff;
+    border: 2px solid #252525;
+    box-shadow: 6px 6px 0 #252525;
+    text-align: center;
+}
+
+.locations-delete-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 18px;
+    background: #f8e1df;
+    border: 1px solid #252525;
+    border-radius: 50%;
+    color: #a33d36;
+    font-size: 22px;
+}
+
+.locations-delete-modal h2 {
+    margin-bottom: 12px;
+    font-family: 'EB Garamond', serif;
+    font-size: 28px;
+}
+
+.locations-delete-modal p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.locations-delete-warning {
+    color: #a33d36 !important;
+    font-size: 13px;
+}
+
+.locations-delete-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.locations-delete-actions button {
+    padding: 10px 18px;
+    border: 1px solid #252525;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.locations-delete-cancel {
+    background: #fff;
+    color: #252525;
+}
+
+.locations-delete-confirm {
+    background: #c96b62;
+    color: #fff;
+}
+
+.locations-delete-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* DISABLED */
+
+.locations-page button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+    .locations-header {
+        flex-direction: column;
+        padding: 25px;
+    }
+
+    .locations-content {
+        padding: 25px;
+    }
+
+    .locations-overview {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .locations-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .locations-add-button {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 450px) {
+    .locations-content {
+        padding: 20px 15px;
+    }
+
+    .locations-form {
+        padding: 15px;
+    }
+
+    .locations-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .locations-form-field.full-width,
+    .full-width {
+        grid-column: auto;
+    }
+
+    .locations-card {
+        gap: 9px;
+        padding: 10px;
+    }
+
+    .locations-card-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 17px;
+    }
+
+    .locations-card-details {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .locations-card-actions {
+        gap: 5px;
+    }
+
+    .locations-edit-button,
+    .locations-delete-button {
+        width: 30px;
+        height: 30px;
+    }
+
+    .locations-delete-modal {
+        padding: 25px 18px;
+    }
+
+    .locations-form-actions {
+        flex-wrap: wrap;
+    }
+}
