@@ -79,6 +79,7 @@ public class CuratorController {
             return curatorService.editCurator(
                     curator,
                     body.has("location"),
+                    body.has("phone"),
                     locationService);
         } catch (JacksonException e) {
             throw new RuntimeException("Erro ao processar dados do Curator", e);

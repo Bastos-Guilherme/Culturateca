@@ -299,6 +299,33 @@
     color: #a33;
 }
 
+.password-requirements {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.password-requirements small {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.password-requirements small.valid {
+    color: #198754;
+}
+
+.password-match {
+    display: block;
+    margin-top: 6px;
+    color: #198754;
+}
+
+.password-mismatch {
+    display: block;
+    margin-top: 6px;
+    color: #dc3545;
+}
+
 @media (max-width: 550px) {
 
     .create-curator-page {

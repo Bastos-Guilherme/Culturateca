@@ -21,6 +21,17 @@ public class CuratorServiceImpl implements CuratorService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    private void validatePhone(String phone) {
+        if (phone == null || phone.isBlank()) {
+            return;
+        }
+
+        if (!phone.matches("^\\(\\d{2}\\) \\d{4,5}-\\d{4}$")) {
+            throw new IllegalArgumentException(
+                    "Telefone deve estar no formato (11) 99999-9999.");
+        }
+    }
+
     @Override
     public List<Curator> findAllCurators() {
         try {
@@ -86,6 +97,8 @@ public class CuratorServiceImpl implements CuratorService {
                     "Name é necessário");
         }
 
+        validatePhone(curator.getPhone());
+
         if (curator.getPassword() == null || curator.getPassword().isBlank()) {
             throw new IllegalArgumentException(
                     "Password é necessária");
@@ -116,7 +129,11 @@ public class CuratorServiceImpl implements CuratorService {
     }
 
     @Override
-    public Curator editCurator(Curator curator, boolean locationWasSent, LocationService locationService) {
+    public Curator editCurator(
+            Curator curator,
+            boolean locationWasSent,
+            boolean phoneWasSent,
+            LocationService locationService) {
         try {
 
             if (curator.getId() == null) {
@@ -170,8 +187,12 @@ public class CuratorServiceImpl implements CuratorService {
                 existingCurator.setGender(curator.getGender());
             }
 
-            if (curator.getPhone() != null) {
-                existingCurator.setPhone(curator.getPhone());
+            if (phoneWasSent) {
+                validatePhone(curator.getPhone());
+                existingCurator.setPhone(
+                        curator.getPhone() == null || curator.getPhone().isBlank()
+                                ? null
+                                : curator.getPhone().trim());
             }
 
             if (curator.getIsPublic() != null) {
@@ -192,8 +213,7 @@ public class CuratorServiceImpl implements CuratorService {
 
             return curatorRepository.save(existingCurator);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw new RuntimeException("Erro ao atualizar curador: " + e.getMessage(), e);
         }
     }
 

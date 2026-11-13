@@ -9,6 +9,8 @@ import { useNotification } from '../context/NotificationContext'
 import '../styles/Settings.css'
 import DeleteCuratorModal from '../components/DeleteCuratorModal'
 
+import { formatPhone, validatePhone, validateEmail } from '../utils/formatters'
+
 export default function Settings() {
 
     const navigate = useNavigate()
@@ -64,7 +66,7 @@ export default function Settings() {
                 email: data.email,
                 name: data.name ?? '',
                 gender: data.gender ?? '',
-                phone: data.phone ?? '',
+                phone: formatPhone(data.phone ?? ''),
                 isPublic: data.isPublic ?? true,
                 bio: data.bio ?? '',
                 profilePicture: data.profilePicture ?? '',
@@ -110,13 +112,25 @@ export default function Settings() {
             return
         }
 
+        const normalizedEmail = formData.email.trim()
+
+        if (!validateEmail(normalizedEmail)) {
+            showNotification('Informe um e-mail válido.', 'error')
+            return
+        }
+
+        if (!validatePhone(formData.phone)) {
+            showNotification('Informe um telefone válido com DDD.', 'error')
+            return
+        }
+
         try {
             setSaving(true)
 
             const changes: UpdateCuratorData = {}
 
-            if (formData.email !== originalData.email) {
-                changes.email = formData.email
+            if (normalizedEmail !== originalData.email) {
+                changes.email = normalizedEmail
             }
 
             if (formData.name !== originalData.name) {
@@ -131,10 +145,7 @@ export default function Settings() {
             }
 
             if (formData.phone !== originalData.phone) {
-                changes.phone =
-                    formData.phone === ''
-                        ? null
-                        : formData.phone
+                changes.phone = formData.phone.trim() || null
             }
 
             if (formData.isPublic !== originalData.isPublic) {
@@ -348,6 +359,8 @@ export default function Settings() {
                                 <input
                                     type="email"
                                     value={formData.email}
+                                    placeholder="exemplo@email.com"
+                                    autoComplete="email"
                                     onChange={event =>
                                         handleChange('email', event.target.value)
                                     }
@@ -419,15 +432,23 @@ export default function Settings() {
 
                             {editing ? (
                                 <input
-                                    type="text"
+                                    type="tel"
                                     value={formData.phone}
+                                    placeholder="(11) 99999-9999"
+                                    maxLength={15}
+                                    autoComplete="tel"
                                     onChange={event =>
-                                        handleChange('phone', event.target.value)
+                                        handleChange(
+                                            'phone',
+                                            formatPhone(event.target.value)
+                                        )
                                     }
                                 />
                             ) : (
                                 <div className="settings-value">
-                                    {curator.phone || 'Não informado'}
+                                    {curator.phone
+                                        ? formatPhone(curator.phone)
+                                        : 'Não informado'}
                                 </div>
                             )}
                         </div>

@@ -18,7 +18,12 @@ public interface CuratorService {
 
     public Curator createVerifiedCurator(Curator curator, LocationService locationService);
 
-    Curator editCurator(Curator curator, boolean locationWasSent, LocationService locationService);
+    Curator editCurator(
+        Curator curator,
+        boolean locationWasSent,
+        boolean phoneWasSent,
+        LocationService locationService
+    );
 
     public void deleteCurator(Long id);
 

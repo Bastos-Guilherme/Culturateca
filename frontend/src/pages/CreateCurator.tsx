@@ -8,6 +8,8 @@ import { requestRegistrationCode, type RegisterCuratorData } from '../services/c
 
 import VerifyRegistrationModal from '../components/VerifyRegistrationModal.tsx'
 
+import { formatPhone, validatePhone, validateEmail } from '../utils/formatters'
+
 function CreateCurator() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -27,15 +29,43 @@ function CreateCurator() {
 
     const profilePicture = null
 
+    const [confirmPassword, setConfirmPassword] = useState('')
+
+
     async function submit(event: SyntheticEvent<HTMLFormElement>) {
         event.preventDefault()
 
+        const normalizedEmail = email.trim()
+
+        if (!validateEmail(normalizedEmail)) {
+            setError('Informe um e-mail válido.')
+            return
+        }
+
+        const requirements = validatePassword(password)
+        const passwordIsValid = Object.values(requirements).every(Boolean)
+
+        if (!passwordIsValid) {
+            setError('A senha não atende a todos os requisitos.')
+            return
+        }
+
+        if (password !== confirmPassword) {
+            setError('As senhas não coincidem.')
+            return
+        }
+
+        if (!validatePhone(phone ?? '')) {
+            setError('Informe um telefone válido com DDD.')
+            return
+        }
+
         const data: RegisterCuratorData = {
-            email: email.trim(),
+            email: normalizedEmail,
             password,
             name: name.trim(),
             gender,
-            phone,
+            phone: phone?.trim() || null,
             bio,
             isPublic: true,
             profilePicture,
@@ -69,6 +99,18 @@ function CreateCurator() {
         navigate('/login')
     }
 
+    function validatePassword(password: string) {
+        return {
+            minLength: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[^A-Za-z0-9\s]/.test(password)
+        }
+    }
+
+    const passwordRequirements = validatePassword(password)
+
     return (
         <main className="create-curator-page">
             <section className="create-curator-header">
@@ -91,10 +133,10 @@ function CreateCurator() {
                             type="email"
                             className="form-control"
                             id="email"
+                            placeholder="exemplo@email.com"
+                            autoComplete="email"
                             value={email}
-                            onChange={event =>
-                                setEmail(event.target.value)
-                            }
+                            onChange={event => setEmail(event.target.value)}
                             required
                             disabled={submitting}
                         />
@@ -108,12 +150,53 @@ function CreateCurator() {
                             className="form-control"
                             id="password"
                             value={password}
-                            onChange={event =>
-                                setPassword(event.target.value)
-                            }
+                            onChange={event => setPassword(event.target.value)}
+                            minLength={8}
                             required
                             disabled={submitting}
                         />
+                        <div className="password-requirements mt-2">
+                            <small className={passwordRequirements.minLength ? 'valid' : ''}>
+                                {passwordRequirements.minLength ? '✓' : '○'} Pelo menos 8 caracteres
+                            </small>
+                            <small className={passwordRequirements.uppercase ? 'valid' : ''}>
+                                {passwordRequirements.uppercase ? '✓' : '○'} Uma letra maiúscula
+                            </small>
+                            <small className={passwordRequirements.lowercase ? 'valid' : ''}>
+                                {passwordRequirements.lowercase ? '✓' : '○'} Uma letra minúscula
+                            </small>
+                            <small className={passwordRequirements.number ? 'valid' : ''}>
+                                {passwordRequirements.number ? '✓' : '○'} Um número
+                            </small>
+                            <small className={passwordRequirements.special ? 'valid' : ''}>
+                                {passwordRequirements.special ? '✓' : '○'} Um caractere especial
+                            </small>
+                        </div>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="confirmPassword" className="form-label">
+                            Confirmar senha *
+                        </label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="confirmPassword"
+                            value={confirmPassword}
+                            onChange={event => setConfirmPassword(event.target.value)}
+                            required
+                            disabled={submitting}
+                        />
+                        {confirmPassword && (
+                            <small className={
+                                password === confirmPassword
+                                    ? 'password-match'
+                                    : 'password-mismatch'
+                            }>
+                                {password === confirmPassword
+                                    ? '✓ As senhas coincidem'
+                                    : '✕ As senhas não coincidem'}
+                            </small>
+                        )}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">
@@ -167,10 +250,12 @@ function CreateCurator() {
                             type="tel"
                             className="form-control"
                             id="phone"
+                            placeholder="(11) 99999-9999"
                             value={phone ?? ''}
                             onChange={event =>
-                                setPhone(event.target.value || null)
+                                setPhone(formatPhone(event.target.value) || null)
                             }
+                            maxLength={15}
                             disabled={submitting}
                         />
                     </div>
