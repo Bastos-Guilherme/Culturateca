@@ -235,7 +235,8 @@
 
 .collection-card {
     background-color: #fff;
-
+    min-width: 0;
+    box-sizing: border-box;
     border: 2px solid #222;
     border-radius: 12px;
 
@@ -254,10 +255,24 @@
     border-bottom: 1px solid #ddd;
 }
 
+.collection-card-header > div:first-child {
+    min-width: 0;
+    flex: 1;
+}
+
 .collection-card-actions {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
+}
+
+.collection-card-actions .collection-new-item {
+    width: 220px;
+    min-width: 0;
+    box-sizing: border-box;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .collection-title {
@@ -506,7 +521,19 @@
     }
 
     .collection-items {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .collection-card-header {
+        align-items: flex-start;
+    }
+
+    .collection-card-actions {
+        flex-shrink: 1;
+    }
+
+    .collection-card-actions .collection-new-item {
+        width: 180px;
     }
 }
 
@@ -514,6 +541,8 @@
 
     .curator-header {
         flex-direction: column;
+        padding: 20px;
+        gap: 20px;
     }
 
     .curator-name-row {
@@ -524,6 +553,11 @@
     .curator-stats {
         flex-direction: row;
         align-self: flex-start;
+        padding: 0;
+    }
+
+    .curator-collections {
+        padding: 20px;
     }
 
     .collections-header {
@@ -532,10 +566,33 @@
         gap: 15px;
     }
 
+    .collection-card {
+        padding: 18px;
+    }
+
     .collection-card-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         gap: 15px;
+    }
+
+    .collection-card-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .collection-card-actions .collection-new-item,
+    .collection-card-actions .collection-button, 
+    .collection-filters button.collections-header-new-item {
+        min-width: 100%;
+        min-height: 45px;
+        height: auto;
+        box-sizing: border-box;
+        justify-content: center;
+        white-space: normal;
+        text-align: center;
+        padding: 10px;
     }
 
     .collection-items {
@@ -544,9 +601,22 @@
 
     .collection-filters {
         width: 100%;
+        flex-direction: column;
+        align-items: stretch;
     }
 
     .collection-filters button {
-        flex: 1;
+        width: 100%;
+        flex: none;
+        white-space: normal;
+    }
+
+    .collections-search {
+        gap: 8px;
+        padding: 0 10px;
+    }
+
+    .collections-search input {
+        font-size: 12px;
     }
 }

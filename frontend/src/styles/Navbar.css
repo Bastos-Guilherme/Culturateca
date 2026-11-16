@@ -152,6 +152,7 @@
   background: none;
   font-size: 26px;
   cursor: pointer;
+  display: none;
 }
 
 .menu-button {
@@ -183,6 +184,10 @@
   overflow: hidden;
   transition: width 0.25s ease;
   z-index: 999;
+}
+
+.sidebar-overlay {
+  display: none;
 }
 
 .sidebar.open {
@@ -231,12 +236,12 @@
 }
 
 .sidebar .feedback-link {
-    margin-top: auto;
-    margin-bottom: 4px;
+  margin-top: auto;
+  margin-bottom: 4px;
 }
 
-.sidebar nav > a:last-child {
-    margin-bottom: 15px;
+.sidebar nav>a:last-child {
+  margin-bottom: 15px;
 }
 
 .sidebar.open a,
@@ -279,4 +284,135 @@
 
 .sidebar-open .content {
   padding-left: 220px;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 60px;
+
+    padding: 0 55px;
+    justify-content: center;
+
+    z-index: 1003;
+  }
+
+  .logo {
+    font-size: 21px;
+    gap: 7px;
+  }
+
+  .sidebar-button {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1002;
+    display: block;
+  }
+
+  .user-menu {
+    right: 8px;
+  }
+
+  .sidebar {
+    width: 220px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 1001;
+    box-shadow: none;
+  }
+
+  .sidebar.open {
+    width: 220px;
+    transform: translateX(0);
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar a,
+  .sidebar .feedback-link,
+  .sidebar .sidebar-action {
+    width: calc(100% - 18px);
+  }
+
+  .sidebar span {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.4);
+
+    border: none;
+    cursor: pointer;
+
+    z-index: 1000;
+
+    animation: overlay-appear 0.2s ease;
+  }
+
+  @keyframes overlay-appear {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .content,
+.sidebar-open .content {
+    padding-left: 0;
+    padding-top: 60px;
+    width: 100%;
+}
+
+  .layout {
+    width: 100%;
+    overflow-x: clip;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .topbar {
+    height: 56px;
+  }
+
+  .logo {
+    font-size: 19px;
+  }
+
+  .user-menu {
+    height: 56px;
+    right: 5px;
+  }
+
+  .user-button {
+    width: 38px;
+    height: 38px;
+    font-size: 25px;
+  }
+
+  .sidebar-button {
+    left: 8px;
+    font-size: 24px;
+  }
+
+  .dropdown-menu {
+    right: -5px;
+    width: 220px;
+  }
 }

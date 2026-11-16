@@ -40,13 +40,31 @@ function Navbar() {
     logout()
     setLogoutModalOpen(false)
     setMenuOpen(false)
+    setSidebarOpen(false)
     navigate('/login')
+  }
+
+  function toggleSidebar() {
+    setSidebarOpen(previous => !previous)
+  }
+
+  function closeSidebar() {
+    setSidebarOpen(false)
   }
 
   return (
     <div className={`layout ${sidebarOpen ? 'sidebar-open' : ''}`}>
 
       <header className="topbar">
+        <button
+          className="sidebar-button"
+          onClick={toggleSidebar}
+          aria-label={sidebarOpen ? 'Fechar menu' : 'Abrir menu'}
+          aria-expanded={sidebarOpen}
+        >
+          <i className={`bi ${sidebarOpen ? 'bi-x-lg' : 'bi-list'}`}></i>
+        </button>
+
         <h1 className="logo" onClick={() => navigate('/')}>
           <i className="bi bi-archive"></i>
           Culturateca
@@ -63,35 +81,42 @@ function Navbar() {
           {menuOpen && (
             <div className="dropdown-menu">
               {!isAuthenticated && (
-                <button onClick={() => { navigate('/login'), setMenuOpen(!menuOpen) }}>
+                <button onClick={() => { navigate('/login'); setMenuOpen(false) }}>
                   <i className="bi bi-box-arrow-in-right"></i>
                   Login
                 </button>
               )}
 
               {isAuthenticated && (
-                <button onClick={() => { navigate('/settings'), setMenuOpen(!menuOpen) }}>
+                <button onClick={() => { navigate('/settings'); setMenuOpen(false) }}>
                   <i className="bi bi-gear"></i>
                   Configurações
                 </button>
               )}
 
               {isAuthenticated && (
-                <button onClick={() => { setLogoutModalOpen(true), setMenuOpen(!menuOpen) }}>
+                <button onClick={() => { setLogoutModalOpen(true); setMenuOpen(false) }}>
                   <i className="bi bi-box-arrow-in-right"></i>
                   Logout
                 </button>
               )}
-
             </div>
           )}
         </div>
       </header>
+      {sidebarOpen && (
+        <button
+          className="sidebar-overlay"
+          onClick={closeSidebar}
+          aria-label="Fechar menu"
+        />
+      )}
 
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <button
           className="menu-button"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          onClick={toggleSidebar}
+          aria-label="Expandir ou recolher menu"
         >
           <i className="bi bi-list"></i>
         </button>
@@ -99,30 +124,49 @@ function Navbar() {
         <nav>
           {isAuthenticated && (
             <>
-              <NavLink to="/curator" className={({ isActive }) => (isActive ? 'active' : '')}>
+              <NavLink
+                to="/curator"
+                onClick={closeSidebar}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
                 <i className="bi bi-person-rolodex"></i>
                 <span>Home</span>
               </NavLink>
 
-              <NavLink to="/categories" className={({ isActive }) => (isActive ? 'active' : '')}>
+              <NavLink
+                to="/categories"
+                onClick={closeSidebar}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
                 <i className="bi bi-back"></i>
                 <span>Categorias</span>
               </NavLink>
 
-              <NavLink to="/locations" className={({ isActive }) => (isActive ? 'active' : '')}>
+              <NavLink
+                to="/locations"
+                onClick={closeSidebar}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
                 <i className="bi bi-geo-alt"></i>
                 <span>Localizações</span>
               </NavLink>
 
               <button
                 className="sidebar-action"
-                onClick={() => setShowAddCollectionModal(true)}
+                onClick={() => {
+                  setShowAddCollectionModal(true)
+                  closeSidebar()
+                }}
               >
                 <i className="bi bi-collection"></i>
                 <span>Criar Coleção</span>
               </button>
 
-              <NavLink to="/createItem" className={({ isActive }) => (isActive ? 'active' : '')}>
+              <NavLink
+                to="/createItem"
+                onClick={closeSidebar}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
                 <i className="bi bi-plus-circle"></i>
                 <span>Criar Item</span>
               </NavLink>
@@ -134,6 +178,7 @@ function Navbar() {
             rel="noopener noreferrer"
             className="feedback-link"
             title="Enviar feedback"
+            onClick={closeSidebar}
           >
             <i className="bi bi-chat-square-text"></i>
             <span>Feedback</span>
@@ -141,6 +186,7 @@ function Navbar() {
           {isAuthenticated && (
             <NavLink
               to="/settings"
+              onClick={closeSidebar}
               className={({ isActive }) => (isActive ? 'active' : '')}
             >
               <i className="bi bi-gear"></i>

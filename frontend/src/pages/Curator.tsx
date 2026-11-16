@@ -22,7 +22,7 @@ function CuratorPage() {
     const [showAddCollectionModal, setShowAddCollectionModal] = useState(false)
 
     const [searchTerm, setSearchTerm] = useState('')
-    const [collectionSort, setCollectionSort] = useState<'all' | 'largest' | 'smallest'>('all')
+    const [collectionSort, setCollectionSort] = useState<'all' | 'largest' | 'smallest'>('largest')
 
     const navigate = useNavigate()
 
@@ -252,13 +252,6 @@ function CuratorPage() {
                             className="collection-new-item collections-header-new-item"
                             onClick={() => setShowAddCollectionModal(true)}
                         />
-                        <button
-                            type="button"
-                            className={collectionSort === 'all' ? 'active' : ''}
-                            onClick={() => setCollectionSort('all')}
-                        >
-                            Todas as coleções
-                        </button>
                         <button
                             type="button"
                             className={collectionSort === 'largest' ? 'active' : ''}

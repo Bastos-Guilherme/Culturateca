@@ -10,6 +10,7 @@ import '../styles/Settings.css'
 import DeleteCuratorModal from '../components/DeleteCuratorModal'
 
 import { formatPhone, validatePhone, validateEmail } from '../utils/formatters'
+import AddLocationModal from '../components/AddLocationModal'
 
 export default function Settings() {
 
@@ -26,6 +27,7 @@ export default function Settings() {
     const [savingEmailMfa, setSavingEmailMfa] = useState(false)
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showAddLocationModal, setShowAddLocationModal] = useState(false)
     const [deleting, setDeleting] = useState(false)
 
     const [formData, setFormData] = useState({
@@ -105,6 +107,20 @@ export default function Settings() {
         formData.bio !== originalData.bio ||
         formData.profilePicture !== originalData.profilePicture ||
         formData.locationId !== originalData.locationId
+
+    function handleLocationCreated(location: Location) {
+        setLocations(previous => {
+            if (previous.some(item => item.id === location.id)) {
+                return previous
+            }
+
+            return [...previous, location]
+        })
+
+        handleChange('locationId', location.id)
+
+        setShowAddLocationModal(false)
+    }
 
     async function handleSave() {
 
@@ -513,30 +529,35 @@ export default function Settings() {
                             </label>
 
                             {editing ? (
-                                <select
-                                    value={formData.locationId ?? ''}
-                                    onChange={event =>
-                                        handleChange(
-                                            'locationId',
-                                            event.target.value === ''
-                                                ? null
-                                                : Number(event.target.value)
-                                        )
-                                    }
-                                >
-                                    <option value="">
-                                        Nenhuma localização
-                                    </option>
-
-                                    {locations.map(location => (
-                                        <option
-                                            key={location.id}
-                                            value={location.id}
-                                        >
-                                            {location.name}
+                                <>
+                                    <select
+                                        value={formData.locationId ?? ''}
+                                        onChange={event =>
+                                            handleChange(
+                                                'locationId',
+                                                event.target.value === ''
+                                                    ? null
+                                                    : Number(event.target.value)
+                                            )
+                                        }
+                                    >
+                                        <option value="">
+                                            Nenhuma localização
                                         </option>
-                                    ))}
-                                </select>
+
+                                        {locations.map(location => (
+                                            <option
+                                                key={location.id}
+                                                value={location.id}
+                                            >
+                                                {location.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <p className="settings-add-location" onClick={() => setShowAddLocationModal(true)}>
+                                        + Adicionar Localização
+                                    </p>
+                                </>
                             ) : (
                                 <div className="settings-value">
                                     {locations.find(
@@ -604,6 +625,15 @@ export default function Settings() {
                 onDelete={handleDelete}
             />
             {deleting && <span className="deleting-text">Saindo...</span>}
+
+            {showAddLocationModal && (
+                <AddLocationModal
+                    locations={locations}
+                    curatorId={curator.id}
+                    onClose={() => setShowAddLocationModal(false)}
+                    onCreated={handleLocationCreated}
+                />
+            )}
         </div>
     )
 }
