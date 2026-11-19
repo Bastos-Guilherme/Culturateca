@@ -3,12 +3,15 @@ package com.social.culturateca.service.implementation;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.social.culturateca.model.Curator;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.model.repository.PropertyRepository;
 import com.social.culturateca.service.PropertyService;
+import com.social.culturateca.service.CopyService;
 import com.social.culturateca.service.CuratorService;
 
 @Service
@@ -131,11 +134,13 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public void deleteProperty(Long id) {
-        try {
-            propertyRepository.deleteById(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public void deleteProperty(Long id, CopyService copyService) {
+        if (copyService.existsByCategory(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Não é possível excluir uma propriedade vinculada a cópias.");
         }
+
+        propertyRepository.deleteById(id);
     }
 }

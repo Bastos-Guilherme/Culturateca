@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { NavLink, useNavigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import '../styles/Navbar.css'
@@ -14,6 +14,9 @@ function Navbar() {
   const [collections, setCollections] = useState<Collection[]>([])
   const [showAddCollectionModal, setShowAddCollectionModal] = useState(false)
   const [curatorEmail, setCuratorEmail] = useState('')
+
+  const sidebarRef = useRef<HTMLElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
 
   const navigate = useNavigate()
   const { logout, isAuthenticated } = useAuth()
@@ -35,6 +38,33 @@ function Navbar() {
 
     loadData()
   }, [isAuthenticated])
+
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      const target = event.target as Node
+
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(target)
+      ) {
+        setMenuOpen(false)
+      }
+
+      if (
+        window.innerWidth <= 768 &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(target)
+      ) {
+        setSidebarOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
 
   function handleLogout() {
     logout()
@@ -70,7 +100,7 @@ function Navbar() {
           Culturateca
         </h1>
 
-        <div className="user-menu">
+        <div className="user-menu" ref={userMenuRef}>
           <button
             className="user-button"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -112,7 +142,10 @@ function Navbar() {
         />
       )}
 
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <aside
+        ref={sidebarRef}
+        className={`sidebar ${sidebarOpen ? 'open' : ''}`}
+      >
         <button
           className="menu-button"
           onClick={toggleSidebar}
@@ -140,6 +173,15 @@ function Navbar() {
               >
                 <i className="bi bi-back"></i>
                 <span>Categorias</span>
+              </NavLink>
+
+              <NavLink
+                to="/properties"
+                onClick={closeSidebar}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                <i className="bi bi-p-square"></i>
+                <span>Propriedades</span>
               </NavLink>
 
               <NavLink

@@ -102,6 +102,11 @@ public class CopyServiceImpl implements CopyService {
     }
 
     @Override
+    public boolean existsByProperty(Long propertyId) {
+        return copyRepository.existsByPropertyId(propertyId);
+    }
+
+    @Override
     @Transactional
     public Copy createCopy(
             Copy copy,

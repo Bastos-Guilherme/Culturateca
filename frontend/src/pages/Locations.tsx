@@ -13,6 +13,7 @@ import { getCurrentCurator } from '../services/curatorService'
 import { useNotification } from '../context/NotificationContext'
 
 import '../styles/Locations.css'
+import DeleteCheckModal from '../components/DeleteCheckModal'
 
 export default function Locations() {
     const navigate = useNavigate()
@@ -677,46 +678,13 @@ export default function Locations() {
                 </div>
 
                 {locationToDelete && (
-                    <div className="locations-delete-overlay">
-                        <div className="locations-delete-modal">
-                            <div className="locations-delete-icon">
-                                <i className="bi bi-geo-alt"></i>
-                            </div>
-
-                            <h2>Excluir localização?</h2>
-
-                            <p>
-                                Tem certeza de que deseja excluir a localização
-                                <strong> "{locationToDelete.name}"</strong>?
-                            </p>
-
-                            <p className="locations-delete-warning">
-                                Essa ação não poderá ser desfeita.
-                            </p>
-
-                            <div className="locations-delete-actions">
-                                <button
-                                    type="button"
-                                    className="locations-delete-cancel"
-                                    onClick={() => setLocationToDelete(null)}
-                                    disabled={deletingId !== null}
-                                >
-                                    Cancelar
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="locations-delete-confirm"
-                                    onClick={() => handleDelete(locationToDelete)}
-                                    disabled={deletingId === locationToDelete.id}
-                                >
-                                    {deletingId === locationToDelete.id
-                                        ? 'Excluindo...'
-                                        : 'Excluir localização'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <DeleteCheckModal
+                        itemName={locationToDelete.name}
+                        itemType="localização"
+                        deleting={deletingId === locationToDelete.id}
+                        onCancel={() => setLocationToDelete(null)}
+                        onConfirm={() => handleDelete(locationToDelete)}
+                    />
                 )}
             </main>
         </div>

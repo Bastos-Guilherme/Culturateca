@@ -23,17 +23,26 @@ public interface CopyRepository extends JpaRepository<Copy, Long> {
     boolean existsByLocation_Id(Long locationId);
 
     @Query(value = """
-        select *
-        from copy
-        where jsonb_exists(property, CAST(:propertyId AS text))
-        """, nativeQuery = true)
+            SELECT EXISTS (
+                SELECT 1
+                FROM copy c
+                WHERE jsonb_exists(c.property, CAST(:propertyId AS TEXT))
+            )
+            """, nativeQuery = true)
+    boolean existsByPropertyId(@Param("propertyId") Long propertyId);
+
+    @Query(value = """
+            select *
+            from copy
+            where jsonb_exists(property, CAST(:propertyId AS text))
+            """, nativeQuery = true)
     List<Copy> findAllByProperty(@Param("propertyId") Long propertyId);
 
     @Modifying
     @Query(value = """
-        DELETE FROM collection_copy
-        WHERE copy = :copyId
-        """, nativeQuery = true)
+            DELETE FROM collection_copy
+            WHERE copy = :copyId
+            """, nativeQuery = true)
     void deleteCollectionLinksByCopyId(@Param("copyId") Long copyId);
 
 }

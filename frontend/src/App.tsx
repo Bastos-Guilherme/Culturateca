@@ -13,6 +13,7 @@ import CreateItem from './pages/CreateItem'
 import InitialPage from './pages/InitialPage'
 import Categories from './pages/Categories'
 import Locations from './pages/Locations'
+import Properties from './pages/Properties'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/createItem" element={<CreateItem />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/locations" element={<Locations />} />
+          <Route path="/properties" element={<Properties />} />
           <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         </Route>
       </Routes>

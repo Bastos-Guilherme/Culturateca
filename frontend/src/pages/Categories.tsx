@@ -13,6 +13,7 @@ import { getCurrentCurator } from '../services/curatorService'
 import { useNotification } from '../context/NotificationContext'
 
 import '../styles/Categories.css'
+import DeleteCheckModal from '../components/DeleteCheckModal'
 
 export default function Categories() {
     const navigate = useNavigate()
@@ -404,43 +405,13 @@ export default function Categories() {
                 </div>
 
                 {categoryToDelete && (
-                    <div className="delete-modal-overlay">
-                        <div className="delete-modal">
-                            <div className="delete-modal-icon">
-                                <i className="bi bi-trash"></i>
-                            </div>
-
-                            <h2>Excluir categoria?</h2>
-
-                            <p>
-                                Tem certeza de que deseja excluir a categoria
-                                <strong> "{categoryToDelete.name}"</strong>?
-                            </p>
-
-                            <p className="delete-modal-warning">
-                                Essa ação não poderá ser desfeita.
-                            </p>
-
-                            <div className="delete-modal-actions">
-                                <button
-                                    className="delete-modal-cancel"
-                                    onClick={() => setCategoryToDelete(null)}
-                                >
-                                    Cancelar
-                                </button>
-
-                                <button
-                                    className="delete-modal-confirm"
-                                    onClick={() => handleDelete(categoryToDelete)}
-                                    disabled={deletingId === categoryToDelete.id}
-                                >
-                                    {deletingId === categoryToDelete.id
-                                        ? 'Excluindo...'
-                                        : 'Excluir categoria'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <DeleteCheckModal
+                        itemName={categoryToDelete.name}
+                        itemType="categoria"
+                        deleting={deletingId === categoryToDelete.id}
+                        onCancel={() => setCategoryToDelete(null)}
+                        onConfirm={() => handleDelete(categoryToDelete)}
+                    />
                 )}
             </main>
         </div>

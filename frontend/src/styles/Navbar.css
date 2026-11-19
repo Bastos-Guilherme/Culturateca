@@ -387,10 +387,6 @@
 
 @media (max-width: 480px) {
 
-  .topbar {
-    height: 56px;
-  }
-
   .logo {
     font-size: 19px;
   }

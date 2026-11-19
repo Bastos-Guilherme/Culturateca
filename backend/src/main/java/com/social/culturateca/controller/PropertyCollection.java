@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.social.culturateca.model.Property;
 import com.social.culturateca.service.CuratorService;
 import com.social.culturateca.service.PropertyService;
+import com.social.culturateca.service.CopyService;
 
 @RestController
 @RequestMapping("/property")
@@ -25,6 +26,9 @@ public class PropertyCollection {
 
     @Autowired
     CuratorService curatorService;
+
+    @Autowired
+    CopyService copyService;
 
     @GetMapping
     public List<Property> getAllProperty() {
@@ -58,6 +62,6 @@ public class PropertyCollection {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
-        propertyService.deleteProperty(id);
+        propertyService.deleteProperty(id, copyService);
     }
 }

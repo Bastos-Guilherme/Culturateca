@@ -19,5 +19,5 @@ public interface PropertyService {
 
     public Property editProperty(Property property, CuratorService curatorService);
     
-    public void deleteProperty(Long id);
+    public void deleteProperty(Long id, CopyService copyService);
 }
