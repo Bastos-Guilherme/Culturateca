@@ -34,6 +34,9 @@ export default function Properties() {
     const [showForm, setShowForm] = useState(false)
     const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null)
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const propertiesPerPage = 10
+
     useEffect(() => {
         async function loadProperties() {
             try {
@@ -57,6 +60,10 @@ export default function Properties() {
         loadProperties()
     }, [])
 
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm])
+
     const filteredProperties = useMemo(() => {
         const normalizedSearch = searchTerm.trim().toLowerCase()
 
@@ -66,6 +73,15 @@ export default function Properties() {
             )
             .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
     }, [properties, searchTerm])
+
+    const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage)
+
+    const startIndex = (currentPage - 1) * propertiesPerPage
+
+    const currentProperties = filteredProperties.slice(
+        startIndex,
+        startIndex + propertiesPerPage
+    )
 
     function openCreateForm() {
         setEditingProperty(null)
@@ -347,7 +363,7 @@ export default function Properties() {
 
                 <section className="properties-list">
                     {filteredProperties.length > 0 ? (
-                        filteredProperties.map(property => (
+                        currentProperties.map(property => (
                             <article
                                 className="properties-card"
                                 key={property.id}
@@ -413,11 +429,43 @@ export default function Properties() {
                             )}
                         </div>
                     )}
+                    {totalPages > 1 && (
+                        <div className="properties-pagination">
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage(previous => previous - 1)}
+                                disabled={currentPage === 1}
+                                aria-label="Página anterior"
+                            >
+                                <i className="bi bi-chevron-left"></i>
+                            </button>
+
+                            {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+                                <button
+                                    key={page}
+                                    type="button"
+                                    className={currentPage === page ? 'active' : ''}
+                                    onClick={() => setCurrentPage(page)}
+                                >
+                                    {page}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage(previous => previous + 1)}
+                                disabled={currentPage === totalPages}
+                                aria-label="Próxima página"
+                            >
+                                <i className="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    )}
                 </section>
 
                 <div className="properties-footer">
-                    Exibindo {filteredProperties.length} de {properties.length}{' '}
-                    {properties.length === 1
+                    Exibindo {currentProperties.length} de {filteredProperties.length}{' '}
+                    {filteredProperties.length === 1
                         ? 'propriedade'
                         : 'propriedades'}
                 </div>

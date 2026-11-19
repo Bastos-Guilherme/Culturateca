@@ -36,6 +36,9 @@ export default function Locations() {
     const [deletingId, setDeletingId] = useState<number | null>(null)
     const [showForm, setShowForm] = useState(false)
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const locationsPerPage = 10
+
     useEffect(() => {
         async function loadLocations() {
             try {
@@ -59,6 +62,10 @@ export default function Locations() {
         loadLocations()
     }, [])
 
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm])
+
     const filteredLocations = useMemo(() => {
         const normalizedSearch = searchTerm.trim().toLowerCase()
 
@@ -68,6 +75,17 @@ export default function Locations() {
             )
             .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
     }, [locations, searchTerm])
+
+    const totalPages = Math.ceil(
+        filteredLocations.length / locationsPerPage
+    )
+
+    const startIndex = (currentPage - 1) * locationsPerPage
+
+    const currentLocations = filteredLocations.slice(
+        startIndex,
+        startIndex + locationsPerPage
+    )
 
     const locationsWithCoordinates = useMemo(() => {
         return locations.filter(location =>
@@ -573,7 +591,7 @@ export default function Locations() {
 
                 <section className="locations-list">
                     {filteredLocations.length > 0 ? (
-                        filteredLocations.map(location => (
+                        currentLocations.map(location => (
                             <article
                                 className="locations-card"
                                 key={location.id}
@@ -668,11 +686,46 @@ export default function Locations() {
                             )}
                         </div>
                     )}
+                    {totalPages > 1 && (
+                        <div className="locations-pagination">
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage(previous => previous - 1)}
+                                disabled={currentPage === 1}
+                                aria-label="Página anterior"
+                            >
+                                <i className="bi bi-chevron-left"></i>
+                            </button>
+
+                            {Array.from(
+                                { length: totalPages },
+                                (_, index) => index + 1
+                            ).map(page => (
+                                <button
+                                    key={page}
+                                    type="button"
+                                    className={currentPage === page ? 'active' : ''}
+                                    onClick={() => setCurrentPage(page)}
+                                >
+                                    {page}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage(previous => previous + 1)}
+                                disabled={currentPage === totalPages}
+                                aria-label="Próxima página"
+                            >
+                                <i className="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    )}
                 </section>
 
                 <div className="locations-footer">
-                    Exibindo {filteredLocations.length} de {locations.length}{' '}
-                    {locations.length === 1
+                    Exibindo {currentLocations.length} de {filteredLocations.length}{' '}
+                    {filteredLocations.length === 1
                         ? 'localização'
                         : 'localizações'}
                 </div>

@@ -32,6 +32,9 @@ export default function Categories() {
     const [showForm, setShowForm] = useState(false)
     const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null)
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const categoriesPerPage = 10
+
     useEffect(() => {
         async function loadCategories() {
             try {
@@ -54,6 +57,10 @@ export default function Categories() {
         loadCategories()
     }, [])
 
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm])
+
     const filteredCategories = useMemo(() => {
         const normalizedSearch = searchTerm.trim().toLowerCase()
 
@@ -63,6 +70,15 @@ export default function Categories() {
             )
             .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
     }, [categories, searchTerm])
+
+    const totalPages = Math.ceil(filteredCategories.length / categoriesPerPage)
+
+    const startIndex = (currentPage - 1) * categoriesPerPage
+
+    const currentCategories = filteredCategories.slice(
+        startIndex,
+        startIndex + categoriesPerPage
+    )
 
     function openCreateForm() {
         setEditingCategory(null)
@@ -331,7 +347,7 @@ export default function Categories() {
 
                 <section className="categories-list">
                     {filteredCategories.length > 0 ? (
-                        filteredCategories.map(category => (
+                        currentCategories.map(category => (
                             <article
                                 className="categories-card"
                                 key={category.id}
@@ -397,11 +413,43 @@ export default function Categories() {
                             )}
                         </div>
                     )}
+                    {totalPages > 1 && (
+                        <div className="categories-pagination">
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage(previous => previous - 1)}
+                                disabled={currentPage === 1}
+                                aria-label="Página anterior"
+                            >
+                                <i className="bi bi-chevron-left"></i>
+                            </button>
+
+                            {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+                                <button
+                                    key={page}
+                                    type="button"
+                                    className={currentPage === page ? 'active' : ''}
+                                    onClick={() => setCurrentPage(page)}
+                                >
+                                    {page}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage(previous => previous + 1)}
+                                disabled={currentPage === totalPages}
+                                aria-label="Próxima página"
+                            >
+                                <i className="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    )}
                 </section>
 
                 <div className="categories-footer">
-                    Exibindo {filteredCategories.length} de {categories.length}{' '}
-                    {categories.length === 1 ? 'categoria' : 'categorias'}
+                    Exibindo {currentCategories.length} de {filteredCategories.length}{' '}
+                    {filteredCategories.length === 1 ? 'categoria' : 'categorias'}
                 </div>
 
                 {categoryToDelete && (

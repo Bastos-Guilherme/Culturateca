@@ -42,6 +42,9 @@ function CollectionPage() {
 
     const [actionError, setActionError] = useState('')
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const copiesPerPage = 6
+
     const [loading, setLoading] = useState(true)
 
     const loadCollection = useCallback(async () => {
@@ -140,6 +143,10 @@ function CollectionPage() {
         loadCollection()
     }, [loadCollection])
 
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm])
+
     async function handleCopySaved(updatedCopy: Copy) {
         setCopies(current =>
             current.map(copy =>
@@ -194,6 +201,10 @@ function CollectionPage() {
             ? categories[copy.category.id]
             : null
 
+        const location = copy.location
+            ? locations[copy.location.id]
+            : null
+
         const search = searchTerm.trim().toLowerCase()
 
         if (!search) return true
@@ -209,6 +220,7 @@ function CollectionPage() {
             copy.name,
             canonic?.name,
             category?.name,
+            location?.name,
             ...propertyValues
         ]
 
@@ -216,6 +228,23 @@ function CollectionPage() {
             String(value ?? '').toLowerCase().includes(search)
         )
     })
+
+    const totalPages = Math.ceil(filteredCopies.length / copiesPerPage)
+
+    const startIndex = (currentPage - 1) * copiesPerPage
+
+    const currentCopies = filteredCopies.slice(
+        startIndex,
+        startIndex + copiesPerPage
+    )
+
+    useEffect(() => {
+        if (totalPages === 0) {
+            setCurrentPage(1)
+        } else if (currentPage > totalPages) {
+            setCurrentPage(totalPages)
+        }
+    }, [filteredCopies.length, currentPage, totalPages])
 
     async function handleUpdateCollectionName() {
         const name = newCollectionName.trim()
@@ -440,7 +469,7 @@ function CollectionPage() {
                     </div>
                 ) : (
                     <div className="collection-grid">
-                        {filteredCopies.map(copy => {
+                        {currentCopies.map(copy => {
                             const canonic = copy.canonic
                                 ? canonics[copy.canonic.id]
                                 : null
@@ -568,6 +597,39 @@ function CollectionPage() {
                                 </article>
                             )
                         })}
+
+                    </div>
+                )}
+                {totalPages > 1 && (
+                    <div className="collection-pagination">
+                        <button
+                            type="button"
+                            onClick={() => setCurrentPage(previous => previous - 1)}
+                            disabled={currentPage === 1}
+                            aria-label="Página anterior"
+                        >
+                            <i className="bi bi-chevron-left" />
+                        </button>
+
+                        {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+                            <button
+                                key={page}
+                                type="button"
+                                className={currentPage === page ? 'active' : ''}
+                                onClick={() => setCurrentPage(page)}
+                            >
+                                {page}
+                            </button>
+                        ))}
+
+                        <button
+                            type="button"
+                            onClick={() => setCurrentPage(previous => previous + 1)}
+                            disabled={currentPage === totalPages}
+                            aria-label="Próxima página"
+                        >
+                            <i className="bi bi-chevron-right" />
+                        </button>
                     </div>
                 )}
             </section>

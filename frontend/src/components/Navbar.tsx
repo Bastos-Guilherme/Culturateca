@@ -17,6 +17,7 @@ function Navbar() {
 
   const sidebarRef = useRef<HTMLElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
+  const sidebarButtonRef = useRef<HTMLButtonElement>(null)
 
   const navigate = useNavigate()
   const { logout, isAuthenticated } = useAuth()
@@ -53,7 +54,8 @@ function Navbar() {
       if (
         window.innerWidth <= 768 &&
         sidebarRef.current &&
-        !sidebarRef.current.contains(target)
+        !sidebarRef.current.contains(target) &&
+        !sidebarButtonRef.current?.contains(target)
       ) {
         setSidebarOpen(false)
       }
@@ -87,6 +89,7 @@ function Navbar() {
 
       <header className="topbar">
         <button
+          ref={sidebarButtonRef}
           className="sidebar-button"
           onClick={toggleSidebar}
           aria-label={sidebarOpen ? 'Fechar menu' : 'Abrir menu'}

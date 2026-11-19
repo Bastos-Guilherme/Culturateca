@@ -24,6 +24,9 @@ function CuratorPage() {
     const [searchTerm, setSearchTerm] = useState('')
     const [collectionSort, setCollectionSort] = useState<'all' | 'largest' | 'smallest'>('largest')
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const collectionsPerPage = 5
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -107,6 +110,10 @@ function CuratorPage() {
         loadProfile()
     }, [])
 
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm, collectionSort])
+
     function handleCollectionCreated(collection: Collection) {
         setCollections(previous => {
             const alreadyExists = previous.some(
@@ -175,6 +182,17 @@ function CuratorPage() {
 
         return 0
     })
+
+    const totalPages = Math.ceil(
+        filteredCollections.length / collectionsPerPage
+    )
+
+    const startIndex = (currentPage - 1) * collectionsPerPage
+
+    const currentCollections = filteredCollections.slice(
+        startIndex,
+        startIndex + collectionsPerPage
+    )
 
     if (loading) {
         return (
@@ -303,7 +321,7 @@ function CuratorPage() {
                     </div>
                 ) : (
                     <div className="collections-list">
-                        {filteredCollections.map(collection => (
+                        {currentCollections.map(collection => (
                             <div className="collection-card" key={collection.id}>
                                 <div className="collection-card-header">
                                     <div>
@@ -360,6 +378,38 @@ function CuratorPage() {
                                 )}
                             </div>
                         ))}
+                        {totalPages > 1 && (
+                            <div className="collections-pagination">
+                                <button
+                                    type="button"
+                                    onClick={() => setCurrentPage(previous => previous - 1)}
+                                    disabled={currentPage === 1}
+                                    aria-label="Página anterior"
+                                >
+                                    <i className="bi bi-chevron-left"></i>
+                                </button>
+
+                                {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+                                    <button
+                                        key={page}
+                                        type="button"
+                                        className={currentPage === page ? 'active' : ''}
+                                        onClick={() => setCurrentPage(page)}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+
+                                <button
+                                    type="button"
+                                    onClick={() => setCurrentPage(previous => previous + 1)}
+                                    disabled={currentPage === totalPages}
+                                    aria-label="Próxima página"
+                                >
+                                    <i className="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </section>
