@@ -57,43 +57,41 @@ public class CollectionServiceImpl implements CollectionService {
 
   @Override
   public void deleteCollection(Long id) {
-    try {
-      collectionRepository.deleteById(id);
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
+    Collection collection = collectionRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Coleção não encontrada"));
+
+    if (collection.getCopies() != null && !collection.getCopies().isEmpty()) {
+      throw new RuntimeException("Não é possível excluir uma coleção que possui cópias vinculadas.");
     }
+
+    collectionRepository.delete(collection);
   }
 
   @Override
   public Collection editCollection(Collection collection, CuratorService curatorService) {
-    try {
-      if (collection.getId() == null) {
-        throw new RuntimeException("ID não pode ser nulo");
-      }
-
-      if (collectionRepository.findById(collection.getId()).isEmpty()) {
-        throw new RuntimeException("Collection não encontrada");
-      }
-
-      Curator curator = curatorService.findById(collection.getCurator().getId());
-      if (curator == null) {
-        throw new RuntimeException("Curator não encontrado");
-      }
-      collection.setCurator(curator);
-
-      if (BLACKLIST.contains(collection.getName().toLowerCase())) {
-        throw new RuntimeException("Nome de coleção não permitido");
-      }
-
-      if (collection.getIsPublic() == null) {
-        collection.setIsPublic(true);
-      }
-
-      return collectionRepository.save(collection);
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      return null;
+    if (collection.getId() == null) {
+      throw new RuntimeException("ID não pode ser nulo");
     }
+
+    if (collectionRepository.findById(collection.getId()).isEmpty()) {
+      throw new RuntimeException("Collection não encontrada");
+    }
+
+    Curator curator = curatorService.findById(collection.getCurator().getId());
+    if (curator == null) {
+      throw new RuntimeException("Curator não encontrado");
+    }
+    collection.setCurator(curator);
+
+    if (BLACKLIST.contains(collection.getName().toLowerCase())) {
+      throw new RuntimeException("Nome de coleção não permitido");
+    }
+
+    if (collection.getIsPublic() == null) {
+      collection.setIsPublic(true);
+    }
+
+    return collectionRepository.save(collection);
   }
 
   @Override

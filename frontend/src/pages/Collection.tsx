@@ -1,13 +1,18 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { getCollectionById, type Collection } from '../services/collectionService'
+import { getCollectionById, type Collection, updateCollection, deleteCollection } from '../services/collectionService'
 import { getCopyById, type Copy } from '../services/copyService'
 import { getCanonicById, type Canonic } from '../services/canonicService'
 import { getLocationById, type Location } from '../services/locationService'
 import { getAllProperty, type Property } from '../services/propertyService'
 import { getAllCategory, type Category } from '../services/categoryService'
 import EditCopyModal from '../components/EditCopyModal'
+
+import { deleteCopy } from '../services/copyService'
+import { getCurrentCurator } from '../services/curatorService'
+
+import DeleteCheckModal from '../components/DeleteCheckModal'
 
 import '../styles/Collection.css'
 
@@ -24,6 +29,18 @@ function CollectionPage() {
     const [categories, setCategories] = useState<Record<number, Category>>({})
     const [editingCopy, setEditingCopy] = useState<Copy | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
+
+    const [editingCollectionName, setEditingCollectionName] = useState(false)
+    const [newCollectionName, setNewCollectionName] = useState('')
+
+    const [showDeleteCollectionModal, setShowDeleteCollectionModal] = useState(false)
+    const [showDeleteCopiesModal, setShowDeleteCopiesModal] = useState(false)
+
+    const [deletingCollection, setDeletingCollection] = useState(false)
+    const [deletingCopies, setDeletingCopies] = useState(false)
+    const [savingCollectionName, setSavingCollectionName] = useState(false)
+
+    const [actionError, setActionError] = useState('')
 
     const [loading, setLoading] = useState(true)
 
@@ -200,6 +217,92 @@ function CollectionPage() {
         )
     })
 
+    async function handleUpdateCollectionName() {
+        const name = newCollectionName.trim()
+
+        if (!name) {
+            setActionError('O nome da coleção não pode ficar vazio.')
+            return
+        }
+
+        if (!collection) return
+
+        try {
+            setSavingCollectionName(true)
+            setActionError('')
+
+            const curator = await getCurrentCurator()
+
+            const copyIds = collection.copies.map(copy => copy.id)
+
+            const updatedCollection = await updateCollection(
+                collection.id,
+                curator.id,
+                name,
+                collection.isPublic,
+                copyIds
+            )
+
+            setCollection(updatedCollection)
+            setEditingCollectionName(false)
+        } catch (error) {
+            console.error('Erro ao atualizar coleção:', error)
+            setActionError('Não foi possível atualizar o nome da coleção.')
+        } finally {
+            setSavingCollectionName(false)
+        }
+    }
+
+    async function handleDeleteCollection() {
+        if (!collection) return
+
+        try {
+            setDeletingCollection(true)
+            setActionError('')
+
+            await deleteCollection(collection.id)
+
+            setShowDeleteCollectionModal(false)
+            navigate('/curator')
+        } catch (error) {
+            console.error('Erro ao excluir coleção:', error)
+
+            setActionError(
+                'Não foi possível excluir a coleção. Verifique se ela ainda possui itens.'
+            )
+
+            setShowDeleteCollectionModal(false)
+        } finally {
+            setDeletingCollection(false)
+        }
+    }
+
+    async function handleDeleteAllCopies() {
+        try {
+            setDeletingCopies(true)
+            setActionError('')
+
+            for (const copy of copies) {
+                await deleteCopy(copy.id)
+            }
+
+            setShowDeleteCopiesModal(false)
+
+            await loadCollection()
+        } catch (error) {
+            console.error('Erro ao excluir itens da coleção:', error)
+
+            setActionError(
+                'Ocorreu um erro ao excluir os itens. A coleção foi atualizada para refletir as exclusões realizadas.'
+            )
+
+            setShowDeleteCopiesModal(false)
+
+            await loadCollection()
+        } finally {
+            setDeletingCopies(false)
+        }
+    }
 
     if (loading) {
         return (
@@ -228,19 +331,55 @@ function CollectionPage() {
                     <span className="section-label">
                         COLEÇÃO
                     </span>
-                    <h1>
-                        {collection.name}
-                    </h1>
+
+                    <h1>{collection.name}</h1>
                 </div>
-                <button
-                    type="button"
-                    className="collection-back-button"
-                    onClick={() => navigate('/curator')}
-                >
-                    <i className="bi bi-arrow-left" />
-                    Voltar para o perfil
-                </button>
+                <div className="collection-header-actions">
+                    <button
+                        type="button"
+                        className="collection-action-button"
+                        onClick={() => {
+                            setNewCollectionName(collection.name)
+                            setEditingCollectionName(true)
+                            setActionError('')
+                        }}
+                    >
+                        <i className="bi bi-pencil" />
+                        Editar nome
+                    </button>
+                    <button
+                        type="button"
+                        className="collection-action-button collection-delete-button"
+                        onClick={() => setShowDeleteCollectionModal(true)}
+                    >
+                        <i className="bi bi-trash" />
+                        Excluir coleção
+                    </button>
+                    <button
+                        type="button"
+                        className="collection-action-button collection-delete-button"
+                        onClick={() => setShowDeleteCopiesModal(true)}
+                        disabled={copies.length === 0}
+                    >
+                        <i className="bi bi-trash3" />
+                        Excluir todos os itens
+                    </button>
+                    <button
+                        type="button"
+                        className="collection-back-button"
+                        onClick={() => navigate('/curator')}
+                    >
+                        <i className="bi bi-arrow-left" />
+                        Voltar para o perfil
+                    </button>
+                </div>
             </section>
+            {actionError && (
+                <p className="collection-action-error" role="alert">
+                    <i className="bi bi-exclamation-circle" />
+                    {actionError}
+                </p>
+            )}
             <section className="collection-info">
                 <div className="collection-stat">
                     <strong>
@@ -442,6 +581,74 @@ function CollectionPage() {
                         onDeleted={handleCopyDeleted}
                     />
                 )}
+            {editingCollectionName && (
+                <div className="collection-modal-overlay">
+                    <section className="collection-name-modal">
+                        <header>
+                            <h2>Editar coleção</h2>
+
+                            <button
+                                type="button"
+                                onClick={() => setEditingCollectionName(false)}
+                                disabled={savingCollectionName}
+                                aria-label="Fechar"
+                            >
+                                ×
+                            </button>
+                        </header>
+                        <div className="collection-name-content">
+                            <label htmlFor="collection-name">
+                                Nome da coleção
+                            </label>
+
+                            <input
+                                id="collection-name"
+                                type="text"
+                                value={newCollectionName}
+                                onChange={event =>
+                                    setNewCollectionName(event.target.value)
+                                }
+                                maxLength={100}
+                                autoFocus
+                            />
+                        </div>
+                        <footer>
+                            <button
+                                type="button"
+                                onClick={() => setEditingCollectionName(false)}
+                                disabled={savingCollectionName}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleUpdateCollectionName}
+                                disabled={savingCollectionName}
+                            >
+                                {savingCollectionName ? 'Salvando...' : 'Salvar'}
+                            </button>
+                        </footer>
+                    </section>
+                </div>
+            )}
+            {showDeleteCollectionModal && (
+                <DeleteCheckModal
+                    itemName={collection.name}
+                    itemType="Coleção"
+                    deleting={deletingCollection}
+                    onCancel={() => setShowDeleteCollectionModal(false)}
+                    onConfirm={handleDeleteCollection}
+                />
+            )}
+            {showDeleteCopiesModal && (
+                <DeleteCheckModal
+                    itemName={`${copies.length} ${copies.length === 1 ? 'item' : 'itens'} da coleção "${collection.name}"`}
+                    itemType="Itens"
+                    deleting={deletingCopies}
+                    onCancel={() => setShowDeleteCopiesModal(false)}
+                    onConfirm={handleDeleteAllCopies}
+                />
+            )}
         </div>
     )
 }

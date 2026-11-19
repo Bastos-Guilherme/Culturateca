@@ -56,7 +56,7 @@ export async function createCollection(
     name: string,
     copyIds: number[]
 ) {
-    const response = await apiFetch(`${API_URL}/collection`,{
+    const response = await apiFetch(`${API_URL}/collection`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -79,12 +79,12 @@ export async function createCollection(
 
 export async function updateCollection(
     id: number,
-    curatorEmail: string,
+    curatorId: number,
     name: string,
     isPublic: boolean,
     copyIds: number[]
 ) {
-    const response = await apiFetch(`${API_URL}/collection`,{
+    const response = await apiFetch(`${API_URL}/collection`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -92,7 +92,7 @@ export async function updateCollection(
         body: JSON.stringify({
             id: id,
             curator: {
-                email: curatorEmail
+                id: curatorId
             },
             name: name,
             isPublic: isPublic,
@@ -108,7 +108,7 @@ export async function updateCollection(
 }
 
 export async function deleteCollection(id: number) {
-    const response = await apiFetch(`${API_URL}/collection/${encodeURIComponent(id)}`,{
+    const response = await apiFetch(`${API_URL}/collection/${encodeURIComponent(id)}`, {
         method: 'DELETE'
     })
 
