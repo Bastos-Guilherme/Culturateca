@@ -17,7 +17,7 @@
 
 .collection-header-info {
     flex: 1;
-    min-width: 0;
+    min-width: 350px;
 }
 
 .collection-header h1 {
