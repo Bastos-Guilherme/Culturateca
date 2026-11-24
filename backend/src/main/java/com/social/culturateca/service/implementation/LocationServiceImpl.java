@@ -67,7 +67,25 @@ public class LocationServiceImpl implements LocationService {
                 throw new RuntimeException("ID não deve ser específicado");
             }
 
-            if (!locationRepository.findByNameContainingIgnoreCase(location.getName()).isEmpty()) {
+            if (location.getCurator() != null) {
+
+                if (location.getCurator().getId() == null) {
+                    throw new RuntimeException("Curator deve possuir ID");
+                }
+
+                Long curatorId = location.getCurator().getId();
+
+                Curator curator = curatorService.findById(curatorId);
+                if (null == curator) {
+                    throw new RuntimeException("Curator não encontrado");
+                }
+
+                location.setCurator(curator);
+            }
+
+            if (!locationRepository
+                    .findByNameIgnoreCaseAndCuratorId(location.getName(), location.getCurator().getId())
+                    .isEmpty()) {
                 throw new RuntimeException("nome da Location ja existe");
             }
 
@@ -99,22 +117,6 @@ public class LocationServiceImpl implements LocationService {
                 location.setLocation(parent);
             }
 
-            if (location.getCurator() != null) {
-
-                if (location.getCurator().getId() == null) {
-                    throw new RuntimeException("Curator deve possuir ID");
-                }
-
-                Long curatorId = location.getCurator().getId();
-
-                Curator curator = curatorService.findById(curatorId);
-                if (null == curator) {
-                    throw new RuntimeException("Curator não encontrado");
-                }
-
-                location.setCurator(curator);
-            }
-
             return locationRepository.save(location);
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,11 +134,36 @@ public class LocationServiceImpl implements LocationService {
             Location existingLocation = locationRepository.findById(location.getId())
                     .orElseThrow(() -> new RuntimeException("Location não encontrada"));
 
-            if (location.getName() != null &&
-                    !location.getName().equalsIgnoreCase(existingLocation.getName()) &&
-                    !locationRepository.findByNameContainingIgnoreCase(location.getName()).isEmpty()) {
+            if (location.getCurator() != null) {
 
-                throw new RuntimeException("nome da Location ja existe");
+                if (location.getCurator().getId() == null) {
+                    throw new RuntimeException("Curator deve possuir ID");
+                }
+
+                Long curatorId = location.getCurator().getId();
+
+                Curator curator = curatorService.findById(curatorId);
+                if (null == curator) {
+                    throw new RuntimeException("Curator não encontrado");
+                }
+
+                existingLocation.setCurator(curator);
+            }        
+            
+            if (location.getName() != null) {
+
+                Long curatorId = location.getCurator() != null
+                        ? location.getCurator().getId()
+                        : existingLocation.getCurator().getId();
+
+                boolean nameExists = locationRepository
+                        .findByNameIgnoreCaseAndCuratorId(location.getName(), curatorId)
+                        .stream()
+                        .anyMatch(loc -> !loc.getId().equals(existingLocation.getId()));
+
+                if (nameExists) {
+                    throw new RuntimeException("Nome da Location já existe");
+                }
             }
 
             if (location.getName() != null) {
@@ -181,22 +208,6 @@ public class LocationServiceImpl implements LocationService {
                         .orElseThrow(() -> new RuntimeException("Location não encontrada"));
 
                 existingLocation.setLocation(parent);
-            }
-
-            if (location.getCurator() != null) {
-
-                if (location.getCurator().getId() == null) {
-                    throw new RuntimeException("Curator deve possuir ID");
-                }
-
-                Long curatorId = location.getCurator().getId();
-
-                Curator curator = curatorService.findById(curatorId);
-                if (null == curator) {
-                    throw new RuntimeException("Curator não encontrado");
-                }
-
-                existingLocation.setCurator(curator);
             }
 
             return locationRepository.save(existingLocation);

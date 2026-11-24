@@ -12,5 +12,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
   
   List<Location> findByNameContainingIgnoreCase(String name);
 
+  List<Location> findByNameIgnoreCaseAndCuratorId(String name, Long CuratorId);
+
   List<Location> findAllByCuratorId(Long curatorId);
 }
