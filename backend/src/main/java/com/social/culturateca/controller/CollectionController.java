@@ -3,6 +3,9 @@ package com.social.culturateca.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +23,7 @@ import com.social.culturateca.service.CuratorService;
 @RestController
 @RequestMapping("/collection")
 public class CollectionController {
-  
+
   @Autowired
   CollectionService collectionService;
 
@@ -28,26 +31,37 @@ public class CollectionController {
   CuratorService curatorService;
 
   @GetMapping
-  public List<Collection> getAllCollection(){
+  public List<Collection> getAllCollection() {
     return collectionService.findAllCollections();
   }
 
   @GetMapping("/curator={email}")
-  public List<Collection> getAllByCurator(@PathVariable("email") String email) {
-      Curator curator = curatorService.findByEmail(email);
-      return collectionService.findCollectionsByOwner(curator);
+  public ResponseEntity<?> getAllByCurator(@PathVariable("email") String email, Authentication authentication) {
+    if (!authentication.getName().equals(email)) {
+      return ResponseEntity
+          .status(HttpStatus.FORBIDDEN)
+          .body("Você não tem permissão para acessar essas coleções.");
+    }
+
+    Curator curator = curatorService.findByEmail(email);
+    return ResponseEntity.ok(collectionService.findCollectionsByOwner(curator));
   }
 
   @GetMapping("/id={id}")
-  public Collection getById(@PathVariable("id") Long id) {
-    return collectionService.findById(id);
+  public ResponseEntity<Collection> findById(
+      @PathVariable Long id,
+      Authentication authentication) {
+    Curator curator = curatorService.findByEmail(
+        authentication.getName());
+
+    return ResponseEntity.ok(collectionService.findById(id, curator));
   }
 
   @GetMapping("/name={name}")
   public List<Collection> getByName(@PathVariable("name") String name) {
     return collectionService.findByName(name);
   }
-  
+
   @PostMapping
   public Collection create(@RequestBody Collection collection) {
     return collectionService.createCollection(collection, curatorService);
@@ -59,7 +73,14 @@ public class CollectionController {
   }
 
   @DeleteMapping("/{id}")
-  public void delete(@PathVariable("id") Long id) {
-    collectionService.deleteCollection(id);
+  public ResponseEntity<Void> deleteCollection(
+      @PathVariable Long id,
+      Authentication authentication) {
+    Curator curator = curatorService.findByEmail(
+        authentication.getName());
+
+    collectionService.deleteCollection(id, curator);
+
+    return ResponseEntity.noContent().build();
   }
 }

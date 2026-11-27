@@ -346,7 +346,9 @@ function CuratorPage() {
                                         />
                                         <button
                                             className="collection-button"
-                                            onClick={() => navigate(`/collection/${collection.id}`)}
+                                            onClick={() => navigate('/collection', {
+                                                state: { collectionId: collection.id }
+                                            })}
                                         >
                                             Ver coleção
                                             <i className="bi bi-arrow-right"></i>

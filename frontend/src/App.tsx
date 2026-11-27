@@ -24,7 +24,7 @@ function App() {
           <Route path="/createCurator" element={<CreateCurator />} />
           <Route path="/curator" element={<CuratorPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/collection/:id" element={<CollectionPage />} />
+          <Route path="/collection" element={<CollectionPage />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/createItem" element={<CreateItem />} />
           <Route path="/categories" element={<Categories />} />

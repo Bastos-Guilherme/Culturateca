@@ -11,13 +11,13 @@ public interface CollectionService {
 
   public Collection createCollection(Collection collection, CuratorService curatorService);
 
-  public void deleteCollection(Long id);
+  public void deleteCollection(Long id, Curator curator);
 
   public List<Collection> findCollectionsByOwner(Curator curator);
 
   public Collection editCollection(Collection collection, CuratorService curatorService);
 
-  public Collection findById(Long id);
+  public Collection findById(Long id, Curator curator);
 
   public List<Collection> findByName(String name);
 }

@@ -1,6 +1,7 @@
 package com.social.culturateca.model.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
   List<Collection> findByNameContainingIgnoreCase(String name);
 
   List<Collection> findAllByCurator(Curator curator);
+
+  Optional<Collection> findByIdAndCurator_Id(Long id, Long curatorId);
 }

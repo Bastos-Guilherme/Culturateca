@@ -229,7 +229,9 @@ public class ItemRegistrationServiceImpl implements ItemRegistrationService {
                         Copy copy,
                         String curatorEmail) {
 
-                Collection collection = collectionService.findById(collectionId);
+                Curator curator = curatorService.findByEmail(curatorEmail);
+
+                Collection collection = collectionService.findById(collectionId, curator);
 
                 if (collection == null) {
                         throw new IllegalArgumentException(

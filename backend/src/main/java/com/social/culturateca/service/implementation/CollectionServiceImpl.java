@@ -56,12 +56,13 @@ public class CollectionServiceImpl implements CollectionService {
   }
 
   @Override
-  public void deleteCollection(Long id) {
-    Collection collection = collectionRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Coleção não encontrada"));
+  public void deleteCollection(Long id, Curator curator) {
+    Collection collection = findCollectionByOwner(id, curator);
 
-    if (collection.getCopies() != null && !collection.getCopies().isEmpty()) {
-      throw new RuntimeException("Não é possível excluir uma coleção que possui cópias vinculadas.");
+    if (collection.getCopies() != null &&
+        !collection.getCopies().isEmpty()) {
+      throw new RuntimeException(
+          "Não é possível excluir uma coleção que possui cópias vinculadas.");
     }
 
     collectionRepository.delete(collection);
@@ -108,9 +109,20 @@ public class CollectionServiceImpl implements CollectionService {
     }
   }
 
+  private Collection findCollectionByOwner(Long id, Curator curator) {
+    if (curator == null || curator.getId() == null) {
+      throw new RuntimeException("Curador não autenticado");
+    }
+
+    return collectionRepository
+        .findByIdAndCurator_Id(id, curator.getId())
+        .orElseThrow(() -> new RuntimeException(
+            "Coleção não encontrada ou acesso não autorizado"));
+  }
+
   @Override
-  public Collection findById(Long id) {
-    return collectionRepository.findById(id).orElse(null);
+  public Collection findById(Long id, Curator curator) {
+    return findCollectionByOwner(id, curator);
   }
 
   @Override

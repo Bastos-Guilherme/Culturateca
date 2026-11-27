@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { getCollectionById, type Collection, updateCollection, deleteCollection } from '../services/collectionService'
 import { getCopyById, type Copy } from '../services/copyService'
@@ -17,8 +17,9 @@ import DeleteCheckModal from '../components/DeleteCheckModal'
 import '../styles/Collection.css'
 
 function CollectionPage() {
-    const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
+    const location = useLocation()
+    const id = location.state?.collectionId
 
     const [collection, setCollection] = useState<Collection | null>(null)
     const [copies, setCopies] = useState<Copy[]>([])
